@@ -461,7 +461,7 @@ export default function Home() {
                                                 animate={{ opacity: [0.7, 1, 0.7] }}
                                                 transition={{ duration: 3, repeat: Infinity }}
                                             >
-                                                $7.50
+                                                $3.50
                                             </motion.p>
                                             <p className="text-sm text-gray-500">Avg Campus Ride</p>
                                         </div>
