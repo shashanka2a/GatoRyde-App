@@ -358,22 +358,22 @@ export default function Home() {
                             </motion.div>
 
                             <motion.div
-                                className="relative"
+                                className="relative mt-8 lg:mt-0"
                                 initial={{ opacity: 0, x: 50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.8, delay: 0.4 }}
                             >
                                 {/* Ride-Sharing Hero Graphics */}
-                                <div className="relative z-10 bg-white rounded-3xl p-8 shadow-2xl">
+                                <div className="relative z-10 bg-white rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl mx-4 sm:mx-0">
                                     <div className="flex flex-col items-center text-center">
                                         {/* Car with Route Visualization */}
                                         <motion.div
-                                            className="bg-teal-100 p-6 rounded-2xl mb-6 relative"
+                                            className="bg-teal-100 p-4 sm:p-6 rounded-2xl mb-4 sm:mb-6 relative"
                                             whileHover={{ scale: 1.05 }}
                                             transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                         >
                                             {/* Car Icon */}
-                                            <svg className="w-16 h-16 text-teal-600" fill="currentColor" viewBox="0 0 24 24">
+                                            <svg className="w-12 h-12 sm:w-16 sm:h-16 text-teal-600" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.22.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
                                             </svg>
                                             {/* Route dots */}
@@ -385,13 +385,13 @@ export default function Home() {
                                         </motion.div>
 
                                         {/* Driver and Passengers */}
-                                        <div className="flex items-center justify-center gap-6 mb-6">
+                                        <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4 sm:mb-6">
                                             {/* Driver */}
                                             <div className="text-center">
-                                                <div className="bg-teal-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg mb-1 relative">
+                                                <div className="bg-teal-600 text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-bold text-sm sm:text-lg mb-1 relative">
                                                     D
-                                                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                                                        <svg className="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                                    <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                                                        <svg className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-white" fill="currentColor" viewBox="0 0 24 24">
                                                             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                                                         </svg>
                                                     </div>
@@ -401,13 +401,13 @@ export default function Home() {
 
                                             {/* Arrow */}
                                             <div>
-                                                <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <svg className="w-4 h-4 sm:w-6 sm:h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                                                 </svg>
                                             </div>
 
                                             {/* Passengers */}
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-1 sm:gap-2">
                                                 {[
                                                     { initial: 'A', color: 'bg-blue-500' },
                                                     { initial: 'M', color: 'bg-purple-500' }
@@ -423,7 +423,7 @@ export default function Home() {
                                                             delay: i * 0.3
                                                         }}
                                                     >
-                                                        <div className={`${passenger.color} text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm mb-1`}>
+                                                        <div className={`${passenger.color} text-white w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-bold text-xs sm:text-sm mb-1`}>
                                                             {passenger.initial}
                                                         </div>
                                                         <span className="text-xs text-gray-500">Rider</span>
@@ -432,7 +432,7 @@ export default function Home() {
                                             </div>
                                         </div>
 
-                                        <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
                                             Share the Ride, Split the Cost
                                         </h3>
                                         <p className="text-gray-600 text-sm">
@@ -441,9 +441,9 @@ export default function Home() {
                                     </div>
                                 </div>
 
-                                {/* Floating Stats Card */}
+                                {/* Floating Stats Card - Hidden on mobile, visible on larger screens */}
                                 <motion.div
-                                    className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg border border-gray-200 z-20"
+                                    className="hidden sm:block absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg border border-gray-200 z-20"
                                     whileHover={{ scale: 1.05, y: -5 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
                                 >
@@ -468,9 +468,9 @@ export default function Home() {
                                     </div>
                                 </motion.div>
 
-                                {/* University Partnership Badge */}
+                                {/* University Partnership Badge - Hidden on mobile */}
                                 <motion.div
-                                    className="absolute -top-6 -left-6 bg-orange-500 text-white p-3 rounded-full shadow-lg z-20"
+                                    className="hidden sm:block absolute -top-6 -left-6 bg-orange-500 text-white p-3 rounded-full shadow-lg z-20"
                                     animate={{
                                         rotate: [0, 10, 0, -10, 0],
                                         scale: [1, 1.05, 1]
@@ -484,9 +484,9 @@ export default function Home() {
                                     <Shield className="h-6 w-6" />
                                 </motion.div>
 
-                                {/* Additional floating elements */}
+                                {/* Additional floating elements - Hidden on mobile */}
                                 <motion.div
-                                    className="absolute -top-4 -right-4 bg-emerald-500 p-3 rounded-full shadow-lg z-20"
+                                    className="hidden sm:block absolute -top-4 -right-4 bg-emerald-500 p-3 rounded-full shadow-lg z-20"
                                     whileHover={{ scale: 1.1, rotate: 15 }}
                                     animate={{
                                         rotate: [0, 10, 0, -10, 0],
@@ -618,20 +618,20 @@ export default function Home() {
                 </section>
 
                 {/* App Features */}
-                <section id="app" className="py-20 bg-gradient-to-br from-gray-50 to-gray-100">
+                <section id="app" className="py-12 sm:py-20 bg-gradient-to-br from-gray-50 to-gray-100">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                             <motion.div
-                                className="lg:order-2"
+                                className="lg:order-2 text-center lg:text-left"
                                 initial={{ opacity: 0, x: 50 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.8 }}
                                 viewport={{ once: true }}
                             >
-                                <h2 className="text-4xl text-gray-900 mb-6">
+                                <h2 className="text-3xl sm:text-4xl text-gray-900 mb-4 sm:mb-6">
                                     Designed for <span className="text-teal-600">Students</span>
                                 </h2>
-                                <p className="text-xl text-gray-600 mb-8">
+                                <p className="text-lg sm:text-xl text-gray-600 mb-6 sm:mb-8">
                                     Our intuitive app makes ride-sharing simple and safe. With student verification, in-app messaging, and real-time tracking, you're always in control.
                                 </p>
                                 <div className="space-y-4">
@@ -682,7 +682,7 @@ export default function Home() {
                                 viewport={{ once: true }}
                             >
                                 {/* Illustrated Phone Mockups */}
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 max-w-md mx-auto lg:max-w-none">
                                     <motion.div
                                         className="space-y-6"
                                         whileHover={{ y: -10 }}
@@ -1199,10 +1199,10 @@ export default function Home() {
                 </section>
 
                 {/* Footer */}
-                <footer className="bg-gray-900 text-gray-300 py-12">
+                <footer className="bg-gray-900 text-gray-300 py-8 sm:py-12">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <motion.div
-                            className="grid grid-cols-1 md:grid-cols-4 gap-8"
+                            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8"
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}

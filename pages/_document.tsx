@@ -5,6 +5,7 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="GatoRyde - Safe, Shared, Smart rides for students. Connect with fellow students for affordable and eco-friendly rides across campus and beyond." />
         <meta name="keywords" content="rideshare, students, campus, transportation, eco-friendly, affordable" />
         <meta name="author" content="GatoRyde" />
