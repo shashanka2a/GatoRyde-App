@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import { track } from '@vercel/analytics';
 import { Button } from '../src/components/ui/button';
 import { Card, CardContent } from '../src/components/ui/card';
 import { Search, Users, Star, Check, Menu, X, Smartphone, Shield, MapPin, Clock, DollarSign, Zap } from 'lucide-react';
@@ -9,6 +10,22 @@ import { motion } from 'framer-motion';
 
 export default function Home() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    // Analytics tracking functions
+    const trackButtonClick = (buttonName: string, location: string) => {
+        track('Button Click', {
+            button: buttonName,
+            location: location,
+            timestamp: new Date().toISOString()
+        });
+    };
+
+    const trackNavigation = (section: string) => {
+        track('Navigation', {
+            section: section,
+            timestamp: new Date().toISOString()
+        });
+    };
     // Testimonials functionality commented out for pre-launch
     /*
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
@@ -91,6 +108,7 @@ export default function Home() {
                                     className="text-gray-600 hover:text-teal-600 transition-colors relative"
                                     whileHover={{ y: -2 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                    onClick={() => trackNavigation('How it works')}
                                 >
                                     How it works
                                     <motion.div
@@ -105,6 +123,7 @@ export default function Home() {
                                     className="text-gray-600 hover:text-teal-600 transition-colors relative"
                                     whileHover={{ y: -2 }}
                                     transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                                    onClick={() => trackNavigation('App')}
                                 >
                                     App
                                     <motion.div
@@ -132,12 +151,19 @@ export default function Home() {
                                 </motion.a>
                                 */}
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button variant="outline" className="text-teal-600 border-teal-600 hover:bg-teal-50">
+                                    <Button 
+                                        variant="outline" 
+                                        className="text-teal-600 border-teal-600 hover:bg-teal-50"
+                                        onClick={() => trackButtonClick('Sign In', 'Navigation')}
+                                    >
                                         Sign In
                                     </Button>
                                 </motion.div>
                                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                                    <Button className="bg-teal-600 hover:bg-teal-700">
+                                    <Button 
+                                        className="bg-teal-600 hover:bg-teal-700"
+                                        onClick={() => trackButtonClick('Download App', 'Navigation')}
+                                    >
                                         Download App
                                     </Button>
                                 </motion.div>
@@ -168,10 +194,17 @@ export default function Home() {
                                 <a href="#app" className="block text-gray-600 hover:text-teal-600 transition-colors" onClick={() => setIsMenuOpen(false)}>App</a>
                                 {/* <a href="#testimonials" className="block text-gray-600 hover:text-teal-600 transition-colors" onClick={() => setIsMenuOpen(false)}>Reviews</a> */}
                                 <div className="flex flex-col space-y-2 pt-2">
-                                    <Button variant="outline" className="text-teal-600 border-teal-600 hover:bg-teal-50">
+                                    <Button 
+                                        variant="outline" 
+                                        className="text-teal-600 border-teal-600 hover:bg-teal-50"
+                                        onClick={() => trackButtonClick('Sign In', 'Mobile Navigation')}
+                                    >
                                         Sign In
                                     </Button>
-                                    <Button className="bg-teal-600 hover:bg-teal-700">
+                                    <Button 
+                                        className="bg-teal-600 hover:bg-teal-700"
+                                        onClick={() => trackButtonClick('Download App', 'Mobile Navigation')}
+                                    >
                                         Download App
                                     </Button>
                                 </div>
@@ -274,7 +307,10 @@ export default function Home() {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        <Button className="bg-teal-600 hover:bg-teal-700 text-lg py-6 px-8 shadow-lg hover:shadow-xl transition-shadow">
+                                        <Button 
+                                            className="bg-teal-600 hover:bg-teal-700 text-lg py-6 px-8 shadow-lg hover:shadow-xl transition-shadow"
+                                            onClick={() => trackButtonClick('Get Started Free', 'Hero Section')}
+                                        >
                                             Get Started Free
                                         </Button>
                                     </motion.div>
@@ -282,7 +318,11 @@ export default function Home() {
                                         whileHover={{ scale: 1.05 }}
                                         whileTap={{ scale: 0.95 }}
                                     >
-                                        <Button variant="outline" className="text-teal-600 border-teal-600 hover:bg-teal-50 text-lg py-6 px-8">
+                                        <Button 
+                                            variant="outline" 
+                                            className="text-teal-600 border-teal-600 hover:bg-teal-50 text-lg py-6 px-8"
+                                            onClick={() => trackButtonClick('Find Rides Now', 'Hero Section')}
+                                        >
                                             Find Rides Now
                                         </Button>
                                     </motion.div>

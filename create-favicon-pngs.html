@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Favicon PNGs</title>
+</head>
+<body>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <script>
+        function createFavicon(size, filename) {
+            const canvas = document.getElementById('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Create gradient background
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#0d9488');
+            gradient.addColorStop(0.5, '#0891b2');
+            gradient.addColorStop(1, '#059669');
+            
+            // Draw circle background
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 1, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw border
+            ctx.strokeStyle = '#065f46';
+            ctx.lineWidth = Math.max(1, size/32);
+            ctx.stroke();
+            
+            // Draw letter G
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.55}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('G', size/2, size/2);
+            
+            // Download
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        // Auto-generate files
+        setTimeout(() => {
+            createFavicon(16, 'favicon-16x16.png');
+        }, 100);
+        
+        setTimeout(() => {
+            createFavicon(32, 'favicon-32x32.png');
+        }, 200);
+        
+        setTimeout(() => {
+            createFavicon(180, 'apple-touch-icon.png');
+        }, 300);
+    </script>
+    <p>Favicon files are being generated and downloaded automatically...</p>
+</body>
+</html>

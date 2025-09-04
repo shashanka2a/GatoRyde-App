@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GatoRyde Favicon Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 10px; }
+        .favicon-preview { display: flex; gap: 20px; flex-wrap: wrap; margin: 20px 0; }
+        .size-demo { text-align: center; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        canvas { border: 1px solid #ccc; }
+        button { background: #0d9488; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        button:hover { background: #059669; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GatoRyde Favicon Generator</h1>
+        <p>Click the buttons below to generate and download different favicon sizes:</p>
+        
+        <div class="favicon-preview">
+            <div class="size-demo">
+                <h3>16x16</h3>
+                <canvas id="canvas16" width="16" height="16"></canvas>
+                <br><button onclick="downloadFavicon(16)">Download 16x16</button>
+            </div>
+            <div class="size-demo">
+                <h3>32x32</h3>
+                <canvas id="canvas32" width="32" height="32"></canvas>
+                <br><button onclick="downloadFavicon(32)">Download 32x32</button>
+            </div>
+            <div class="size-demo">
+                <h3>48x48</h3>
+                <canvas id="canvas48" width="48" height="48"></canvas>
+                <br><button onclick="downloadFavicon(48)">Download 48x48</button>
+            </div>
+            <div class="size-demo">
+                <h3>64x64</h3>
+                <canvas id="canvas64" width="64" height="64"></canvas>
+                <br><button onclick="downloadFavicon(64)">Download 64x64</button>
+            </div>
+        </div>
+        
+        <button onclick="generateICO()">Generate favicon.ico</button>
+        
+        <h3>Usage Instructions:</h3>
+        <ol>
+            <li>The SVG favicon is already created at <code>public/favicon.svg</code></li>
+            <li>Use the buttons above to generate PNG versions for different sizes</li>
+            <li>The favicon.ico will be automatically generated for browser compatibility</li>
+            <li>Update your HTML head section with the favicon links</li>
+        </ol>
+    </div>
+
+    <script>
+        function drawFavicon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size / 2 - 1;
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#0d9488');
+            gradient.addColorStop(0.5, '#0891b2');
+            gradient.addColorStop(1, '#059669');
+            
+            // Draw background circle
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Draw border
+            ctx.strokeStyle = '#065f46';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+            
+            // Draw letter G
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('G', centerX, centerY);
+        }
+        
+        function downloadFavicon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const link = document.createElement('a');
+            link.download = `favicon-${size}x${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        function generateICO() {
+            // For ICO generation, we'll create a 32x32 version
+            const canvas = document.getElementById('canvas32');
+            const link = document.createElement('a');
+            link.download = 'favicon.ico';
+            link.href = canvas.toDataURL();
+            link.click();
+            alert('Note: This generates a PNG. For true ICO format, use online converters or specialized tools.');
+        }
+        
+        // Initialize canvases
+        window.onload = function() {
+            [16, 32, 48, 64].forEach(size => {
+                const canvas = document.getElementById(`canvas${size}`);
+                drawFavicon(canvas, size);
+            });
+        };
+    </script>
+</body>
+</html>
