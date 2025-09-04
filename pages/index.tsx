@@ -214,7 +214,7 @@ export default function Home() {
                 </nav>
 
                 {/* Hero Section */}
-                <section className="relative bg-gradient-to-br from-teal-50 to-emerald-50 pt-16 pb-20 overflow-hidden">
+                <section className="relative bg-gradient-to-br from-teal-50 to-emerald-50 pt-8 sm:pt-16 pb-12 sm:pb-20 overflow-hidden">
                     {/* Animated Background Elements */}
                     <div className="absolute inset-0 overflow-hidden">
                         <motion.div
@@ -256,14 +256,14 @@ export default function Home() {
                     </div>
 
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                             <motion.div
                                 initial={{ opacity: 0, x: -50 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.8, delay: 0.2 }}
                             >
                                 <motion.h1
-                                    className="text-5xl lg:text-6xl text-gray-900 mb-6 leading-tight"
+                                    className="text-3xl sm:text-4xl lg:text-6xl text-gray-900 mb-6 leading-tight"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.4 }}
@@ -275,7 +275,7 @@ export default function Home() {
                                     >Ride with Classmates.</motion.span>
                                 </motion.h1>
                                 <motion.p
-                                    className="text-xl text-gray-600 mb-6"
+                                    className="text-lg sm:text-xl text-gray-600 mb-6"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.6 }}
@@ -283,18 +283,18 @@ export default function Home() {
                                     Split costs. Share rides. Stay safe. Connect with verified college students for affordable campus transportation.
                                 </motion.p>
                                 <motion.div
-                                    className="flex items-center gap-4 mb-8 text-sm bg-teal-50 p-4 rounded-lg border border-teal-100"
+                                    className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-8 text-sm bg-teal-50 p-4 rounded-lg border border-teal-100"
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.8, delay: 0.7 }}
                                 >
                                     <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+                                        <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
                                             <span className="text-white text-xs font-bold">UF</span>
                                         </div>
                                         <span className="text-gray-700 font-medium">University of Florida Verified</span>
                                     </div>
-                                    <div className="text-gray-400">•</div>
+                                    <div className="hidden sm:block text-gray-400">•</div>
                                     <span className="text-gray-600">50% cheaper than rideshare apps</span>
                                 </motion.div>
                                 <motion.div
@@ -308,7 +308,7 @@ export default function Home() {
                                         whileTap={{ scale: 0.95 }}
                                     >
                                         <Button 
-                                            className="bg-teal-600 hover:bg-teal-700 text-lg py-6 px-8 shadow-lg hover:shadow-xl transition-shadow"
+                                            className="bg-teal-600 hover:bg-teal-700 text-base sm:text-lg py-4 sm:py-6 px-6 sm:px-8 shadow-lg hover:shadow-xl transition-shadow w-full sm:w-auto"
                                             onClick={() => trackButtonClick('Get Started Free', 'Hero Section')}
                                         >
                                             Get Started Free
@@ -320,7 +320,7 @@ export default function Home() {
                                     >
                                         <Button 
                                             variant="outline" 
-                                            className="text-teal-600 border-teal-600 hover:bg-teal-50 text-lg py-6 px-8"
+                                            className="text-teal-600 border-teal-600 hover:bg-teal-50 text-base sm:text-lg py-4 sm:py-6 px-6 sm:px-8 w-full sm:w-auto"
                                             onClick={() => trackButtonClick('Find Rides Now', 'Hero Section')}
                                         >
                                             Find Rides Now
@@ -328,7 +328,7 @@ export default function Home() {
                                     </motion.div>
                                 </motion.div>
                                 <motion.div
-                                    className="flex items-center gap-6 mt-8 text-sm text-gray-500"
+                                    className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mt-8 text-sm text-gray-500"
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ duration: 0.8, delay: 1 }}
@@ -337,21 +337,21 @@ export default function Home() {
                                         className="flex items-center gap-2"
                                         whileHover={{ scale: 1.05 }}
                                     >
-                                        <Shield className="h-4 w-4 text-teal-600" />
+                                        <Shield className="h-4 w-4 text-teal-600 flex-shrink-0" />
                                         <span>College Email Verified</span>
                                     </motion.div>
                                     <motion.div
                                         className="flex items-center gap-2"
                                         whileHover={{ scale: 1.05 }}
                                     >
-                                        <Check className="h-4 w-4 text-teal-600" />
+                                        <Check className="h-4 w-4 text-teal-600 flex-shrink-0" />
                                         <span>Parent Notifications</span>
                                     </motion.div>
                                     <motion.div
                                         className="flex items-center gap-2"
                                         whileHover={{ scale: 1.05 }}
                                     >
-                                        <MapPin className="h-4 w-4 text-teal-600" />
+                                        <MapPin className="h-4 w-4 text-teal-600 flex-shrink-0" />
                                         <span>Campus Routes Only</span>
                                     </motion.div>
                                 </motion.div>
@@ -506,19 +506,19 @@ export default function Home() {
                 </section>
 
                 {/* How It Works */}
-                <section id="how-it-works" className="py-20 bg-white">
+                <section id="how-it-works" className="py-12 sm:py-20 bg-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <motion.div
-                            className="text-center mb-16"
+                            className="text-center mb-12 sm:mb-16"
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8 }}
                             viewport={{ once: true }}
                         >
-                            <h2 className="text-4xl text-gray-900 mb-4">
+                            <h2 className="text-3xl sm:text-4xl text-gray-900 mb-4">
                                 How It Works
                             </h2>
-                            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
                                 Three simple steps to affordable, safe rides with fellow students.
                             </p>
                         </motion.div>
