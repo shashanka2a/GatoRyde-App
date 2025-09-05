@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String?
+  email        String   @unique
+  phone        String?  @unique
+  eduVerified  Boolean  @default(false)
+  photoUrl     String?
+  ratingAvg    Float?
+  ratingCount  Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  // Relations
+  driver         Driver?
+  vehicles       Vehicle[]
+  bookings       Booking[]      @relation("RiderBookings")
+  contactLogs    ContactLog[]   @relation("ContactLogs")
+  verifications  Verification[]
+  disputesOpened Dispute[]      @relation("DisputeOpener")
+
+  @@map("users")
+}
+
+model Driver {
+  userId          String  @id
+  licenseNumber   String  @unique
+  licensePhotoUrl String?
+  verified        Boolean @default(false)
+  offeredSeats    Int     @default(4)
+  zelleHandle     String?
+  cashAppHandle   String?
+  venmoHandle     String?
+  zelleQrUrl      String?
+  cashAppQrUrl    String?
+  paymentQrUrl    String?
+  vehicleId       String?
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vehicle Vehicle? @relation(fields: [vehicleId], references: [id])
+  rides   Ride[]
+
+  @@map("drivers")
+}
+
+model Vehicle {
+  id       String @id @default(cuid())
+  userId   String
+  make     String
+  model    String
+  year     Int
+  color    String
+  plate    String @unique
+  seats    Int
+  photoUrl String?
+
+  // Relations
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drivers Driver[]
+
+  @@map("vehicles")
+}
+
+enum RideStatus {
+  open
+  full
+  in_progress
+  completed
+  cancelled
+}
+
+model Ride {
+  id             String     @id @default(cuid())
+  driverId       String
+  originText     String
+  originLat      Float
+  originLng      Float
+  destText       String
+  destLat        Float
+  destLng        Float
+  departAt       DateTime
+  seatsTotal     Int
+  seatsAvailable Int
+  totalCostCents Int
+  status         RideStatus @default(open)
+  polyline       String?
+  notes          String?
+
+  // Relations
+  driver   Driver    @relation(fields: [driverId], references: [userId], onDelete: Cascade)
+  bookings Booking[]
+
+  @@map("rides")
+}
+
+enum BookingStatus {
+  pending
+  authorized
+  confirmed
+  in_progress
+  completed
+  cancelled
+  disputed
+}
+
+model Booking {
+  id                 String        @id @default(cuid())
+  rideId             String
+  riderId            String
+  seats              Int
+  authEstimateCents  Int
+  finalShareCents    Int?
+  status             BookingStatus @default(pending)
+  tripStartOtp       String?
+  otpExpiresAt       DateTime?
+  tripStartedAt      DateTime?
+  tripCompletedAt    DateTime?
+  paidByRider        Boolean       @default(false)
+  confirmedByDriver  Boolean       @default(false)
+  proofOfPaymentUrl  String?
+  cancelledAt        DateTime?
+  cancelledBy        String?
+  tags               String[]      @default([])
+  etiquettePaymentDue Boolean      @default(false)
+
+  // Relations
+  ride        Ride         @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  rider       User         @relation("RiderBookings", fields: [riderId], references: [id], onDelete: Cascade)
+  contactLogs ContactLog[]
+  disputes    Dispute[]
+
+  @@map("bookings")
+}
+
+enum ContactMethod {
+  sms
+  email
+  twilio_proxy
+}
+
+model ContactLog {
+  id        String        @id @default(cuid())
+  bookingId String
+  userId    String
+  method    ContactMethod
+  createdAt DateTime      @default(now())
+
+  // Relations
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user    User    @relation("ContactLogs", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("contact_logs")
+}
+
+enum VerificationType {
+  license
+  vehicle
+  student
+}
+
+enum VerificationStatus {
+  pending
+  approved
+  rejected
+}
+
+model Verification {
+  id          String             @id @default(cuid())
+  userId      String
+  type        VerificationType
+  status      VerificationStatus @default(pending)
+  files       Json?              // Store file URLs and metadata
+  data        Json?              // Store form data (license number, vehicle info, etc.)
+  notes       String?            // Admin notes
+  reviewedBy  String?            // Admin who reviewed
+  reviewedAt  DateTime?          // When reviewed
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("verifications")
+}
+
+enum DisputeStatus {
+  open
+  resolved
+  rejected
+}
+
+model Dispute {
+  id                   String        @id @default(cuid())
+  bookingId            String
+  openedById           String
+  reason               String
+  status               DisputeStatus @default(open)
+  resolution           String?
+  contactLogsSnapshot  Json?         // Store contact logs at time of dispute
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  // Relations
+  booking  Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  openedBy User    @relation("DisputeOpener", fields: [openedById], references: [id], onDelete: Cascade)
+
+  @@map("disputes")
+}
