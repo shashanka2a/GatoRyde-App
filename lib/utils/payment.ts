@@ -31,7 +31,7 @@ export class PaymentUtils {
   ): string {
     const amount = this.formatAmountForUrl(options.amount)
     const note = encodeURIComponent(
-      `GatoRyde ${options.originText} to ${options.destText} ${this.formatDate(options.date)}`
+      `Rydify ${options.originText} to ${options.destText} ${this.formatDate(options.date)}`
     )
     
     return `https://cash.app/$${handle}/${amount}?note=${note}`
@@ -43,10 +43,10 @@ export class PaymentUtils {
     options: PaymentLinkOptions
   ): string {
     const formattedAmount = this.formatCurrency(options.amount)
-    const subject = encodeURIComponent(`Payment for GatoRyde Trip - ${formattedAmount}`)
+    const subject = encodeURIComponent(`Payment for Rydify Trip - ${formattedAmount}`)
     const body = encodeURIComponent(
       `Hi ${driverName || 'there'},\n\n` +
-      `I'm sending payment for our GatoRyde trip:\n` +
+      `I'm sending payment for our Rydify trip:\n` +
       `• Route: ${options.originText} to ${options.destText}\n` +
       `• Date: ${this.formatDate(options.date)}\n` +
       `• Amount: ${formattedAmount}\n\n` +
@@ -63,7 +63,7 @@ export class PaymentUtils {
   ): string {
     const formattedAmount = this.formatCurrency(options.amount)
     const message = encodeURIComponent(
-      `Hi! Sending ${formattedAmount} for our GatoRyde trip from ${options.originText} to ${options.destText} on ${this.formatDate(options.date)}. Thanks for the ride!`
+      `Hi! Sending ${formattedAmount} for our Rydify trip from ${options.originText} to ${options.destText} on ${this.formatDate(options.date)}. Thanks for the ride!`
     )
     
     return `sms:${phone}?body=${message}`

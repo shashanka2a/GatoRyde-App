@@ -157,7 +157,7 @@ export function PaymentRequestPanel({
           </div>
           <div className="ml-3">
             <p className="text-sm text-yellow-800">
-              <strong>Off-platform payments.</strong> RydeShare doesn't process funds. 
+              <strong>Off-platform payments.</strong> Rydify doesn't process funds. 
               Report issues via Disputes.
             </p>
           </div>

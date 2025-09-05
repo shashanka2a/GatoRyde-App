@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 
 // Add metadata for better SEO and performance
 export const metadata = {
-  title: 'Find Rides - RydeShare',
+  title: 'Find Rides - Rydify',
   description: 'Find safe, verified rides with fellow university students',
 }
 

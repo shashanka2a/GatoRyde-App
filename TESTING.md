@@ -1,6 +1,6 @@
 # Testing Guide
 
-This document outlines the comprehensive testing strategy for the GatoRyde platform, covering unit tests, integration tests, E2E tests, and CLI testing scripts.
+This document outlines the comprehensive testing strategy for the Rydify platform, covering unit tests, integration tests, E2E tests, and CLI testing scripts.
 
 ## Test Structure
 

@@ -1,6 +1,6 @@
-# GatoRyde Landing Page
+# Rydify Landing Page
 
-A production-ready Next.js 14 application for GatoRyde - a student rideshare platform. This landing page features modern animations, responsive design, and optimized performance.
+A production-ready Next.js 14 application for Rydify - a student rideshare platform. This landing page features modern animations, responsive design, and optimized performance.
 
 ## 🚀 Features
 
@@ -113,4 +113,4 @@ This app is configured for static export and can be deployed to:
 
 ## 📄 Original Design
 
-The original Figma design is available at: https://www.figma.com/design/yRup5RXwUhumFnYQQU7XXM/GatoRyde-Landing-Page
+The original Figma design is available at: https://www.figma.com/design/yRup5RXwUhumFnYQQU7XXM/Rydify-Landing-Page

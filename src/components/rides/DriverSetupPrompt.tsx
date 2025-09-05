@@ -147,7 +147,7 @@ export function DriverSetupPrompt({ onStartSetup, userEduVerified }: DriverSetup
           >
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Why Drive with RydeShare?
+                Why Drive with Rydify?
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 More than just ridesharing - it's about building community while earning money

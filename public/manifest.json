@@ -1,6 +1,6 @@
 {
-  "name": "GatoRyde - Student Rideshare",
-  "short_name": "GatoRyde",
+  "name": "Rydify - Student Rideshare",
+  "short_name": "Rydify",
   "description": "Safe, verified student ridesharing for University of Florida",
   "start_url": "/",
   "display": "standalone",

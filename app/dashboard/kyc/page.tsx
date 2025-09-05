@@ -31,7 +31,7 @@ export default function KYCPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Identity Verification</h1>
           <p className="text-gray-600">
-            Complete your verification to start driving with GatoRyde. 
+            Complete your verification to start driving with Rydify. 
             All information is encrypted and securely stored.
           </p>
         </div>

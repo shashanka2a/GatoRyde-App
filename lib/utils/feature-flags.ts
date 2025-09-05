@@ -1,5 +1,5 @@
 /**
- * Feature flags system for GatoRyde
+ * Feature flags system for Rydify
  * 
  * This module provides a centralized way to manage feature flags
  * that control various aspects of the application behavior.

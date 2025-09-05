@@ -1,6 +1,6 @@
 # Payment Features Implementation
 
-This document outlines the implementation of driver payment profiles and payment request UI for GatoRyde.
+This document outlines the implementation of driver payment profiles and payment request UI for Rydify.
 
 ## Features Implemented
 

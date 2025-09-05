@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 /**
- * MVP Test Script for Rydify (GatoRyde)
+ * MVP Test Script for Rydify
  * Tests core functionality: Ride search, Drive posting, Profile management
  */
 

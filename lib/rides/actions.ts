@@ -719,7 +719,7 @@ export async function startTrip(bookingId: string, otp: string): Promise<StartTr
     // SMS both parties "Trip started" with safe info (no OTP)
     const riderName = booking.rider.name || 'Rider'
     const driverName = booking.ride.driver.user.name || 'Driver'
-    const tripStartMessage = `GatoRyde: Trip started! ${riderName} and ${driverName} are now on their way. Safe travels!`
+    const tripStartMessage = `Rydify: Trip started! ${riderName} and ${driverName} are now on their way. Safe travels!`
 
     // Send SMS to rider
     if (booking.rider.phone) {

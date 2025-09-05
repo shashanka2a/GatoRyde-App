@@ -113,7 +113,7 @@ export function FirstTimeDriverOnboarding({ onComplete }: FirstTimeDriverOnboard
       <CardHeader className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
         <CardTitle className="flex items-center gap-2 text-2xl">
           <Car className="w-6 h-6" />
-          Welcome to RydeShare Driver!
+          Welcome to Rydify Driver!
         </CardTitle>
         <CardDescription className="text-teal-100">
           Let's get you set up to offer rides to fellow students

@@ -181,7 +181,7 @@ function generateContactInfo(
   const totalCostForRider = costPerPerson * seatsRequested
 
   // Create message content
-  const subject = `GatoRyde: Ride Request - ${ride.originText} to ${ride.destText}`
+  const subject = `Rydify: Ride Request - ${ride.originText} to ${ride.destText}`
   const message = `Hi ${driverName}!
 
 I'm ${riderName}, a verified UF student interested in your ride:
@@ -197,7 +197,7 @@ Thanks,
 ${riderName}
 
 ---
-This message was sent through GatoRyde (gatoryde.com)`
+This message was sent through Rydify (rydify.com)`
 
   const contactInfo: ContactRideResult['contactInfo'] = {}
 

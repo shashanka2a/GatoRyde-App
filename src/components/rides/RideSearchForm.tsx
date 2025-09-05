@@ -300,9 +300,9 @@ export function RideSearchForm({
             
             {/* Enhanced Date Chips */}
             <div className="space-y-3">
-              <div className="relative">
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                  <div className="flex gap-3 min-w-max px-1">
+              <div className="relative overflow-hidden">
+                <div className="flex gap-3 overflow-x-auto pb-2 px-2 scrollbar-hide">
+                  <div className="flex gap-3 min-w-max">
                   {getDateChips().map((chip) => (
                     <Button
                       key={chip.date}
@@ -328,9 +328,9 @@ export function RideSearchForm({
                   ))}
                   </div>
                 </div>
-                {/* Enhanced gradient fades */}
-                <div className="absolute left-0 top-0 bottom-2 w-6 bg-gradient-to-r from-white via-white/80 to-transparent pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-2 w-6 bg-gradient-to-l from-white via-white/80 to-transparent pointer-events-none" />
+                {/* Subtle gradient fades that don't cut off content */}
+                <div className="absolute left-0 top-0 bottom-2 w-4 bg-gradient-to-r from-white/60 to-transparent pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-2 w-4 bg-gradient-to-l from-white/60 to-transparent pointer-events-none" />
               </div>
             </div>
 
@@ -388,8 +388,8 @@ export function RideSearchForm({
             {isRoundTrip && (
               <div className="space-y-4 animate-in slide-in-from-top-2 duration-200">
                 <Label htmlFor="returnDate" className="text-sm font-medium">Return date</Label>
-                <div className="relative">
-                  <div className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                <div className="relative overflow-hidden">
+                  <div className="flex gap-2 overflow-x-auto pb-2 px-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                     <div className="flex gap-2 min-w-max">
                       {getDateChips().map((chip) => (
                         <Button
@@ -410,9 +410,9 @@ export function RideSearchForm({
                       ))}
                     </div>
                   </div>
-                  {/* Mobile gradient fades */}
-                  <div className="absolute left-0 top-0 bottom-2 w-4 bg-gradient-to-r from-white to-transparent pointer-events-none sm:hidden" />
-                  <div className="absolute right-0 top-0 bottom-2 w-4 bg-gradient-to-l from-white to-transparent pointer-events-none sm:hidden" />
+                  {/* Subtle gradient fades that don't cut off content */}
+                  <div className="absolute left-0 top-0 bottom-2 w-3 bg-gradient-to-r from-white/50 to-transparent pointer-events-none sm:hidden" />
+                  <div className="absolute right-0 top-0 bottom-2 w-3 bg-gradient-to-l from-white/50 to-transparent pointer-events-none sm:hidden" />
                 </div>
 
                 {/* Custom Return Date Picker */}

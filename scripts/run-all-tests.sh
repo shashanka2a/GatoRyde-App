@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Comprehensive test runner for GatoRyde platform
+# Comprehensive test runner for Rydify platform
 # Runs all test suites in the correct order with proper error handling
 
 set -e  # Exit on any error
 
-echo "🚀 Starting GatoRyde Test Suite..."
+echo "🚀 Starting Rydify Test Suite..."
 echo "=================================="
 
 # Colors for output

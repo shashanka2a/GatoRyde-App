@@ -1,5 +1,5 @@
 /**
- * Timezone utilities for GatoRyde
+ * Timezone utilities for Rydify
  * 
  * This module provides utilities for handling dates and times consistently
  * across the application. All dates should be stored in UTC and displayed

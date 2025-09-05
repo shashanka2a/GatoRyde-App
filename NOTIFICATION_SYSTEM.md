@@ -1,6 +1,6 @@
 # Notification System Documentation
 
-A comprehensive notification system for GatoRyde that handles booking status changes with email/SMS notifications, retry logic, and proper PII handling.
+A comprehensive notification system for Rydify that handles booking status changes with email/SMS notifications, retry logic, and proper PII handling.
 
 ## Features
 
@@ -33,7 +33,7 @@ UPSTASH_REDIS_REST_TOKEN=your_upstash_redis_token
 
 # Email provider (Resend)
 RESEND_API_KEY=your_resend_api_key
-FROM_EMAIL=noreply@gatoryde.com
+FROM_EMAIL=noreply@rydify.com
 
 # SMS provider (Twilio)
 TWILIO_ACCOUNT_SID=your_twilio_account_sid
@@ -117,7 +117,7 @@ initializeNotifications()
 
 ### Booking Authorized (Rider Email)
 ```
-Subject: GatoRyde: Booking Confirmed - Campus to Airport
+Subject: Rydify: Booking Confirmed - Campus to Airport
 
 Hi John,
 
@@ -134,12 +134,12 @@ Driver: Sarah
 Please save your OTP code - you'll need it when the trip starts.
 
 Safe travels!
-The GatoRyde Team
+The Rydify Team
 ```
 
 ### Trip Completed (Rider Email with Payment Info)
 ```
-Subject: GatoRyde: Trip Completed - Payment Due $25.00
+Subject: Rydify: Trip Completed - Payment Due $25.00
 
 Hi John,
 
@@ -160,12 +160,12 @@ Payment Options:
   Quick pay: https://cash.app/$sarahsmith/25.00
 • Zelle: sarah@example.com
 
-QR Codes available in the GatoRyde app for easy payment.
+QR Codes available in the Rydify app for easy payment.
 
-⚠️ IMPORTANT: GatoRyde does not process payments. All transactions are between you and the driver.
+⚠️ IMPORTANT: Rydify does not process payments. All transactions are between you and the driver.
 
-Thank you for using GatoRyde!
-The GatoRyde Team
+Thank you for using Rydify!
+The Rydify Team
 ```
 
 ## Queue Management

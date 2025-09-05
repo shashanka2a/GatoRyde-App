@@ -15,7 +15,7 @@ export class ResendEmailProvider implements EmailProvider {
 
   constructor() {
     this.apiKey = process.env.RESEND_API_KEY!
-    this.fromEmail = process.env.FROM_EMAIL || 'noreply@gatoryde.com'
+    this.fromEmail = process.env.FROM_EMAIL || 'noreply@rydify.com'
   }
 
   async sendEmail(to: string, subject: string, content: string): Promise<void> {

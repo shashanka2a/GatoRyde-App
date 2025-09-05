@@ -6,14 +6,14 @@ export default function Document() {
       <Head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="GatoRyde - Safe, Shared, Smart rides for students. Connect with fellow students for affordable and eco-friendly rides across campus and beyond." />
+        <meta name="description" content="Rydify - Safe, Shared, Smart rides for students. Connect with fellow students for affordable and eco-friendly rides across campus and beyond." />
         <meta name="keywords" content="rideshare, students, campus, transportation, eco-friendly, affordable" />
-        <meta name="author" content="GatoRyde" />
-        <meta property="og:title" content="GatoRyde - Ride the Gator Way" />
+        <meta name="author" content="Rydify" />
+        <meta property="og:title" content="Rydify - Ride the Smart Way" />
         <meta property="og:description" content="Safe, Shared, Smart rides for students. Connect with fellow students for affordable and eco-friendly rides." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="GatoRyde - Ride the Gator Way" />
+        <meta name="twitter:title" content="Rydify - Ride the Smart Way" />
         <meta name="twitter:description" content="Safe, Shared, Smart rides for students." />
         <link rel="icon" href="/favicon.ico" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

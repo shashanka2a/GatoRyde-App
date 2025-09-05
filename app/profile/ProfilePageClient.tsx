@@ -325,7 +325,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           Driver Payment QR
         </CardTitle>
         <CardDescription>
-          RydeShare doesn't process payments; settle directly with the driver
+          Rydify doesn't process payments; settle directly with the driver
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -403,7 +403,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
         </div>
 
         <div className="text-xs text-gray-600 bg-amber-50 p-3 rounded border border-amber-200">
-          <strong>Note:</strong> RydeShare doesn't process payments. All transactions are handled directly between drivers and riders using the payment methods above.
+          <strong>Note:</strong> Rydify doesn't process payments. All transactions are handled directly between drivers and riders using the payment methods above.
         </div>
       </CardContent>
     </Card>
@@ -538,7 +538,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 <>
                   <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 mb-2">No rides yet</p>
-                  <p className="text-sm text-gray-500 mb-4">Start your RydeShare journey</p>
+                  <p className="text-sm text-gray-500 mb-4">Start your Rydify journey</p>
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <Link href="/rides">
                       <Button size="sm">Find a ride</Button>

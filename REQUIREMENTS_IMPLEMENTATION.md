@@ -1,6 +1,6 @@
 # Requirements Implementation Summary
 
-This document summarizes the implementation of the specified requirements for the GatoRyde application.
+This document summarizes the implementation of the specified requirements for the Rydify application.
 
 ## ✅ Implemented Requirements
 

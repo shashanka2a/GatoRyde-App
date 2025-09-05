@@ -110,7 +110,7 @@ Resolution: ${resolution}
 
 If you have any questions about this resolution, please contact our support team.
 
-The GatoRyde Team`
+The Rydify Team`
 
     // Email to rider
     await NotificationQueue.enqueue({
@@ -118,7 +118,7 @@ The GatoRyde Team`
       channel: 'email',
       recipientId: dispute.booking.rider.id,
       recipientEmail: dispute.booking.rider.email,
-      subject: `GatoRyde: Dispute ${status.charAt(0).toUpperCase() + status.slice(1)} - ${dispute.booking.ride.originText} to ${dispute.booking.ride.destText}`,
+      subject: `Rydify: Dispute ${status.charAt(0).toUpperCase() + status.slice(1)} - ${dispute.booking.ride.originText} to ${dispute.booking.ride.destText}`,
       content: `Hi ${riderName},\n\n${emailContent}`,
       bookingId: dispute.bookingId,
     })
@@ -129,7 +129,7 @@ The GatoRyde Team`
       channel: 'email',
       recipientId: dispute.booking.ride.driver.user.id,
       recipientEmail: dispute.booking.ride.driver.user.email,
-      subject: `GatoRyde: Dispute ${status.charAt(0).toUpperCase() + status.slice(1)} - ${dispute.booking.ride.originText} to ${dispute.booking.ride.destText}`,
+      subject: `Rydify: Dispute ${status.charAt(0).toUpperCase() + status.slice(1)} - ${dispute.booking.ride.originText} to ${dispute.booking.ride.destText}`,
       content: `Hi ${driverName},\n\n${emailContent}`,
       bookingId: dispute.bookingId,
     })

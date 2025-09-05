@@ -53,7 +53,7 @@ export function AppNavigation() {
               <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-2 rounded-lg font-bold text-xl">
                 GR
               </div>
-              <span className="text-2xl text-gray-900 font-bold">RydeShare</span>
+              <span className="text-2xl text-gray-900 font-bold">Rydify</span>
             </Link>
 
             {/* Desktop Navigation */}

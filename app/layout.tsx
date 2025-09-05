@@ -7,28 +7,28 @@ import '../src/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'RydeShare - Student Rideshare App',
+  title: 'Rydify - Student Rideshare App',
   description: 'Safe, verified student ridesharing for university students. Connect with fellow students for affordable rides.',
   keywords: 'rideshare, students, university, carpooling, transportation, app, pwa',
-  authors: [{ name: 'RydeShare Team' }],
+  authors: [{ name: 'Rydify Team' }],
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'GatoRyde',
+    title: 'Rydify',
   },
   formatDetection: {
     telephone: false,
   },
   openGraph: {
     type: 'website',
-    siteName: 'GatoRyde',
-    title: 'GatoRyde - Student Rideshare App',
+    siteName: 'Rydify',
+    title: 'Rydify - Student Rideshare App',
     description: 'Safe, verified student ridesharing for University of Florida',
   },
   twitter: {
     card: 'summary',
-    title: 'GatoRyde - Student Rideshare App',
+    title: 'Rydify - Student Rideshare App',
     description: 'Safe, verified student ridesharing for University of Florida',
   },
 }
@@ -45,7 +45,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0d9488" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="GatoRyde" />
+        <meta name="apple-mobile-web-app-title" content="Rydify" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />

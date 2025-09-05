@@ -1,4 +1,4 @@
-# Rydify (GatoRyde) MVP
+# Rydify MVP
 
 A ride-sharing platform designed specifically for college students, focusing on safety, verification, and community.
 

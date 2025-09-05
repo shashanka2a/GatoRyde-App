@@ -93,7 +93,7 @@ function CreateRideContent() {
                       <Alert className="border-orange-200 bg-orange-50">
                         <AlertTriangle className="w-4 h-4 text-orange-600" />
                         <AlertDescription className="text-orange-800">
-                          <strong>Registration Required:</strong> To offer rides on GatoRyde, you must complete driver registration and verification.
+                          <strong>Registration Required:</strong> To offer rides on Rydify, you must complete driver registration and verification.
                         </AlertDescription>
                       </Alert>
 
