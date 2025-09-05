@@ -51,7 +51,7 @@ export function AppNavigation() {
             {/* Logo - Acts as home button */}
             <Link href="/rides" className="flex items-center gap-2">
               <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-2 rounded-lg font-bold text-xl">
-                GR
+                R
               </div>
               <span className="text-2xl text-gray-900 font-bold">Rydify</span>
             </Link>
