@@ -130,7 +130,7 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
                 <Car className="w-12 h-12 text-yellow-300" />
               </div>
               <p className="text-xl text-teal-100 mb-6 max-w-2xl mx-auto">
-                Connect with verified Gators heading your way
+                Connect with verified students heading your way
               </p>
             </div>
           </div>
@@ -174,7 +174,7 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
               </div>
             </div>
             <p className="text-teal-100 max-w-xl">
-              Connect with verified Gators for safe, affordable campus transportation
+              Connect with verified students for safe, affordable campus transportation
             </p>
           </div>
         </div>
@@ -375,7 +375,7 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
                           No requests yet
                         </h3>
                         <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                          Be the first to help fellow Gators! Offer a ride and start earning.
+                          Be the first to help fellow students! Offer a ride and start earning.
                         </p>
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                           <Link href="/rides/create">

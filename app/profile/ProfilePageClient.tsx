@@ -325,7 +325,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           Driver Payment QR
         </CardTitle>
         <CardDescription>
-          GatoRyde doesn't process payments; settle directly with the driver
+          RydeShare doesn't process payments; settle directly with the driver
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -403,7 +403,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
         </div>
 
         <div className="text-xs text-gray-600 bg-amber-50 p-3 rounded border border-amber-200">
-          <strong>Note:</strong> GatoRyde doesn't process payments. All transactions are handled directly between drivers and riders using the payment methods above.
+          <strong>Note:</strong> RydeShare doesn't process payments. All transactions are handled directly between drivers and riders using the payment methods above.
         </div>
       </CardContent>
     </Card>
@@ -538,7 +538,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 <>
                   <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                   <p className="text-gray-600 mb-2">No rides yet</p>
-                  <p className="text-sm text-gray-500 mb-4">Start your GatoRyde journey</p>
+                  <p className="text-sm text-gray-500 mb-4">Start your RydeShare journey</p>
                   <div className="flex flex-col sm:flex-row gap-2 justify-center">
                     <Link href="/rides">
                       <Button size="sm">Find a ride</Button>
@@ -578,17 +578,24 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header with Content */}
+      {/* Enhanced Header to match other pages */}
       <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
-        <div className="container mx-auto py-12 px-4">
-          <div className="max-w-6xl mx-auto text-center">
-            <h1 className="text-3xl lg:text-4xl font-bold mb-4">
-              Profile
-            </h1>
-            <p className="text-xl text-teal-100 mb-6 max-w-2xl mx-auto">
+        <div className="container mx-auto py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <User className="w-8 h-8 text-yellow-300" />
+                <h1 className="text-2xl lg:text-3xl font-bold">Profile</h1>
+              </div>
+              <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-3 py-1 rounded-full">
+                <Shield className="h-4 w-4" />
+                <span>Verified Students Only</span>
+              </div>
+            </div>
+            <p className="text-teal-100 max-w-xl mb-6">
               Manage your account, verification, and ride history
             </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <div className="flex flex-wrap gap-4 text-sm">
               <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
                 <Shield className="h-4 w-4" />
                 <span>Verification Status</span>

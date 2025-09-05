@@ -144,7 +144,7 @@ function DriverOnboardingContent() {
                             <div className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
                             <div>
                               <p className="font-medium text-blue-900">Create Your First Ride</p>
-                              <p className="text-sm text-blue-700">Start earning by offering rides to fellow Gators</p>
+                              <p className="text-sm text-blue-700">Start earning by offering rides to fellow students</p>
                             </div>
                           </div>
                           <div className="flex items-start gap-3 p-3 bg-purple-50 rounded-lg">

@@ -172,7 +172,7 @@ export function RidePageClient({ userEduVerified }: RidePageClientProps) {
           >
             <h1 className="text-4xl font-bold mb-4">Find Your Perfect Ride</h1>
             <p className="text-xl text-teal-100">
-              Connect with verified Gators heading your way
+              Connect with verified students heading your way
             </p>
           </motion.div>
 

@@ -93,7 +93,7 @@ export function OTPForm({ onSuccess, referral }: OTPFormProps) {
     return (
       <Card className="w-full max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Sign in to GatoRyde</CardTitle>
+          <CardTitle>Sign in to RydeShare</CardTitle>
           <CardDescription>
             Enter your email or phone number to get started
           </CardDescription>

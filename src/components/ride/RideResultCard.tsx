@@ -140,8 +140,8 @@ export function RideResultCard({ ride, userEduVerified, onContact }: RideResultC
     const rideInfo = `${ride.originText} to ${ride.destText} on ${ride.departAt.toLocaleDateString()}`
     
     return {
-      sms: `sms:${ride.driver.user.phone}?body=Hi ${driverName}! I'm interested in your ride: ${rideInfo}. I found you on Rydify.`,
-      email: `mailto:${ride.driver.user.email}?subject=Ride Request via Rydify&body=Hi ${driverName},%0A%0AI'm interested in your ride: ${rideInfo}.%0A%0APlease let me know if you have space available.%0A%0AThanks!`
+      sms: `sms:${ride.driver.user.phone}?body=Hi ${driverName}! I'm interested in your ride: ${rideInfo}. I found you on RydeShare.`,
+      email: `mailto:${ride.driver.user.email}?subject=Ride Request via RydeShare&body=Hi ${driverName},%0A%0AI'm interested in your ride: ${rideInfo}.%0A%0APlease let me know if you have space available.%0A%0AThanks!`
     }
   }
 

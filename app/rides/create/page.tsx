@@ -324,7 +324,7 @@ function CreateRideContent() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  Share your journey and earn money while helping fellow Gators get around campus and beyond.
+                  Share your journey and earn money while helping fellow students get around campus and beyond.
                 </motion.p>
                 
                 <motion.div 

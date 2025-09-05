@@ -7,10 +7,10 @@ import '../src/styles/globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'GatoRyde - Student Rideshare App',
-  description: 'Safe, verified student ridesharing for University of Florida. Connect with fellow Gators for affordable rides.',
-  keywords: 'rideshare, students, university, florida, gators, carpooling, transportation, app, pwa',
-  authors: [{ name: 'GatoRyde Team' }],
+  title: 'RydeShare - Student Rideshare App',
+  description: 'Safe, verified student ridesharing for university students. Connect with fellow students for affordable rides.',
+  keywords: 'rideshare, students, university, carpooling, transportation, app, pwa',
+  authors: [{ name: 'RydeShare Team' }],
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

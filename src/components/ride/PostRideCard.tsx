@@ -138,7 +138,7 @@ export function PostRideCard({ searchParams }: PostRideCardProps) {
                   <div className="bg-blue-100 p-2 rounded-full">
                     <Users className="w-4 h-4 text-blue-600" />
                   </div>
-                  <span className="text-gray-600">Find Fellow Gators</span>
+                  <span className="text-gray-600">Find Fellow Students</span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
                   <div className="bg-purple-100 p-2 rounded-full">

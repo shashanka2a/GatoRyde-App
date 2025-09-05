@@ -328,7 +328,7 @@ export function CreateRideForm({ showSkippedNotice = false }: CreateRideFormProp
             Offer your ride to fellow students
           </CardTitle>
           <CardDescription className="text-teal-100">
-            Fill in the details below to help fellow Gators while earning some extra cash
+            Fill in the details below to help fellow students while earning some extra cash
           </CardDescription>
         </CardHeader>
         <CardContent className="p-6 space-y-6">

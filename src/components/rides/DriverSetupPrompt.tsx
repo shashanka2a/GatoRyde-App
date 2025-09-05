@@ -32,7 +32,7 @@ export function DriverSetupPrompt({ onStartSetup, userEduVerified }: DriverSetup
     {
       icon: DollarSign,
       title: "Earn Extra Cash",
-      description: "Make money while helping fellow Gators get around campus",
+      description: "Make money while helping fellow students get around campus",
       highlight: "Up to $50+ per trip",
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
@@ -147,7 +147,7 @@ export function DriverSetupPrompt({ onStartSetup, userEduVerified }: DriverSetup
           >
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Why Drive with GatoRyde?
+                Why Drive with RydeShare?
               </h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 More than just ridesharing - it's about building community while earning money

@@ -3,8 +3,8 @@ import { Suspense } from 'react'
 
 // Add metadata for better SEO and performance
 export const metadata = {
-  title: 'Find Rides - GatorRide',
-  description: 'Find safe, verified rides with fellow University of Florida students',
+  title: 'Find Rides - RydeShare',
+  description: 'Find safe, verified rides with fellow university students',
 }
 
 // Enable static generation for better performance

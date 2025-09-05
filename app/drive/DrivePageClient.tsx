@@ -100,7 +100,7 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
                       <Alert className="border-orange-200 bg-orange-50">
                         <AlertTriangle className="w-4 h-4 text-orange-600" />
                         <AlertDescription className="text-orange-800">
-                          <strong>Registration Required:</strong> To offer rides on Rydify, you must complete driver registration and verification.
+                          <strong>Registration Required:</strong> To offer rides on RydeShare, you must complete driver registration and verification.
                         </AlertDescription>
                       </Alert>
 
@@ -173,28 +173,35 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
-      {/* Header with Content */}
+      {/* Enhanced Header to match Find Ride style */}
       <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
-        <div className="container mx-auto py-12 px-4">
-          <div className="max-w-6xl mx-auto text-center">
-            <motion.h1
-              className="text-3xl lg:text-4xl font-bold mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              Drive
-            </motion.h1>
+        <div className="container mx-auto py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-4">
+              <motion.div 
+                className="flex items-center gap-3"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <Car className="w-8 h-8 text-yellow-300" />
+                <h1 className="text-2xl lg:text-3xl font-bold">Become a Driver</h1>
+              </motion.div>
+              <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-3 py-1 rounded-full">
+                <Shield className="h-4 w-4" />
+                <span>Verified Students Only</span>
+              </div>
+            </div>
             <motion.p
-              className="text-xl text-teal-100 mb-6 max-w-2xl mx-auto"
+              className="text-teal-100 max-w-xl mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              Offer rides to fellow students and earn money
+              Join thousands of students earning money while helping their community get around campus and beyond
             </motion.p>
             <motion.div
-              className="flex flex-wrap justify-center gap-4 text-sm"
+              className="flex flex-wrap gap-4 text-sm"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -209,7 +216,7 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
               </div>
               <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
                 <MapPin className="h-4 w-4" />
-                <span>Local & Inter-city</span>
+                <span>Campus & Inter-city Routes</span>
               </div>
             </motion.div>
           </div>
