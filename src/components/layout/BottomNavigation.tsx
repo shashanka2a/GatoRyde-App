@@ -15,17 +15,22 @@ export function BottomNavigation() {
   const pathname = usePathname()
 
   const navigationItems = [
-    { href: '/rides', label: 'Find Ride', icon: Search },
+    { href: '/browse-rides', label: 'Browse', icon: Search },
     { href: '/rides/create', label: 'Drive', icon: Car },
     { href: '/profile', label: 'Profile', icon: User },
   ]
 
-  const isActive = (href: string) => {
-    if (href === '/rides') {
-      return pathname === '/rides' || pathname === '/' || (pathname.startsWith('/rides') && !pathname.startsWith('/rides/create'))
+  const isActive = (href: string, label: string) => {
+    if (href === '/browse-rides') {
+      return pathname === '/browse-rides' || pathname === '/' || pathname === '/rides'
     }
-    if (href === '/rides/create') {
-      return pathname === '/rides/create' || pathname.startsWith('/rides/create')
+    if (label === 'Drive') {
+      // Check for both possible drive paths
+      return pathname === '/rides/create' || 
+             pathname.startsWith('/rides/create') || 
+             pathname === '/driver/onboarding' || 
+             pathname.startsWith('/driver/onboarding') ||
+             pathname.startsWith('/drive')
     }
     if (href === '/profile') {
       return pathname === '/profile' || pathname.startsWith('/profile')
@@ -38,7 +43,7 @@ export function BottomNavigation() {
       <div className="grid grid-cols-3 h-16">
         {navigationItems.map((item) => {
           const Icon = item.icon
-          const active = isActive(item.href)
+          const active = isActive(item.href, item.label)
           
           return (
             <Link

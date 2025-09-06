@@ -13,8 +13,5 @@ const RidePageClient = dynamic(() => import('./RidePageClient').then(mod => ({ d
 })
 
 export default function RidePage() {
-  // Simplified for MVP - assume user is verified
-  const userEduVerified = true
-
-  return <RidePageClient userEduVerified={userEduVerified} />
+  return <RidePageClient />
 }

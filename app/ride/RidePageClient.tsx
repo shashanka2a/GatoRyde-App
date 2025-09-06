@@ -13,9 +13,12 @@ import { Search, ArrowUpDown, Calendar, Plus, Car, Users, Clock } from 'lucide-r
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { useAuth } from '@/src/hooks/useAuth'
+import { getDefaultUniversityScope, getAvailableScopeOptions } from '@/lib/rides/university-filter'
+import type { UniversityScope } from '@/lib/rides/types'
 
 interface RidePageClientProps {
-  userEduVerified: boolean
+  // No props needed - we'll get user data from the auth hook
 }
 
 interface RideResult {
@@ -58,9 +61,11 @@ interface SearchFilters {
   returnDate?: string
   passengers: number
   isRoundTrip: boolean
+  universityScope: UniversityScope
 }
 
-export function RidePageClient({ userEduVerified }: RidePageClientProps) {
+export function RidePageClient({}: RidePageClientProps) {
+  const { user, isLoading: authLoading, isAuthenticated } = useAuth()
   const [rides, setRides] = useState<RideResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [hasSearched, setHasSearched] = useState(false)
@@ -73,7 +78,8 @@ export function RidePageClient({ userEduVerified }: RidePageClientProps) {
     departureDate: '',
     returnDate: '',
     passengers: 1,
-    isRoundTrip: false
+    isRoundTrip: false,
+    universityScope: 'all' // Default until user data loads
   })
 
   // Date chips for quick selection
@@ -92,11 +98,19 @@ export function RidePageClient({ userEduVerified }: RidePageClientProps) {
     return chips
   }
 
-  // Initialize with today's date
+  // Initialize with today's date and university scope
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0]
     setFilters(prev => ({ ...prev, departureDate: today }))
   }, [])
+
+  // Update university scope when user data loads
+  useEffect(() => {
+    if (user?.email) {
+      const defaultScope = getDefaultUniversityScope(user.email)
+      setFilters(prev => ({ ...prev, universityScope: defaultScope }))
+    }
+  }, [user?.email])
 
   const handleLocationSwap = () => {
     setFilters(prev => ({
@@ -159,6 +173,20 @@ export function RidePageClient({ userEduVerified }: RidePageClientProps) {
       </div>
     </motion.div>
   )
+
+  // Show loading state while auth is loading
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
@@ -291,6 +319,36 @@ export function RidePageClient({ userEduVerified }: RidePageClientProps) {
                 )}
               </div>
 
+              {/* University Scope */}
+              {user?.email && (
+                <div className="mb-6">
+                  <Label className="text-sm font-medium mb-3 block">University Filter</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {getAvailableScopeOptions(user.email).map((option) => (
+                      <Button
+                        key={option.value}
+                        variant={filters.universityScope === option.value ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => 
+                          setFilters(prev => ({ ...prev, universityScope: option.value }))
+                        }
+                        className={cn(
+                          "transition-all duration-200",
+                          filters.universityScope === option.value 
+                            ? "bg-teal-600 hover:bg-teal-700" 
+                            : "hover:bg-teal-50 hover:border-teal-300"
+                        )}
+                      >
+                        <div className="text-left">
+                          <div className="font-medium">{option.label}</div>
+                          <div className="text-xs opacity-75">{option.description}</div>
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Passengers */}
               <div className="flex items-center justify-between mb-6">
                 <Label className="text-sm font-medium flex items-center gap-2">
@@ -391,7 +449,7 @@ export function RidePageClient({ userEduVerified }: RidePageClientProps) {
                 </Button>
               </div>
               {rides.map((ride) => (
-                <RideResultCard key={ride.id} ride={ride} userEduVerified={userEduVerified} />
+                <RideResultCard key={ride.id} ride={ride} userEduVerified={user?.eduVerified || false} />
               ))}
             </motion.div>
           ) : null}

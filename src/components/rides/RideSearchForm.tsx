@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { lazy, Suspense, useState as useLocationState } from 'react'
-import { SimpleLocationInput } from './SimpleLocationInput'
+
 import { Button } from '@/src/components/ui/button'
 import { Input } from '@/src/components/ui/input'
 import { Label } from '@/src/components/ui/label'
@@ -50,9 +50,8 @@ export function RideSearchForm({
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [isRoundTrip, setIsRoundTrip] = useState(false)
-  const [useSimpleInputs, setUseSimpleInputs] = useState(true)
-  const [simpleOrigin, setSimpleOrigin] = useState('')
-  const [simpleDestination, setSimpleDestination] = useState('')
+
+
 
   // Set default departure time (now)
   useEffect(() => {
@@ -110,26 +109,7 @@ export function RideSearchForm({
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     
-    // If using simple inputs, convert text to basic location format
     const searchFilters = { ...filters }
-    if (useSimpleInputs) {
-      if (simpleOrigin.trim()) {
-        searchFilters.origin = {
-          text: simpleOrigin.trim(),
-          placeName: simpleOrigin.trim(),
-          lat: 0, // Will be handled by backend
-          lng: 0
-        }
-      }
-      if (simpleDestination.trim()) {
-        searchFilters.destination = {
-          text: simpleDestination.trim(),
-          placeName: simpleDestination.trim(),
-          lat: 0, // Will be handled by backend
-          lng: 0
-        }
-      }
-    }
     
     onSearch(searchFilters)
   }
@@ -249,12 +229,7 @@ export function RideSearchForm({
             ) : (
               <>
                 <Suspense fallback={
-                  <SimpleLocationInput
-                    label="From"
-                    placeholder="Pickup location (optional)"
-                    value={simpleOrigin}
-                    onChange={setSimpleOrigin}
-                  />
+                  <div className="animate-pulse bg-gray-200 h-10 rounded"></div>
                 }>
                   <LocationAutocomplete
                     label="From"
@@ -270,12 +245,7 @@ export function RideSearchForm({
                 </Suspense>
 
                 <Suspense fallback={
-                  <SimpleLocationInput
-                    label="To"
-                    placeholder="Destination (optional)"
-                    value={simpleDestination}
-                    onChange={setSimpleDestination}
-                  />
+                  <div className="animate-pulse bg-gray-200 h-10 rounded"></div>
                 }>
                   <LocationAutocomplete
                     label="To"
@@ -292,19 +262,7 @@ export function RideSearchForm({
               </>
             )}
             
-            {useSimpleInputs && (
-              <div className="col-span-full">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setUseSimpleInputs(false)}
-                  className="text-xs"
-                >
-                  Enable location search
-                </Button>
-              </div>
-            )}
+
           </div>
           </div>
 

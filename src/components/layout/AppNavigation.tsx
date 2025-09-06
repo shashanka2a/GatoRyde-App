@@ -26,17 +26,26 @@ export function AppNavigation() {
   }
 
   const navigationItems = [
-    { href: '/rides', label: 'Find Ride', icon: Search },
+    { href: '/browse-rides', label: 'Browse Rides', icon: Search },
+    { href: '/ride', label: 'Search', icon: Search },
     { href: getDriveHref(), label: 'Drive', icon: Car },
     { href: '/profile', label: 'Profile', icon: User },
   ]
 
-  const isActive = (href: string) => {
-    if (href === '/rides') {
-      return pathname === '/rides' || pathname === '/' || (pathname.startsWith('/rides') && !pathname.startsWith('/rides/create'))
+  const isActive = (href: string, label: string) => {
+    if (href === '/browse-rides') {
+      return pathname === '/browse-rides' || pathname === '/'
     }
-    if (href === '/rides/create' || href === '/driver/onboarding') {
-      return pathname === '/rides/create' || pathname.startsWith('/rides/create') || pathname === '/driver/onboarding' || pathname.startsWith('/driver/onboarding')
+    if (href === '/ride') {
+      return pathname === '/ride' || pathname === '/rides'
+    }
+    if (label === 'Drive') {
+      // Check for both possible drive paths
+      return pathname === '/rides/create' || 
+             pathname.startsWith('/rides/create') || 
+             pathname === '/driver/onboarding' || 
+             pathname.startsWith('/driver/onboarding') ||
+             pathname.startsWith('/drive')
     }
     if (href === '/profile') {
       return pathname === '/profile' || pathname.startsWith('/profile')
@@ -49,7 +58,7 @@ export function AppNavigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Acts as home button */}
-            <Link href="/rides" className="flex items-center gap-3">
+            <Link href="/" className="flex items-center gap-3">
               <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center">
                 R
               </div>
@@ -60,7 +69,7 @@ export function AppNavigation() {
             <div className="hidden md:flex items-center space-x-1">
               {navigationItems.map((item) => {
                 const Icon = item.icon
-                const active = isActive(item.href)
+                const active = isActive(item.href, item.label)
                 
                 return (
                   <Link
