@@ -219,42 +219,44 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
 
     return (
       <TooltipProvider>
-        <Card className="bg-white shadow-lg border-0 relative overflow-hidden">
+        <Card className="bg-white shadow-lg border-0 relative overflow-hidden h-full">
           {progress === 100 && (
             <div className="absolute top-0 right-0 bg-gradient-to-l from-green-500 to-transparent w-32 h-1"></div>
           )}
           
           <CardHeader className="border-b border-gray-100 pb-4">
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-xl font-bold text-gray-900">
-                <div className="bg-teal-100 p-2 rounded-lg">
-                  <Shield className="w-5 h-5 text-teal-600" />
-                </div>
-                Verification Status
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p>Complete all steps to unlock full platform features including driving and enhanced safety features.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </CardTitle>
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                  <div className="bg-teal-100 p-2 rounded-lg flex-shrink-0">
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
+                  </div>
+                  <span className="truncate">Verification Status</span>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help flex-shrink-0" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p>Complete all steps to unlock full platform features including driving and enhanced safety features.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </CardTitle>
+                <CardDescription className="text-gray-600 text-sm">
+                  3-step verification process • Review time: 24-48 hours
+                </CardDescription>
+              </div>
               {progress === 100 && (
-                <Badge className="bg-green-100 text-green-800 border-green-200">
+                <Badge className="bg-green-100 text-green-800 border-green-200 flex-shrink-0">
                   <CheckCircle className="w-3 h-3 mr-1" />
                   Fully Verified
                 </Badge>
               )}
             </div>
-            <CardDescription className="text-gray-600">
-              3-step verification process • Review time: 24-48 hours
-            </CardDescription>
           </CardHeader>
           
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 flex-1">
             {/* Stepper UI replacing progress bar */}
-            <div className="flex items-center justify-between relative">
+            <div className="flex items-center justify-between relative px-2">
               {/* Progress line */}
               <div className="absolute top-4 left-8 right-8 h-0.5 bg-gray-200">
                 <div 
@@ -306,12 +308,12 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
             {nextStepIndex !== -1 && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                 <div className="flex items-start gap-3">
-                  <div className="bg-blue-100 p-2 rounded-lg">
+                  <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
                     {React.createElement(verificationSteps[nextStepIndex].icon, {
                       className: "w-5 h-5 text-blue-600"
                     })}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-blue-900 mb-1">
                       Next: {verificationSteps[nextStepIndex].label} Verification
                     </h4>
@@ -328,29 +330,31 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
             )}
 
             {/* Action Buttons */}
-            {progress < 100 ? (
-              <div className="space-y-3">
-                <Link href="/dashboard/kyc" className="w-full">
-                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white sticky bottom-4 shadow-lg" size="lg">
-                    {nextStepIndex !== -1 ? (
-                      <>
-                        Continue Verification
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </>
-                    ) : (
-                      'Complete Verification'
-                    )}
-                  </Button>
-                </Link>
-              </div>
-            ) : (
-              <Alert className="bg-green-50 border-green-200">
-                <CheckCircle className="h-4 w-4 text-green-600" />
-                <AlertDescription className="text-green-800">
-                  <strong>Congratulations!</strong> Your account is fully verified. You can now offer rides and access all platform features.
-                </AlertDescription>
-              </Alert>
-            )}
+            <div className="mt-auto">
+              {progress < 100 ? (
+                <div className="space-y-3">
+                  <Link href="/dashboard/kyc" className="w-full">
+                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg" size="lg">
+                      {nextStepIndex !== -1 ? (
+                        <>
+                          Continue Verification
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </>
+                      ) : (
+                        'Complete Verification'
+                      )}
+                    </Button>
+                  </Link>
+                </div>
+              ) : (
+                <Alert className="bg-green-50 border-green-200">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <AlertDescription className="text-green-800">
+                    <strong>Congratulations!</strong> Your account is fully verified. You can now offer rides and access all platform features.
+                  </AlertDescription>
+                </Alert>
+              )}
+            </div>
           </CardContent>
         </Card>
       </TooltipProvider>
@@ -363,29 +367,29 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     
     return (
       <TooltipProvider>
-        <Card className="bg-white shadow-lg border-0">
+        <Card className="bg-white shadow-lg border-0 h-full">
           <CardHeader className="border-b border-gray-100 pb-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="flex items-center gap-2 text-xl font-bold text-gray-900">
-                  <div className="bg-teal-100 p-2 rounded-lg">
-                    <QrCode className="w-5 h-5 text-teal-600" />
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                  <div className="bg-teal-100 p-2 rounded-lg flex-shrink-0">
+                    <QrCode className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                   </div>
-                  Payment Settings
+                  <span className="truncate">Payment Settings</span>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help flex-shrink-0" />
                     </TooltipTrigger>
                     <TooltipContent className="max-w-xs">
                       <p>Riders can scan this to pay you instantly. Set up your payment methods for quick transfers.</p>
                     </TooltipContent>
                   </Tooltip>
                 </CardTitle>
-                <CardDescription className="text-gray-600">
+                <CardDescription className="text-gray-600 text-sm">
                   Rydify doesn't process payments; riders pay you directly
                 </CardDescription>
               </div>
-              <Button variant="outline" size="sm" className="border-teal-200 text-teal-600 hover:bg-teal-50">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-600 hover:bg-teal-50 flex-shrink-0">
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Button>
@@ -394,19 +398,19 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           
           <CardContent className="space-y-6">
             {/* Enhanced QR Code Section */}
-            <div className="text-center p-6 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl border border-teal-200 relative overflow-hidden">
+            <div className="text-center p-4 sm:p-6 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl border border-teal-200 relative overflow-hidden">
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div 
                     className={cn(
-                      "bg-white p-6 rounded-xl inline-block shadow-sm border-2 border-white cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105",
+                      "bg-white p-4 sm:p-6 rounded-xl inline-block shadow-sm border-2 border-white cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105",
                       qrEnlarged && "scale-150 z-50"
                     )}
                     onMouseEnter={() => setQrHovered(true)}
                     onMouseLeave={() => setQrHovered(false)}
                     onClick={() => setQrEnlarged(!qrEnlarged)}
                   >
-                    <QrCode className="w-28 h-28 text-teal-600 mx-auto" />
+                    <QrCode className="w-20 h-20 sm:w-28 sm:h-28 text-teal-600 mx-auto" />
                     {qrHovered && (
                       <div className="absolute inset-0 bg-black/10 rounded-xl flex items-center justify-center">
                         <span className="text-xs text-teal-700 font-medium bg-white/90 px-2 py-1 rounded">
@@ -425,7 +429,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 <p className="text-sm font-semibold text-teal-900">Your Payment QR Code</p>
                 <p className="text-xs text-teal-700">Riders scan this to access your payment info</p>
                 
-                <div className="flex items-center justify-center gap-4 mt-3 text-xs text-teal-600">
+                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-3 text-xs text-teal-600">
                   <div className="flex items-center gap-1">
                     <Smartphone className="w-3 h-3" />
                     <span>Contactless</span>
@@ -624,23 +628,23 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   }
 
   const ContactCard = () => (
-    <Card className="bg-white shadow-md border border-gray-200">
+    <Card className="bg-white shadow-lg border-0 h-full">
       <CardHeader className="border-b border-gray-100 pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
           <div className="bg-gray-100 p-2 rounded-lg">
-            <User className="w-4 h-4 text-gray-600" />
+            <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
           </div>
           Contact Information
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 flex-1">
         <div className="space-y-3">
           <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div className="bg-blue-100 p-2 rounded-lg">
+            <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
               <Mail className="w-4 h-4 text-blue-600" />
             </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">{userData.email}</p>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{userData.email}</p>
               <p className="text-xs text-gray-500 flex items-center gap-1">
                 📧 Email
               </p>
@@ -648,10 +652,10 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </div>
 
           <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div className="bg-green-100 p-2 rounded-lg">
+            <div className="bg-green-100 p-2 rounded-lg flex-shrink-0">
               <Phone className="w-4 h-4 text-green-600" />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p className="text-sm font-medium">{userData.phone}</p>
               <p className="text-xs text-gray-500 flex items-center gap-1">
                 📱 Phone
@@ -660,10 +664,12 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </div>
         </div>
 
-        <Button variant="outline" className="w-full hover:bg-gray-50 transition-colors">
-          <Edit className="w-4 h-4 mr-2" />
-          Update Contact Info
-        </Button>
+        <div className="mt-auto pt-4">
+          <Button variant="outline" className="w-full hover:bg-gray-50 transition-colors">
+            <Edit className="w-4 h-4 mr-2" />
+            Update Contact Info
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )
@@ -673,16 +679,16 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     const pastRides = rideHistory.filter(ride => ride.date <= new Date())
     
     return (
-      <Card className="bg-white shadow-md border border-gray-200">
+      <Card className="bg-white shadow-lg border-0">
         <CardHeader className="border-b border-gray-100 pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
               <div className="bg-gray-100 p-2 rounded-lg">
-                <History className="w-4 h-4 text-gray-600" />
+                <History className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
               </div>
               Ride History
             </CardTitle>
-            <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 hover:bg-gray-50">
+            <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 hover:bg-gray-50 flex-shrink-0">
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </Button>
@@ -861,15 +867,15 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-          {/* Enhanced User Info Card - Only Teal Container */}
-          <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl">
-            <CardContent className="p-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-6 sm:space-y-0 sm:space-x-8">
-                <div className="relative">
-                  <Avatar className="w-24 h-24 border-4 border-white/30 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+          {/* Enhanced User Info Card - Hero Section */}
+          <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl mb-8">
+            <CardContent className="p-6 sm:p-8">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+                <div className="relative flex-shrink-0">
+                  <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white/30 shadow-lg">
                     <AvatarImage src="/placeholder-avatar.jpg" alt={`${userData.name}'s profile picture`} />
-                    <AvatarFallback className="bg-white/20 text-white text-2xl font-bold">
+                    <AvatarFallback className="bg-white/20 text-white text-xl sm:text-2xl font-bold">
                       {userData.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
@@ -880,10 +886,10 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   )}
                 </div>
                 
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 w-full lg:w-auto">
                   <div className="mb-4">
-                    <h1 className="text-3xl font-bold mb-2">Welcome back, {userData.name.split(' ')[0]}!</h1>
-                    <p className="text-teal-100 text-lg">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-2">Welcome back, {userData.name.split(' ')[0]}!</h1>
+                    <p className="text-teal-100 text-base sm:text-lg">
                       Member since {userData.joinedAt.getFullYear()} • 
                       <span className="ml-2 inline-flex items-center gap-1">
                         <Users className="w-4 h-4" />
@@ -892,8 +898,8 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                     </p>
                   </div>
                   
-                  <div className="flex flex-wrap items-center gap-4 mb-6">
-                    <div className="flex items-center space-x-1 bg-white/20 px-4 py-2 rounded-full">
+                  <div className="flex flex-wrap items-center gap-3 mb-6">
+                    <div className="flex items-center space-x-1 bg-white/20 px-3 py-2 rounded-full">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       <span className="font-semibold">{userData.ratingAvg.toFixed(1)}</span>
                       <span className="text-teal-100 text-sm">({userData.ratingCount})</span>
@@ -915,22 +921,22 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </div>
 
                   {/* Stats Row */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-white">{stats.totalRides}</div>
+                      <div className="text-xl sm:text-2xl font-bold text-white">{stats.totalRides}</div>
                       <div className="text-xs text-teal-100">Total Rides</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-green-300">${stats.totalEarned.toFixed(0)}</div>
+                      <div className="text-xl sm:text-2xl font-bold text-green-300">${stats.totalEarned.toFixed(0)}</div>
                       <div className="text-xs text-teal-100">Earned</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-300">${stats.totalSpent.toFixed(0)}</div>
+                      <div className="text-xl sm:text-2xl font-bold text-blue-300">${stats.totalSpent.toFixed(0)}</div>
                       <div className="text-xs text-teal-100">Spent</div>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <span className="text-2xl font-bold text-yellow-300">{stats.avgRating.toFixed(1)}</span>
+                        <span className="text-xl sm:text-2xl font-bold text-yellow-300">{stats.avgRating.toFixed(1)}</span>
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       </div>
                       <div className="text-xs text-teal-100">Rating</div>
@@ -938,7 +944,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
@@ -968,26 +974,28 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
             </CardContent>
           </Card>
 
-          {/* Primary Sections Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Verification Status - Primary */}
-            <VerificationCard />
-            
-            {/* Payment Settings - Primary */}
-            <PaymentCard />
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+            {/* Left Column - Primary Actions */}
+            <div className="space-y-6 lg:space-y-8">
+              {/* Verification Status - Primary */}
+              <VerificationCard />
+              
+              {/* Contact Information - Secondary */}
+              <ContactCard />
+            </div>
+
+            {/* Right Column - Payment & Settings */}
+            <div className="space-y-6 lg:space-y-8">
+              {/* Payment Settings - Primary */}
+              <PaymentCard />
+            </div>
           </div>
 
-          {/* Secondary Sections Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Contact Information - Secondary */}
-            <ContactCard />
-            
-            {/* Placeholder for future secondary section */}
-            <div></div>
+          {/* Full Width Ride History - Bottom Section */}
+          <div className="mt-8">
+            <RideHistoryCard />
           </div>
-
-          {/* Full Width Ride History - Secondary */}
-          <RideHistoryCard />
         </div>
 
         {/* Toast Notification */}

@@ -21,8 +21,6 @@ import {
   List,
   Plus,
   AlertTriangle,
-  Users,
-  MapPin,
   Shield,
   Car,
   MessageSquare
@@ -133,17 +131,16 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
   // Show simple loading state for initial render
   if (isInitialLoad) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
+      <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
-          <div className="container mx-auto py-12 px-4">
-            <div className="max-w-6xl mx-auto text-center">
-              <div className="flex items-center justify-center gap-4 mb-6">
-                <Search className="w-12 h-12 text-yellow-300" />
-                <h1 className="text-3xl lg:text-4xl font-bold">Find Ride</h1>
-                <Car className="w-12 h-12 text-yellow-300" />
+        <div className="bg-white border-b border-gray-200">
+          <div className="container mx-auto py-8 px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center gap-4 mb-4">
+                <Search className="w-8 h-8 text-gray-600" />
+                <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Find Rides</h1>
               </div>
-              <p className="text-xl text-teal-100 mb-6 max-w-2xl mx-auto">
+              <p className="text-lg text-gray-600 max-w-2xl">
                 Connect with verified students heading your way
               </p>
             </div>
@@ -155,12 +152,12 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <div className="lg:col-span-1">
-                <div className="h-96 bg-white rounded-lg shadow-xl animate-pulse" />
+                <div className="h-96 bg-white rounded-lg shadow-sm animate-pulse" />
               </div>
               <div className="lg:col-span-2">
                 <div className="space-y-6">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="h-32 bg-white rounded-lg shadow-xl animate-pulse" />
+                    <div key={i} className="h-32 bg-white rounded-lg shadow-sm animate-pulse" />
                   ))}
                 </div>
               </div>
@@ -172,48 +169,48 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
+      <div className="bg-white border-b border-gray-200">
         <div className="container mx-auto py-8 px-4">
           <div className="max-w-6xl mx-auto">
             {/* Breadcrumb Navigation */}
-            <nav className="flex items-center gap-2 text-sm text-teal-100 mb-4">
-              <Link href="/" className="hover:text-white transition-colors">
+            <nav className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+              <Link href="/" className="hover:text-gray-700 transition-colors">
                 Home
               </Link>
-              <Search className="w-4 h-4" />
-              <span className="text-white font-medium">Find Rides</span>
+              <span>/</span>
+              <span className="text-gray-900 font-medium">Find Rides</span>
             </nav>
-            
+
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="bg-white/20 p-2 rounded-xl">
-                  <Car className="w-8 h-8 text-yellow-300" />
+                <div className="bg-gray-100 p-2 rounded-lg">
+                  <Car className="w-8 h-8 text-gray-600" />
                 </div>
                 <div>
-                  <h1 className="text-2xl lg:text-3xl font-bold">Find Rides</h1>
-                  <p className="text-teal-100 text-lg">Connect with verified students</p>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">Find Rides</h1>
+                  <p className="text-gray-600 text-lg">Connect with verified students</p>
                 </div>
               </div>
-              <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full border border-white/30">
+              <div className="hidden md:flex items-center gap-2 text-sm bg-green-50 text-green-700 px-4 py-2 rounded-full border border-green-200">
                 <Shield className="h-4 w-4" />
                 <span>Verified Students Only</span>
               </div>
             </div>
-            
-            <p className="text-teal-100 max-w-xl mb-6">
+
+            <p className="text-gray-600 max-w-xl mb-6">
               Safe, affordable campus transportation with fellow students. Search for rides or offer your own.
             </p>
-            
+
             {/* Navigation Pills */}
             <div className="flex flex-wrap gap-3 text-sm">
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+              <div className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-full">
                 <Search className="h-4 w-4" />
                 <span>Search Rides</span>
               </div>
-              
-              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+
+              <div className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-full">
                 <Car className="h-4 w-4" />
                 <span>Offer Rides</span>
               </div>
@@ -250,7 +247,7 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
 
           {/* Mobile-First Search Form */}
           <div className="mb-8">
-            <Card className="shadow-lg border-0 bg-white">
+            <Card className="shadow-sm border border-gray-200 bg-white">
               <CardContent className="p-4 md:p-6">
                 <RideSearchForm
                   onSearch={handleSearch}
@@ -267,17 +264,17 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
           <div>
             <Tabs defaultValue="list" className="w-full">
               <div className="flex items-center justify-between mb-6">
-                <TabsList className="bg-white shadow-lg border-0">
+                <TabsList className="bg-white shadow-sm border border-gray-200">
                   <TabsTrigger
                     value="list"
-                    className="flex items-center gap-2 data-[state=active]:bg-teal-600 data-[state=active]:text-white"
+                    className="flex items-center gap-2 data-[state=active]:bg-gray-900 data-[state=active]:text-white"
                   >
                     <List className="w-4 h-4" />
                     List View
                   </TabsTrigger>
                   <TabsTrigger
                     value="map"
-                    className="flex items-center gap-2 data-[state=active]:bg-teal-600 data-[state=active]:text-white"
+                    className="flex items-center gap-2 data-[state=active]:bg-gray-900 data-[state=active]:text-white"
                   >
                     <Map className="w-4 h-4" />
                     Map View
@@ -287,17 +284,17 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
                 <div className="flex items-center gap-3">
                   {/* University Filter Status */}
                   {currentFilters && userEmail && (
-                    <div className="bg-gradient-to-r from-teal-100 to-emerald-100 px-4 py-2 rounded-full border border-teal-200">
-                      <p className="text-sm font-medium text-teal-800">
+                    <div className="bg-blue-50 px-4 py-2 rounded-full border border-blue-200">
+                      <p className="text-sm font-medium text-blue-800">
                         🎓 {getFilterScopeDescription(userEmail, currentFilters.universityScope)}
                       </p>
                     </div>
                   )}
 
                   {hasSearched && !isLoading && (
-                    <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-gray-200">
+                    <div className="bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200">
                       <p className="text-sm font-medium text-gray-700">
-                        <span className="text-teal-600 font-bold">{rides.length}</span> ride{rides.length !== 1 ? 's' : ''} found
+                        <span className="text-gray-900 font-bold">{rides.length}</span> ride{rides.length !== 1 ? 's' : ''} found
                       </p>
                     </div>
                   )}
@@ -331,20 +328,20 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
               </TabsContent>
 
               <TabsContent value="map">
-                <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-                  <CardHeader className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white rounded-t-lg">
-                    <CardTitle className="flex items-center gap-2">
+                <Card className="shadow-sm border border-gray-200 bg-white">
+                  <CardHeader className="bg-gray-50 border-b border-gray-200">
+                    <CardTitle className="flex items-center gap-2 text-gray-900">
                       <Map className="w-5 h-5" />
                       Map View
                     </CardTitle>
-                    <CardDescription className="text-teal-100">
+                    <CardDescription className="text-gray-600">
                       Interactive map showing ride locations
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="p-6">
                     {showMapboxWarning ? (
                       <div className="text-center py-16">
-                        <Map className="w-16 h-16 text-teal-400 mx-auto mb-6" />
+                        <Map className="w-16 h-16 text-gray-400 mx-auto mb-6" />
                         <h3 className="text-xl font-semibold text-gray-900 mb-3">
                           Map View Coming Soon
                         </h3>
@@ -355,16 +352,16 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
                         <Button
                           variant="outline"
                           onClick={() => (document.querySelector('[value="list"]') as HTMLElement)?.click()}
-                          className="border-teal-600 text-teal-600 hover:bg-teal-50"
+                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
                         >
                           <List className="w-4 h-4 mr-2" />
                           Switch to List View
                         </Button>
                       </div>
                     ) : (
-                      <div className="h-96 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-lg flex items-center justify-center border border-teal-200">
+                      <div className="h-96 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-200">
                         <div className="text-center">
-                          <Map className="w-16 h-16 text-teal-500 mx-auto mb-4" />
+                          <Map className="w-16 h-16 text-gray-500 mx-auto mb-4" />
                           <h3 className="text-lg font-semibold text-gray-900 mb-2">
                             Interactive Map Loading...
                           </h3>
@@ -384,79 +381,75 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
         {/* Empty State with Context-Aware CTAs */}
         {rides.length === 0 && hasSearched && !isLoading && !error && (
           <div className="mt-12">
-            <Card className="shadow-2xl border-0 bg-white/90 backdrop-blur-sm overflow-hidden">
-              <div className="bg-gradient-to-r from-teal-600 to-emerald-600 p-1">
-                <div className="bg-white rounded-lg">
-                  <CardContent className="text-center py-12">
-                    <div>
-                      {searchType === 'drivers' ? (
-                        <Car className="w-16 h-16 text-teal-500 mx-auto mb-6" />
-                      ) : (
-                        <MessageSquare className="w-16 h-16 text-teal-500 mx-auto mb-6" />
-                      )}
-                    </div>
-
-                    {searchType === 'drivers' ? (
-                      <>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                          No rides yet for this day
-                        </h3>
-                        <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                          Be the first to offer a ride on this route! Post a request to let drivers know you need a ride.
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                          <Button
-                            onClick={() => setSearchType('requests')}
-                            size="lg"
-                            className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-8 py-4 font-semibold"
-                          >
-                            <MessageSquare className="w-5 h-5 mr-3" />
-                            Post Ride Request
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="lg"
-                            onClick={() => window.location.reload()}
-                            className="border-2 border-teal-600 text-teal-600 hover:bg-teal-50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-8 py-4 font-semibold"
-                          >
-                            <Search className="w-5 h-5 mr-3" />
-                            Search Again
-                          </Button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                          No requests yet
-                        </h3>
-                        <p className="text-gray-600 mb-8 max-w-md mx-auto">
-                          Be the first to help fellow students! Offer a ride and start earning.
-                        </p>
-                        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                          <Link href="/rides/create">
-                            <Button
-                              size="lg"
-                              className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-8 py-4 font-semibold"
-                            >
-                              <Plus className="w-5 h-5 mr-3" />
-                              Offer a Ride
-                            </Button>
-                          </Link>
-                          <Button
-                            onClick={() => setSearchType('drivers')}
-                            variant="outline"
-                            size="lg"
-                            className="border-2 border-teal-600 text-teal-600 hover:bg-teal-50 shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-8 py-4 font-semibold"
-                          >
-                            <Car className="w-5 h-5 mr-3" />
-                            Find Drivers
-                          </Button>
-                        </div>
-                      </>
-                    )}
-                  </CardContent>
+            <Card className="shadow-sm border border-gray-200 bg-white">
+              <CardContent className="text-center py-12">
+                <div>
+                  {searchType === 'drivers' ? (
+                    <Car className="w-16 h-16 text-gray-400 mx-auto mb-6" />
+                  ) : (
+                    <MessageSquare className="w-16 h-16 text-gray-400 mx-auto mb-6" />
+                  )}
                 </div>
-              </div>
+
+                {searchType === 'drivers' ? (
+                  <>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      No rides yet for this day
+                    </h3>
+                    <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                      Be the first to offer a ride on this route! Post a request to let drivers know you need a ride.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                      <Button
+                        onClick={() => setSearchType('requests')}
+                        size="lg"
+                        className="bg-gray-900 hover:bg-gray-800 text-white shadow-sm hover:shadow-md transition-all duration-200 px-8 py-4 font-semibold"
+                      >
+                        <MessageSquare className="w-5 h-5 mr-3" />
+                        Post Ride Request
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        onClick={() => window.location.reload()}
+                        className="border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm hover:shadow-md transition-all duration-200 px-8 py-4 font-semibold"
+                      >
+                        <Search className="w-5 h-5 mr-3" />
+                        Search Again
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      No requests yet
+                    </h3>
+                    <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                      Be the first to help fellow students! Offer a ride and start earning.
+                    </p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                      <Link href="/rides/create">
+                        <Button
+                          size="lg"
+                          className="bg-gray-900 hover:bg-gray-800 text-white shadow-sm hover:shadow-md transition-all duration-200 px-8 py-4 font-semibold"
+                        >
+                          <Plus className="w-5 h-5 mr-3" />
+                          Offer a Ride
+                        </Button>
+                      </Link>
+                      <Button
+                        onClick={() => setSearchType('drivers')}
+                        variant="outline"
+                        size="lg"
+                        className="border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm hover:shadow-md transition-all duration-200 px-8 py-4 font-semibold"
+                      >
+                        <Car className="w-5 h-5 mr-3" />
+                        Find Drivers
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </CardContent>
             </Card>
           </div>
         )}
