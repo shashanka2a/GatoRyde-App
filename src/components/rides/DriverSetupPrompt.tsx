@@ -48,18 +48,7 @@ export function DriverSetupPrompt({ onStartSetup }: DriverSetupPromptProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
-      {/* Mobile-optimized header - minimal */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="container mx-auto py-4 px-4">
-          <nav className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-            <a href="/" className="hover:text-gray-700 transition-colors">
-              Home
-            </a>
-            <ArrowRight className="w-4 h-4" />
-            <span className="text-gray-900 font-medium">Driver</span>
-          </nav>
-        </div>
-      </div>
+
 
       <div className="container mx-auto py-6 px-4">
         <div className="max-w-lg mx-auto space-y-6">
