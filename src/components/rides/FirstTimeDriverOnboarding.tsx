@@ -285,24 +285,40 @@ export function FirstTimeDriverOnboarding({ onComplete }: FirstTimeDriverOnboard
           Driver's License Verification
         </CardTitle>
         <CardDescription className="text-teal-100">
-          Required for long-distance rides and higher rider trust
+          Optional but recommended for higher rider trust and long-distance rides
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
-            <Upload className="w-8 h-8 text-orange-600" />
+          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+            <Upload className="w-8 h-8 text-blue-600" />
           </div>
           <h3 className="text-lg font-semibold text-gray-900">
-            Upload Your Driver's License
+            Upload Your Driver's License (Optional)
           </h3>
           <p className="text-gray-600 max-w-md mx-auto">
-            We need to verify your license for safety and compliance. This is required for rides over 25 miles.
+            Uploading your license increases rider trust and allows you to offer long-distance rides.
           </p>
         </div>
 
         <div className="space-y-4">
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-teal-400 transition-colors cursor-pointer">
+          {/* Trust Score Impact */}
+          <div className="bg-gradient-to-r from-blue-50 to-teal-50 p-4 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-2">📈 Trust Score Impact:</h4>
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-blue-800">Current: Student Verified Only</span>
+              <span className="text-blue-600 font-semibold">50%</span>
+            </div>
+            <div className="flex items-center justify-between text-sm mt-1">
+              <span className="text-teal-800">With License: Student + License Verified</span>
+              <span className="text-teal-600 font-semibold">75%</span>
+            </div>
+          </div>
+
+          <div 
+            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-teal-400 transition-colors cursor-pointer"
+            onClick={() => setLicenseUploaded(true)}
+          >
             <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
             <p className="text-sm text-gray-600 mb-1">
               Click to upload or drag and drop
@@ -341,14 +357,20 @@ export function FirstTimeDriverOnboarding({ onComplete }: FirstTimeDriverOnboard
             Back
           </Button>
           <Button
+            onClick={handleNext}
+            variant="outline"
+            className="border-gray-400 text-gray-700 hover:bg-gray-50"
+          >
+            Skip for Now
+          </Button>
+          <Button
             onClick={() => {
               setLicenseUploaded(true)
               handleNext()
             }}
             className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700"
-            disabled={!licenseUploaded}
           >
-            {licenseUploaded ? 'Continue' : 'Upload License First'}
+            Upload & Continue
           </Button>
         </div>
       </CardContent>

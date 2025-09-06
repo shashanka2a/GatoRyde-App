@@ -17,6 +17,7 @@ import {
   Lock,
   AlertTriangle
 } from 'lucide-react'
+import { TrustBadge } from '@/src/components/driver/TrustBadge'
 import { formatDistanceToNow } from 'date-fns'
 import { useAuth } from '@/src/hooks/useAuth'
 import Link from 'next/link'
@@ -32,6 +33,16 @@ interface Ride {
   driverId: string
   status: string
   createdAt: string
+  driver?: {
+    studentVerified: boolean
+    licenseVerified: boolean
+    idVerified: boolean
+    trustScore: number
+    user: {
+      name: string
+      university: string
+    }
+  }
 }
 
 interface PublicRideListProps {
@@ -236,11 +247,21 @@ export function PublicRideList({ className }: PublicRideListProps) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="text-xs">
-                    <Shield className="w-3 h-3 mr-1" />
-                    Verified Driver
-                  </Badge>
+                <div className="flex items-center gap-2 flex-wrap">
+                  {ride.driver ? (
+                    <TrustBadge
+                      studentVerified={ride.driver.studentVerified}
+                      licenseVerified={ride.driver.licenseVerified}
+                      idVerified={ride.driver.idVerified}
+                      trustScore={ride.driver.trustScore}
+                      showScore={true}
+                    />
+                  ) : (
+                    <Badge variant="secondary" className="text-xs">
+                      <Shield className="w-3 h-3 mr-1" />
+                      Student Verified
+                    </Badge>
+                  )}
                   <Badge variant="outline" className="text-xs">
                     {ride.status === 'open' ? 'Available' : 'Full'}
                   </Badge>

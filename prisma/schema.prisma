@@ -16,6 +16,7 @@ model User {
   email        String   @unique
   phone        String?  @unique
   eduVerified  Boolean  @default(false)
+  university   String?
   universityId String?
   state        String?
   city         String?
@@ -23,6 +24,7 @@ model User {
   ratingAvg    Float?
   ratingCount  Int      @default(0)
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relations
   driver         Driver?
@@ -36,18 +38,26 @@ model User {
 }
 
 model Driver {
-  userId          String  @id
-  licenseNumber   String  @unique
-  licensePhotoUrl String?
-  verified        Boolean @default(false)
-  offeredSeats    Int     @default(4)
-  zelleHandle     String?
-  cashAppHandle   String?
-  venmoHandle     String?
-  zelleQrUrl      String?
-  cashAppQrUrl    String?
-  paymentQrUrl    String?
-  vehicleId       String?
+  userId             String   @id
+  licenseNumber      String?  // Made optional
+  licensePhotoUrl    String?
+  idPhotoUrl         String?  // Added ID photo
+  studentVerified    Boolean  @default(true)  // Auto-verified via .edu email
+  licenseVerified    Boolean  @default(false) // Requires document upload
+  idVerified         Boolean  @default(false) // Requires document upload
+  verified           Boolean  @default(false) // Overall verification status
+  trustScore         Float    @default(50.0)  // Trust score out of 100
+  lastPromptedAt     DateTime? // Last time prompted for document upload
+  offeredSeats       Int      @default(4)
+  zelleHandle        String?
+  cashAppHandle      String?
+  venmoHandle        String?
+  zelleQrUrl         String?
+  cashAppQrUrl       String?
+  paymentQrUrl       String?
+  vehicleId          String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   // Relations
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
