@@ -40,12 +40,13 @@ export function AppNavigation() {
       return pathname === '/ride' || pathname === '/rides'
     }
     if (label === 'Drive') {
-      // Check for both possible drive paths
+      // Check for all possible drive-related paths
       return pathname === '/rides/create' || 
              pathname.startsWith('/rides/create') || 
              pathname === '/driver/onboarding' || 
              pathname.startsWith('/driver/onboarding') ||
-             pathname.startsWith('/drive')
+             pathname.startsWith('/drive') ||
+             pathname.startsWith('/dashboard/driver')
     }
     if (href === '/profile') {
       return pathname === '/profile' || pathname.startsWith('/profile')

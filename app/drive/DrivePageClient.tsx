@@ -18,7 +18,8 @@ import {
   Clock,
   Route,
   CheckCircle,
-  Building2
+  Building2,
+  MessageSquare
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -218,6 +219,24 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
                 <MapPin className="h-4 w-4" />
                 <span>Campus & Inter-city Routes</span>
               </div>
+            </motion.div>
+            
+            {/* Quick Actions */}
+            <motion.div
+              className="flex items-center gap-4 mt-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              <Link href="/driver/requests">
+                <Button 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white hover:text-teal-600"
+                >
+                  <MessageSquare className="w-4 h-4 mr-2" />
+                  View Requests
+                </Button>
+              </Link>
             </motion.div>
           </div>
         </div>
