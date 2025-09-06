@@ -28,9 +28,7 @@ import {
   Bell,
   Settings,
   Info,
-  HelpCircle,
   ArrowRight,
-  AlertCircle,
   Smartphone,
   Zap,
   Target,
@@ -38,7 +36,6 @@ import {
   Copy,
   Check,
   FileText,
-  AlertTriangle,
   Sparkles
 } from 'lucide-react'
 
@@ -174,9 +171,9 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
       <CardContent className="p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
           <div className="relative">
-            <Avatar className="w-24 h-24 border-4 border-white/30 shadow-lg">
+            <Avatar className="w-20 h-20 border-4 border-white/30 shadow-lg">
               <AvatarImage src="/placeholder-avatar.jpg" alt={`${userData.name}'s profile picture`} />
-              <AvatarFallback className="bg-white/20 text-white text-2xl font-bold">
+              <AvatarFallback className="bg-white/20 text-white text-xl font-bold">
                 {userData.name.split(' ').map(n => n[0]).join('')}
               </AvatarFallback>
             </Avatar>
@@ -188,11 +185,11 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </div>
           
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold mb-2 truncate">{userData.name}</h1>
-            <p className="text-teal-100 mb-3 text-sm sm:text-base">
+            <h1 className="text-xl sm:text-2xl font-bold mb-2 truncate">{userData.name}</h1>
+            <p className="text-teal-100 mb-3 text-sm">
               Member since {userData.joinedAt.getFullYear()} • 
               <span className="ml-2 inline-flex items-center gap-1">
-                <Users className="w-4 h-4" />
+                <Users className="w-3 h-3" />
                 {stats.totalRides} rides completed
               </span>
             </p>
@@ -972,26 +969,38 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           <div className="relative">
             {/* Timeline line */}
             {filteredHistory.length > 0 && (
-              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-300 to-gray-200"></div>
             )}
             
-            <div className="space-y-4">
+            <div className="space-y-3">
             {filteredHistory.map((ride, index) => (
               <div
                 key={ride.id}
-                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-3 border rounded-lg hover:bg-gray-50 transition-colors relative"
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                {/* Timeline dot */}
+                <div className="absolute left-6 top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-teal-500 rounded-full z-10 shadow-sm hover:scale-110 transition-transform"></div>
+                
+                <div className="flex items-center justify-between gap-3 ml-8">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center flex-wrap gap-2 mb-2">
-                      <Badge variant={ride.type === 'driver' ? 'default' : 'secondary'}>
-                        {ride.type === 'driver' ? 'Driver' : 'Passenger'}
+                    <div className="flex items-center flex-wrap gap-2 mb-1">
+                      <Badge 
+                        variant={ride.type === 'driver' ? 'default' : 'secondary'}
+                        className="text-xs px-2 py-0"
+                      >
+                        {ride.type === 'driver' ? '🚗 Driver' : '🧑‍🤝‍🧑 Passenger'}
                       </Badge>
-                      <Badge variant={ride.status === 'completed' ? 'default' : 'secondary'}>
-                        {ride.status}
+                      <Badge 
+                        variant={ride.status === 'completed' ? 'default' : 'secondary'}
+                        className={cn(
+                          "text-xs px-2 py-0",
+                          ride.status === 'completed' && "bg-green-100 text-green-800 border-green-200"
+                        )}
+                      >
+                        {ride.status === 'completed' ? '✅ Completed' : ride.status}
                       </Badge>
                     </div>
-                    <p className="font-medium text-sm truncate">{ride.from} → {ride.to}</p>
+                    <p className="font-medium text-sm truncate mb-1">{ride.from} → {ride.to}</p>
                     <p className="text-xs text-gray-500">
                       {ride.date.toLocaleDateString()} • 
                       {ride.type === 'driver' 
@@ -1000,12 +1009,18 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                       }
                     </p>
                   </div>
-                  <div className="text-right sm:ml-4">
-                    <p className="font-bold text-lg">
+                  <div className="text-right">
+                    <p className={cn(
+                      "font-bold text-base",
+                      ride.type === 'driver' ? "text-green-600" : "text-blue-600"
+                    )}>
                       {ride.type === 'driver' ? '+' : '-'}${ride.amount.toFixed(2)}
                     </p>
+                    <p className="text-xs text-gray-500">
+                      {ride.type === 'driver' ? 'earned' : 'paid'}
+                    </p>
                     {ride.rating && (
-                      <div className="flex items-center space-x-1 justify-end">
+                      <div className="flex items-center gap-1 justify-end mt-1">
                         <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                         <span className="text-xs">{ride.rating}</span>
                       </div>
@@ -1098,8 +1113,8 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                     <User className="w-8 h-8 text-yellow-300" />
                   </div>
                   <div>
-                    <h1 className="text-xl lg:text-2xl font-bold">Profile</h1>
-                    <p className="text-teal-100 text-sm">Welcome back, {userData.name.split(' ')[0]}!</p>
+                    <h1 className="text-2xl lg:text-3xl font-bold">Profile</h1>
+                    <p className="text-teal-100 text-lg">Welcome back, {userData.name.split(' ')[0]}!</p>
                   </div>
                 </div>
                 <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full border border-white/30">

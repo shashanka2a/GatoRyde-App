@@ -49,11 +49,11 @@ export function AppNavigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Acts as home button */}
-            <Link href="/rides" className="flex items-center gap-2">
-              <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-2 rounded-lg font-bold text-xl">
+            <Link href="/rides" className="flex items-center gap-3">
+              <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center">
                 R
               </div>
-              <span className="text-2xl text-gray-900 font-bold">Rydify</span>
+              <span className="text-xl text-gray-900 font-bold">Rydify</span>
             </Link>
 
             {/* Desktop Navigation */}

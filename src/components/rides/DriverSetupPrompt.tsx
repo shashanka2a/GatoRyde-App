@@ -110,7 +110,7 @@ export function DriverSetupPrompt({ onStartSetup, userEduVerified }: DriverSetup
             >
               <div className="flex items-center justify-center gap-3 mb-6">
                 <Car className="w-12 h-12 text-yellow-300" />
-                <h1 className="text-5xl lg:text-6xl font-bold">
+                <h1 className="text-3xl lg:text-4xl font-bold">
                   Become a <span className="text-yellow-300">Driver</span>
                 </h1>
               </div>
@@ -252,7 +252,7 @@ export function DriverSetupPrompt({ onStartSetup, userEduVerified }: DriverSetup
                         <Zap className="w-8 h-8 text-white" />
                       </div>
                     </div>
-                    <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                    <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
                       Start Earning <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-emerald-600">Today</span>
                     </h2>
                     <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
