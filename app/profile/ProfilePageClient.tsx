@@ -4,14 +4,13 @@ import React, { useState, useEffect } from 'react'
 import { Button } from '@/src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { Badge } from '@/src/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
+import { Avatar, AvatarFallback } from '@/src/components/ui/avatar'
 import { Label } from '@/src/components/ui/label'
 import { Input } from '@/src/components/ui/input'
 import { 
   User, 
   Shield, 
   Car, 
-  Clock, 
   Star, 
   CheckCircle, 
   Users,
@@ -21,21 +20,15 @@ import {
   QrCode,
   History,
   Download,
-  Bell,
-  Info,
   ArrowRight,
-  Smartphone,
-  Zap,
   Copy,
   Check,
-  FileText,
-  Sparkles
+  FileText
 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/src/components/ui/tooltip'
-import { Alert, AlertDescription } from '@/src/components/ui/alert'
+import { TooltipProvider } from '@/src/components/ui/tooltip'
 
 interface UserData {
   id: string
@@ -71,6 +64,12 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   const [rideHistory, setRideHistory] = useState<RideHistory[]>([])
   const [historyFilter, setHistoryFilter] = useState<'all' | 'driver' | 'passenger'>('all')
   const [copySuccess, setCopySuccess] = useState<string | null>(null)
+  const [expandedRides, setExpandedRides] = useState<Set<string>>(new Set())
+
+  // Add safety checks for userData
+  if (!userData) {
+    return <div>Loading...</div>
+  }
 
   // Mock data
   useEffect(() => {
@@ -138,18 +137,28 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     }
   }
 
+  const toggleRideExpansion = (rideId: string) => {
+    const newExpanded = new Set(expandedRides)
+    if (newExpanded.has(rideId)) {
+      newExpanded.delete(rideId)
+    } else {
+      newExpanded.add(rideId)
+    }
+    setExpandedRides(newExpanded)
+  }
+
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {/* User Info Card */}
-          <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl mb-8">
-            <CardContent className="p-6 sm:p-8">
-              <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+          {/* User Info Card - Reduced Padding */}
+          <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl mb-6">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-4 lg:space-y-0 lg:space-x-6">
                 <div className="relative flex-shrink-0">
                   <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white/30 shadow-lg">
                     <AvatarFallback className="bg-white/20 text-white text-xl sm:text-2xl font-bold">
-                      {userData.name.split(' ').map(n => n[0]).join('')}
+                      {userData.name ? userData.name.split(' ').map(n => n[0]).join('') : 'U'}
                     </AvatarFallback>
                   </Avatar>
                   {userData.eduVerified && (
@@ -160,26 +169,26 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 </div>
                 
                 <div className="flex-1 min-w-0 w-full lg:w-auto">
-                  <div className="mb-4">
-                    <h1 className="text-2xl sm:text-3xl font-bold mb-2">Welcome back, {userData.name.split(' ')[0]}!</h1>
-                    <p className="text-teal-100 text-base sm:text-lg">
-                      Member since {userData.joinedAt.getFullYear()} • 
+                  <div className="mb-3">
+                    <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {userData.name ? userData.name.split(' ')[0] : 'User'}!</h1>
+                    <p className="text-teal-100 text-sm sm:text-base">
+                      Member since {userData.joinedAt ? userData.joinedAt.getFullYear() : new Date().getFullYear()} • 
                       <span className="ml-2 inline-flex items-center gap-1">
-                        <Users className="w-4 h-4" />
+                        <Users className="w-3 h-3" />
                         {stats.totalRides} rides completed
                       </span>
                     </p>
                   </div>
                   
-                  <div className="flex flex-wrap items-center gap-3 mb-6">
-                    <div className="flex items-center space-x-1 bg-white/20 px-3 py-2 rounded-full">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{userData.ratingAvg.toFixed(1)}</span>
-                      <span className="text-teal-100 text-sm">({userData.ratingCount})</span>
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
+                    <div className="flex items-center space-x-1 bg-white/20 px-2 py-1 rounded-full">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold text-sm">{(userData.ratingAvg || 0).toFixed(1)}</span>
+                      <span className="text-teal-100 text-xs">({userData.ratingCount || 0})</span>
                     </div>
                     
                     {userData.eduVerified && (
-                      <Badge className="bg-white/20 text-white border-white/30">
+                      <Badge className="bg-white/20 text-white border-white/30 text-xs">
                         <Shield className="w-3 h-3 mr-1" />
                         Student verified
                       </Badge>
@@ -187,23 +196,23 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </div>
 
                   {/* Stats Row */}
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-white">{stats.totalRides}</div>
+                      <div className="text-lg sm:text-xl font-bold text-white">{stats.totalRides}</div>
                       <div className="text-xs text-teal-100">Total Rides</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-green-300">${stats.totalEarned.toFixed(0)}</div>
+                      <div className="text-lg sm:text-xl font-bold text-green-300">${stats.totalEarned.toFixed(0)}</div>
                       <div className="text-xs text-teal-100">Earned</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-blue-300">${stats.totalSpent.toFixed(0)}</div>
+                      <div className="text-lg sm:text-xl font-bold text-blue-300">${stats.totalSpent.toFixed(0)}</div>
                       <div className="text-xs text-teal-100">Spent</div>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <span className="text-xl sm:text-2xl font-bold text-yellow-300">{stats.avgRating.toFixed(1)}</span>
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span className="text-lg sm:text-xl font-bold text-yellow-300">{(stats.avgRating || 0).toFixed(1)}</span>
+                        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                       </div>
                       <div className="text-xs text-teal-100">Rating</div>
                     </div>
@@ -228,7 +237,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
             {/* Left Column */}
             <div className="space-y-6 lg:space-y-8">
-              {/* Verification Status */}
+              {/* Verification Status - Enhanced with Icons */}
               <Card className="bg-white shadow-lg border-0 h-full">
                 <CardHeader className="border-b border-gray-100 pb-4">
                   <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
@@ -242,18 +251,83 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="p-6">
-                  <div className="text-center">
-                    <div className="text-4xl font-bold text-gray-900 mb-2">
+                  {/* Progress Overview */}
+                  <div className="text-center mb-6">
+                    <div className="text-3xl font-bold text-gray-900 mb-1">
                       {Math.round(getVerificationProgress())}%
                     </div>
-                    <p className="text-gray-600 mb-4">Complete</p>
-                    <Link href="/dashboard/kyc">
-                      <Button className="bg-green-600 hover:bg-green-700 text-white">
-                        Continue Verification
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
+                    <p className="text-gray-600 text-sm">Complete</p>
                   </div>
+
+                  {/* Verification Steps */}
+                  <div className="space-y-3 mb-6">
+                    {/* Student Email Verification */}
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                      <div className={cn(
+                        "w-8 h-8 rounded-full flex items-center justify-center",
+                        userData.eduVerified ? "bg-green-100" : "bg-gray-200"
+                      )}>
+                        {userData.eduVerified ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Mail className="w-4 h-4 text-gray-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">Student Email</p>
+                        <p className="text-xs text-gray-500">
+                          {userData.eduVerified ? "✅ Verified" : "📧 Pending verification"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Identity Verification */}
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                      <div className={cn(
+                        "w-8 h-8 rounded-full flex items-center justify-center",
+                        userData.kycVerified ? "bg-green-100" : "bg-gray-200"
+                      )}>
+                        {userData.kycVerified ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <FileText className="w-4 h-4 text-gray-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">Identity (KYC)</p>
+                        <p className="text-xs text-gray-500">
+                          {userData.kycVerified ? "✅ Verified" : "🆔 Upload ID required"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Driver's License */}
+                    <div className="flex items-center gap-3 p-3 rounded-lg bg-gray-50">
+                      <div className={cn(
+                        "w-8 h-8 rounded-full flex items-center justify-center",
+                        userData.licenseVerified ? "bg-green-100" : "bg-gray-200"
+                      )}>
+                        {userData.licenseVerified ? (
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Car className="w-4 h-4 text-gray-500" />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">Driver's License</p>
+                        <p className="text-xs text-gray-500">
+                          {userData.licenseVerified ? "✅ Verified" : "🚗 Upload license required"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Link href="/dashboard/kyc">
+                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
+                      Continue Verification
+                      <ArrowRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
               
@@ -274,7 +348,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                         <Mail className="w-4 h-4 text-blue-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium">{userData.email}</p>
+                        <p className="text-sm font-medium">{userData.email || 'No email provided'}</p>
                         <p className="text-xs text-gray-500">📧 Email</p>
                       </div>
                     </div>
@@ -284,7 +358,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                         <Phone className="w-4 h-4 text-green-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium">{userData.phone}</p>
+                        <p className="text-sm font-medium">{userData.phone || 'No phone provided'}</p>
                         <p className="text-xs text-gray-500">📱 Phone</p>
                       </div>
                     </div>
@@ -407,7 +481,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
             </div>
           </div>
 
-          {/* Ride History */}
+          {/* Ride History - Compact Collapsible Cards */}
           <div className="mt-8">
             <Card className="bg-white shadow-lg border-0">
               <CardHeader className="border-b border-gray-100 pb-4">
@@ -453,81 +527,149 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </Button>
                 </div>
 
-                {/* Ride List */}
-                <div className="space-y-4">
+                {/* Compact Ride List */}
+                <div className="space-y-3">
                   {filteredHistory.length > 0 ? (
-                    filteredHistory.map((ride) => (
-                      <div
-                        key={ride.id}
-                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          {/* Status Icon */}
-                          <div className={cn(
-                            "w-10 h-10 rounded-full flex items-center justify-center",
-                            ride.type === 'driver' ? "bg-blue-100" : "bg-green-100"
-                          )}>
-                            {ride.type === 'driver' ? (
-                              <Car className="w-5 h-5 text-blue-600" />
-                            ) : (
-                              <User className="w-5 h-5 text-green-600" />
-                            )}
-                          </div>
-
-                          {/* Ride Details */}
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge className={cn(
-                                "text-xs",
-                                ride.type === 'driver' 
-                                  ? "bg-blue-100 text-blue-800" 
-                                  : "bg-green-100 text-green-800"
+                    filteredHistory.map((ride) => {
+                      const isExpanded = expandedRides.has(ride.id)
+                      return (
+                        <div
+                          key={ride.id}
+                          className="border border-gray-200 rounded-lg hover:shadow-sm transition-all duration-200"
+                        >
+                          {/* Compact Card Header */}
+                          <div 
+                            className="flex items-center justify-between p-3 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleRideExpansion(ride.id)}
+                          >
+                            <div className="flex items-center gap-3 flex-1">
+                              {/* Status Icon */}
+                              <div className={cn(
+                                "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+                                ride.type === 'driver' ? "bg-blue-100" : "bg-green-100"
                               )}>
-                                {ride.type === 'driver' ? 'Driver' : 'Passenger'}
-                              </Badge>
-                              <Badge className="bg-green-100 text-green-800 text-xs">
-                                ✅ Completed
-                              </Badge>
-                            </div>
-                            
-                            <p className="font-medium text-sm text-gray-900 mb-1">
-                              {ride.from} → {ride.to}
-                            </p>
-                            
-                            <p className="text-xs text-gray-500">
-                              {ride.date.toLocaleDateString('en-US', { 
-                                month: 'short', 
-                                day: 'numeric', 
-                                year: 'numeric' 
-                              })} • 
-                              {ride.type === 'driver' 
-                                ? ` ${ride.passengers} passengers • $${ride.amount.toFixed(2)} per person` 
-                                : ` Driver: ${ride.driver} • $${ride.amount.toFixed(2)} paid`
-                              }
-                            </p>
-                          </div>
-                        </div>
+                                {ride.type === 'driver' ? (
+                                  <Car className="w-4 h-4 text-blue-600" />
+                                ) : (
+                                  <User className="w-4 h-4 text-green-600" />
+                                )}
+                              </div>
 
-                        {/* Amount and Rating */}
-                        <div className="text-right">
-                          <p className={cn(
-                            "font-bold text-lg",
-                            ride.type === 'driver' ? "text-green-600" : "text-blue-600"
-                          )}>
-                            {ride.type === 'driver' ? '+' : '-'}${ride.amount.toFixed(2)}
-                          </p>
-                          <p className="text-xs text-gray-500 mb-1">
-                            {ride.type === 'driver' ? 'earned' : 'paid'}
-                          </p>
-                          {ride.rating && (
-                            <div className="flex items-center gap-1 justify-end">
-                              <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                              <span className="text-xs font-medium">{ride.rating}</span>
+                              {/* Compact Details */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <Badge className={cn(
+                                    "text-xs px-2 py-0.5",
+                                    ride.type === 'driver' 
+                                      ? "bg-blue-100 text-blue-800" 
+                                      : "bg-green-100 text-green-800"
+                                  )}>
+                                    {ride.type === 'driver' ? '🚗 Driver' : '🧑‍🤝‍🧑 Passenger'}
+                                  </Badge>
+                                  <span className="text-xs text-gray-500">
+                                    {ride.date ? ride.date.toLocaleDateString('en-US', { 
+                                      month: 'short', 
+                                      day: 'numeric'
+                                    }) : 'N/A'}
+                                  </span>
+                                </div>
+                                
+                                <p className="font-medium text-sm text-gray-900 truncate">
+                                  {ride.from} → {ride.to}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Amount and Expand Button */}
+                            <div className="flex items-center gap-3">
+                              <div className="text-right">
+                                <p className={cn(
+                                  "font-bold text-base",
+                                  ride.type === 'driver' ? "text-green-600" : "text-blue-600"
+                                )}>
+                                  {ride.type === 'driver' ? '+' : '-'}${ride.amount.toFixed(2)}
+                                </p>
+                                {ride.rating && (
+                                  <div className="flex items-center gap-1 justify-end">
+                                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                    <span className="text-xs font-medium">{ride.rating}</span>
+                                  </div>
+                                )}
+                              </div>
+                              <ArrowRight className={cn(
+                                "w-4 h-4 text-gray-400 transition-transform duration-200",
+                                isExpanded ? "rotate-90" : ""
+                              )} />
+                            </div>
+                          </div>
+
+                          {/* Expanded Details */}
+                          {isExpanded && (
+                            <div className="px-3 pb-3 border-t border-gray-100 bg-gray-50">
+                              <div className="pt-3 space-y-2">
+                                <div className="grid grid-cols-2 gap-4 text-sm">
+                                  <div>
+                                    <p className="text-gray-500 text-xs">Date & Time</p>
+                                    <p className="font-medium">
+                                      {ride.date ? ride.date.toLocaleDateString('en-US', { 
+                                        weekday: 'short',
+                                        month: 'short', 
+                                        day: 'numeric', 
+                                        year: 'numeric' 
+                                      }) : 'N/A'}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    <p className="text-gray-500 text-xs">Status</p>
+                                    <Badge className="bg-green-100 text-green-800 text-xs">
+                                      ✅ Completed
+                                    </Badge>
+                                  </div>
+                                </div>
+
+                                {ride.type === 'driver' ? (
+                                  <div className="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                      <p className="text-gray-500 text-xs">Passengers</p>
+                                      <p className="font-medium">{ride.passengers} riders</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500 text-xs">Per Person</p>
+                                      <p className="font-medium">${(ride.amount / (ride.passengers || 1)).toFixed(2)}</p>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div>
+                                    <p className="text-gray-500 text-xs">Driver</p>
+                                    <p className="font-medium">{ride.driver}</p>
+                                  </div>
+                                )}
+
+                                {ride.rating && (
+                                  <div>
+                                    <p className="text-gray-500 text-xs">Rating</p>
+                                    <div className="flex items-center gap-1">
+                                      {[1, 2, 3, 4, 5].map((star) => (
+                                        <Star 
+                                          key={star}
+                                          className={cn(
+                                            "w-4 h-4",
+                                            star <= (ride.rating || 0) 
+                                              ? "fill-yellow-400 text-yellow-400" 
+                                              : "text-gray-300"
+                                          )}
+                                        />
+                                      ))}
+                                      <span className="ml-2 text-sm font-medium">{ride.rating}/5</span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
-                      </div>
-                    ))
+                      )
+                    })
                   ) : (
                     <div className="text-center py-12">
                       <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
