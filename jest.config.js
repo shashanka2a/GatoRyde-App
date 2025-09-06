@@ -17,7 +17,7 @@ const customJestConfig = {
         '<rootDir>/__tests__/**/*.test.ts',
         '<rootDir>/__tests__/**/!(*.component|*.tsx).test.*'
       ],
-      moduleNameMapping: {
+      moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
       },
     },
@@ -29,7 +29,7 @@ const customJestConfig = {
         '<rootDir>/__tests__/**/*.component.test.*',
         '<rootDir>/__tests__/**/*.test.tsx'
       ],
-      moduleNameMapping: {
+      moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/$1',
       },
     }

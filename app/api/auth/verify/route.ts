@@ -6,12 +6,26 @@ import { rateLimiter } from "@/lib/auth/rate-limit"
 import { validateEduEmail } from "@/lib/auth/university-detector"
 
 const SendOTPSchema = z.object({
-  email: z.string().email("Invalid email format"),
+  email: z.string().trim().email("Invalid email format"),
 })
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    // Parse JSON with proper error handling
+    let body
+    try {
+      body = await request.json()
+    } catch (jsonError) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Invalid JSON format in request body",
+          code: "INVALID_JSON"
+        },
+        { status: 400 }
+      )
+    }
+
     const { email } = SendOTPSchema.parse(body)
 
     // Validate .edu email
