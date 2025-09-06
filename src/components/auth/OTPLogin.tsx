@@ -255,7 +255,7 @@ export function OTPLogin() {
 
           {/* Terms & Services Checkbox */}
           <div className="space-y-3">
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start gap-3">
               <Checkbox
                 id="terms"
                 checked={acceptedTerms}
@@ -266,23 +266,23 @@ export function OTPLogin() {
                   }
                 }}
                 disabled={loading}
-                className={`mt-0.5 ${
+                className={`mt-1 flex-shrink-0 ${
                   errors.terms ? 'border-red-300' : 'border-gray-300 dark:border-gray-600'
                 }`}
               />
-              <div className="text-sm">
+              <div className="flex-1 min-w-0">
                 <Label 
                   htmlFor="terms" 
-                  className="text-gray-700 dark:text-gray-300 cursor-pointer leading-relaxed"
+                  className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer leading-relaxed block"
                 >
                   I agree to the{' '}
                   <Link 
                     href="/terms" 
                     target="_blank"
-                    className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 underline font-medium inline-flex items-center gap-1"
+                    className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 underline font-medium"
                   >
                     Terms of Service
-                    <ExternalLink className="w-3 h-3" />
+                    <ExternalLink className="w-3 h-3 inline ml-1" />
                   </Link>
                   {' '}and understand that Rydify is for verified university students only.
                 </Label>
