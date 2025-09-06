@@ -4,7 +4,7 @@ import { otpManager } from "@/lib/auth/otp"
 import { rateLimiter } from "@/lib/auth/rate-limit"
 import { validateEduEmail, getUniversityName } from "@/lib/auth/university-detector"
 import { PrismaClient } from "@prisma/client"
-import { signJWT } from "@/lib/auth/jwt"
+import { signJWT } from "@/lib/auth/jwt-edge"
 import { OTPEmailService } from "@/lib/auth/otp-email"
 
 const prisma = new PrismaClient()

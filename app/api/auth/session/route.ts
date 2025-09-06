@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
-import { getTokenFromRequest } from "@/lib/auth/jwt"
+import { getTokenFromRequest } from "@/lib/auth/jwt-edge"
 import { PrismaClient } from "@prisma/client"
 
 const prisma = new PrismaClient()
+
+// Mark as dynamic to prevent static generation
+export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
   try {
