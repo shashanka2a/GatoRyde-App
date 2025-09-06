@@ -1,4 +1,4 @@
-import { Suspense } from 'react'
+import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { Badge } from '@/src/components/ui/badge'
 import { Button } from '@/src/components/ui/button'
@@ -269,7 +269,7 @@ export default function FloridaFilteringDemo() {
                     </div>
                   </div>
                 </CardContent>
-              </div>
+              </Card>
             </div>
           </div>
 
@@ -287,27 +287,25 @@ export default function FloridaFilteringDemo() {
                       Join thousands of verified university students sharing safe, affordable rides across Florida
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                      <Button 
-                        asChild
-                        size="lg"
-                        className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        <Link href="/rides">
+                      <Link href="/rides">
+                        <Button 
+                          size="lg"
+                          className="bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700 shadow-lg hover:shadow-xl transition-all duration-300"
+                        >
                           <GraduationCap className="w-5 h-5 mr-2" />
                           Find Rides Now
-                        </Link>
-                      </Button>
-                      <Button 
-                        asChild
-                        variant="outline"
-                        size="lg"
-                        className="border-2 border-teal-600 text-teal-600 hover:bg-teal-50"
-                      >
-                        <Link href="/rides/create">
+                        </Button>
+                      </Link>
+                      <Link href="/rides/create">
+                        <Button 
+                          variant="outline"
+                          size="lg"
+                          className="border-2 border-teal-600 text-teal-600 hover:bg-teal-50"
+                        >
                           <Users className="w-5 h-5 mr-2" />
                           Offer a Ride
-                        </Link>
-                      </Button>
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </div>
