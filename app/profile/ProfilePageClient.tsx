@@ -168,135 +168,131 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
 
 
 
-
-
-  const VerificationCard = () => {
-    const getVerificationProgress = () => {
-      const steps = [userData.eduVerified, userData.kycVerified, userData.licenseVerified]
-      const completed = steps.filter(Boolean).length
-      return (completed / steps.length) * 100
+rified]
+gth
+      return (completed / steps.le 100
     }
 
     const getNextStep = () => {
       if (!userData.eduVerified) return 0
-      if (!userData.kycVerified) return 1
-      if (!userData.licenseVerified) return 2
+     
+
       return -1
     }
 
     const nextStepIndex = getNextStep()
-    const progress = getVerificationProgress()
+    const progrs()
 
-    const verificationSteps = [
+
       { 
         key: 'eduVerified', 
-        label: 'Email', 
-        verified: userData.eduVerified,
-        icon: Mail,
-        description: 'Verify your .edu email address',
-        action: 'Check your email for verification link',
+ 
+        verified: userData.eduV
+        Mail,
+        description: 'Verify
+        action: 'Check ynk',
         estimatedTime: '2 minutes'
       },
       { 
         key: 'kycVerified', 
         label: 'ID', 
-        verified: userData.kycVerified,
-        icon: FileText,
-        description: 'Upload government-issued ID',
-        action: 'Take a photo of your ID',
+        ,
+        
+        description: 'UploadID',
+        action: 'Take,
         estimatedTime: '5 minutes'
       },
       { 
         key: 'licenseVerified', 
         label: 'License', 
-        verified: userData.licenseVerified,
-        icon: Car,
-        description: 'Upload valid driver\'s license',
-        action: 'Photo of front and back',
+        ed,
+         Car,
+        description: 'Upload valse',
+        action: 'Photo of  back',
         estimatedTime: '3 minutes'
       }
     ]
 
     return (
-      <TooltipProvider>
-        <Card className="bg-white shadow-lg border-0 relative overflow-hidden h-full">
-          {progress === 100 && (
-            <div className="absolute top-0 right-0 bg-gradient-to-l from-green-500 to-transparent w-32 h-1"></div>
+      <
+     ll">
+(
+            v>
           )}
           
-          <CardHeader className="border-b border-gray-100 pb-4">
+          <CardHeader className=
             <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                  <div className="bg-teal-100 p-2 rounded-lg flex-shrink-0">
-                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
+            >
+          2">
+                  <div className="bg-teal-100 p-2 rounded-lg fle
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-te
                   </div>
                   <span className="truncate">Verification Status</span>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help flex-shrink-0" />
+                      <Ik-0" />
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
-                      <p>Complete all steps to unlock full platform features including driving and enhanced safety features.</p>
+                    <Tooltis">
+                      <p>Complete al
                     </TooltipContent>
                   </Tooltip>
                 </CardTitle>
                 <CardDescription className="text-gray-600 text-sm">
-                  3-step verification process • Review time: 24-48 hours
-                </CardDescription>
+                  3-step verification
+                </CardDescrion>
               </div>
               {progress === 100 && (
-                <Badge className="bg-green-100 text-green-800 border-green-200 flex-shrink-0">
-                  <CheckCircle className="w-3 h-3 mr-1" />
-                  Fully Verified
+                <Badge className="bg-green-100 text-green-800 border-grek-0">
+                  <CheckCircle clamr-1" />
+                  Fu
                 </Badge>
               )}
             </div>
           </CardHeader>
           
-          <CardContent className="space-y-6 flex-1">
-            {/* Stepper UI replacing progress bar */}
-            <div className="flex items-center justify-between relative px-2">
-              {/* Progress line */}
-              <div className="absolute top-4 left-8 right-8 h-0.5 bg-gray-200">
+          <CardC">
+            {/* St bar */}
+            <div classN">
+          
+              <div className="absolute top-4 left-8 
                 <div 
                   className="h-full bg-green-500 transition-all duration-500"
-                  style={{ width: `${Math.max(0, (progress - 33.33) / 66.67 * 100)}%` }}
+                  style={{ width: ` }}
                 />
               </div>
               
               {verificationSteps.map((step, index) => {
-                const isCompleted = step.verified
-                const isCurrent = index === nextStepIndex
-                const isLocked = index > nextStepIndex && nextStepIndex !== -1
+                cofied
+                conspIndex
+              
                 
                 return (
-                  <div key={step.key} className="flex flex-col items-center relative z-10">
+                  <div key={step.key} className="flex fle
                     <div className={cn(
-                      "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300",
-                      isCompleted 
+                ",
+                      isd 
                         ? "bg-green-500 border-green-500 text-white" 
                         : isCurrent 
                           ? "bg-blue-500 border-blue-500 text-white animate-pulse" 
-                          : "bg-gray-200 border-gray-300 text-gray-500"
+                          : "bg-gr"
                     )}>
                       {isCompleted ? (
                         <CheckCircle className="w-5 h-5" />
                       ) : isCurrent ? (
-                        <Clock className="w-4 h-4" />
+                       4" />
                       ) : (
-                        <span className="text-xs font-medium">{isLocked ? '🔒' : index + 1}</span>
+                        <span className="text-xs font-mediu>
                       )}
                     </div>
-                    <div className="mt-2 text-center">
+                    <div cl">
                       <p className={cn(
-                        "text-xs font-medium",
-                        isCompleted ? "text-green-600" : isCurrent ? "text-blue-600" : "text-gray-500"
+                        ",
+                        is"
                       )}>
                         {step.label}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
-                        {isCompleted ? '✅' : isCurrent ? '⏳' : '🔒'}
+                        {'🔒'}
                       </p>
                     </div>
                   </div>
@@ -304,38 +300,38 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
               })}
             </div>
 
-            {/* Current step details */}
-            {nextStepIndex !== -1 && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
-                    {React.createElement(verificationSteps[nextStepIndex].icon, {
+            {/* C/}
+            {next= -1 && (
+              <div>
+
+                  <div className="bg-blu">
+                    {React.createEleme
                       className: "w-5 h-5 text-blue-600"
                     })}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-blue-900 mb-1">
-                      Next: {verificationSteps[nextStepIndex].label} Verification
+                    <h4 className="font-medium text-blue
+                      Nion
                     </h4>
-                    <p className="text-sm text-blue-700 mb-2">
-                      {verificationSteps[nextStepIndex].description}
+                    <p className="text-sm text-blu
+                      {verificationSteps[nextStepIndex].description
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-blue-600">
+                    <div >
                       <Clock className="w-3 h-3" />
-                      <span>Estimated time: {verificationSteps[nextStepIndex].estimatedTime}</span>
+                      <span>Estimated time: {verificationSteps[nextSpan>
                     </div>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="mt-auto">
-              {progress < 100 ? (
-                <div className="space-y-3">
-                  <Link href="/dashboard/kyc" className="w-full">
-                    <Button className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg" size="lg">
-                      {nextStepIndex !== -1 ? (
+            {/* Action */}
+            <div claauto">
+              
+>
+                  <Link href="/das
+                    <Button className
+                      {nextStepIn (
                         <>
                           Continue Verification
                           <ArrowRight className="w-4 h-4 ml-2" />
@@ -347,73 +343,73 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </Link>
                 </div>
               ) : (
-                <Alert className="bg-green-50 border-green-200">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                  <AlertDescription className="text-green-800">
-                    <strong>Congratulations!</strong> Your account is fully verified. You can now offer rides and access all platform features.
+                <Alert classN
+                  <CheckC" />
+                  <Ale
+                   tures.
                   </AlertDescription>
                 </Alert>
               )}
             </div>
           </CardContent>
         </Card>
-      </TooltipProvider>
+      </TooltipPer>
     )
   }
 
   const PaymentCard = () => {
-    const [qrHovered, setQrHovered] = useState(false)
-    const [qrEnlarged, setQrEnlarged] = useState(false)
+    ce)
+   )
     
     return (
       <TooltipProvider>
-        <Card className="bg-white shadow-lg border-0 h-full">
-          <CardHeader className="border-b border-gray-100 pb-4">
-            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900 mb-2">
-                  <div className="bg-teal-100 p-2 rounded-lg flex-shrink-0">
+        <Card className="bg-white shadow-lg border-0 h-">
+    
+            4">
+              <div clas">
+                <CardTitle className="flex items-center gap-2-2">
+                  <div className="bg-teal-100 p-2 rounded-lg fle>
                     <QrCode className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600" />
                   </div>
                   <span className="truncate">Payment Settings</span>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help flex-shrink-0" />
+                      <I>
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
-                      <p>Riders can scan this to pay you instantly. Set up your payment methods for quick transfers.</p>
+                    <Toolti
+                      <p>Riders can p>
                     </TooltipContent>
                   </Tooltip>
                 </CardTitle>
                 <CardDescription className="text-gray-600 text-sm">
-                  Rydify doesn't process payments; riders pay you directly
-                </CardDescription>
+                  Rydify doesn't procly
+                </CardDescri
               </div>
-              <Button variant="outline" size="sm" className="border-teal-200 text-teal-600 hover:bg-teal-50 flex-shrink-0">
+              <Button variant="outline" size="sm" className="border>
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Button>
             </div>
           </CardHeader>
           
-          <CardContent className="space-y-6">
-            {/* Enhanced QR Code Section */}
-            <div className="text-center p-4 sm:p-6 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl border border-teal-200 relative overflow-hidden">
-              <Tooltip>
+          <CardContent 6">
+            {/* En*/}
+            <div classN">
+          p>
                 <TooltipTrigger asChild>
                   <div 
                     className={cn(
-                      "bg-white p-4 sm:p-6 rounded-xl inline-block shadow-sm border-2 border-white cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105",
-                      qrEnlarged && "scale-150 z-50"
+                      "105",
+                      qrEnlarged && "sca
                     )}
-                    onMouseEnter={() => setQrHovered(true)}
+                    onMouseEnter={d(true)}
                     onMouseLeave={() => setQrHovered(false)}
-                    onClick={() => setQrEnlarged(!qrEnlarged)}
+                    onClick={() => setQrEnlarged(!qr}
                   >
-                    <QrCode className="w-20 h-20 sm:w-28 sm:h-28 text-teal-600 mx-auto" />
+                    <QrCode className="w-20 h-20 sm:w-28 sm" />
                     {qrHovered && (
-                      <div className="absolute inset-0 bg-black/10 rounded-xl flex items-center justify-center">
-                        <span className="text-xs text-teal-700 font-medium bg-white/90 px-2 py-1 rounded">
+                      <div className="absolute inset-0 bg-blac">
+                   ded">
                           Tap to enlarge
                         </span>
                       </div>
@@ -421,18 +417,18 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Riders can scan this to pay you instantly</p>
-                </TooltipContent>
+                  <p>Rp>
+                </Toolti
               </Tooltip>
               
               <div className="mt-4 space-y-2">
-                <p className="text-sm font-semibold text-teal-900">Your Payment QR Code</p>
-                <p className="text-xs text-teal-700">Riders scan this to access your payment info</p>
+                <p className="texe</p>
+                <p classp>
                 
-                <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-3 text-xs text-teal-600">
+                <div className="flex flex-wrap">
                   <div className="flex items-center gap-1">
                     <Smartphone className="w-3 h-3" />
-                    <span>Contactless</span>
+                
                   </div>
                   <div className="flex items-center gap-1">
                     <Zap className="w-3 h-3" />
@@ -446,77 +442,77 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
               </div>
             </div>
 
-            {/* Enhanced Payment Methods with Logos */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label className="text-base font-semibold">Payment Methods</Label>
-                <Badge variant="outline" className="text-xs">
+            {/* Enhancs */}
+            <div cla">
+              <div">
+l>
+                <Badge variant="outline" className="tex>
                   2 methods active
                 </Badge>
               </div>
               
-              <div className="space-y-3">
-                {/* Zelle with Logo */}
-                <div className="p-4 border rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      {/* Zelle Logo Placeholder */}
+              <div className="spac">
+                {/* Zell
+                <div
+              n mb-3">
+                    <div className="flex 
+                      {/* Zelle Logo Pl
                       <div className="bg-blue-600 text-white p-2 rounded-lg font-bold text-sm">
                         Z
                       </div>
                       <div>
-                        <Label className="text-sm font-semibold text-blue-900 flex items-center gap-2">
-                          Zelle
-                          <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-2 py-0">
-                            Primary
+                        <Label className="text-sm font-semibold text-blue-900 flex items-center>
+                         
+                          <B-2 py-0">
+                           Primary
                           </Badge>
-                        </Label>
+                        </Label
                         <p className="text-xs text-blue-700">Bank-to-bank transfer</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div class>
                     <Input 
-                      placeholder="your-email@ufl.edu" 
-                      className="flex-1 bg-white border-blue-200"
+                      pl
+                  0"
                       defaultValue="john.doe@ufl.edu"
-                      readOnly
+                      readO
                     />
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="border-blue-200 text-blue-700 hover:bg-blue-100 transition-colors"
-                      onClick={() => handleCopy("john.doe@ufl.edu", "zelle")}
+                      ors"
+                      onClice")}
                     >
-                      {copySuccess === 'zelle' ? (
+                      {copySucc? (
                         <>
                           <Check className="w-4 h-4 mr-1 text-green-600" />
-                          <span className="text-green-600">Copied!</span>
+                     
                         </>
                       ) : (
                         <>
                           <Copy className="w-4 h-4 mr-1" />
-                          Copy
+                          C
                         </>
                       )}
                     </Button>
                   </div>
                 </div>
                 
-                {/* Cash App with Logo */}
-                <div className="p-4 border rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      {/* Cash App Logo Placeholder */}
+                {/* Cash App }
+                <div cla">
+                  <div>
+                ">
+                      {/* Cash App Logo Pl/}
                       <div className="bg-green-600 text-white p-2 rounded-lg font-bold text-sm">
                         $
                       </div>
                       <div>
-                        <Label className="text-sm font-semibold text-green-900 flex items-center gap-2">
-                          Cash App
-                          <Badge variant="outline" className="text-green-600 border-green-200 text-xs px-2 py-0">
-                            Active
+                        <Label className="text-sm font-semibold text-green-900 flex items-centerap-2">
+                         
+                          <B0">
+                           
                           </Badge>
                         </Label>
                         <p className="text-xs text-green-700">Mobile payments</p>
@@ -524,25 +520,25 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
+                  <div class
                     <Input 
-                      placeholder="$YourCashApp" 
-                      className="flex-1 bg-white border-green-200"
+                      plshApp" 
+                  
                       defaultValue="$JohnDoe23"
                       readOnly
                     />
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="border-green-200 text-green-700 hover:bg-green-100 transition-colors"
-                      onClick={() => handleCopy("$JohnDoe23", "cashapp")}
+                      
+                      onClic
                     >
-                      {copySuccess === 'cashapp' ? (
+                      {copySucc? (
                         <>
-                          <Check className="w-4 h-4 mr-1 text-green-600" />
-                          <span className="text-green-600">Copied!</span>
+                          <Check className="w-4 h-4 mr-1 text-green-600" >
+                     
                         </>
-                      ) : (
+                      ) : 
                         <>
                           <Copy className="w-4 h-4 mr-1" />
                           Copy
@@ -554,69 +550,69 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
               </div>
             </div>
 
-            {/* Quick Actions with Success Feedback */}
-            <div className="space-y-3">
-              <Label className="text-sm font-semibold">Quick Actions</Label>
-              <div className="grid grid-cols-1 gap-2">
+            {/* Quick k */}
+            <div cla3">
+              <Label>
+
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="justify-start h-auto p-3 hover:bg-blue-50 transition-colors"
-                  onClick={() => handleCopy("Hi! Please send $[AMOUNT] via Zelle to john.doe@ufl.edu for our ride. Thanks!", "zelle-template")}
+                  className="justify-start h-auto p-3 
+                  onClic}
                 >
-                  <div className="flex items-center gap-3 w-full">
-                    <div className="bg-blue-600 text-white p-1 rounded text-xs font-bold">Z</div>
+                  <div class>
+                    <div className="bg-blue-600 text-white p-1 rounded text-xs font-bold"/div>
                     <div className="text-left flex-1">
-                      <p className="text-sm font-medium">Copy Zelle Request</p>
-                      <p className="text-xs text-gray-500">Template message for riders</p>
+                 t</p>
+                      <p className="text-xs text-gray-500">Templat
                     </div>
                     {copySuccess === 'zelle-template' ? (
                       <div className="flex items-center gap-1 text-green-600">
                         <Check className="w-4 h-4" />
-                        <span className="text-xs font-medium">Copied!</span>
+                        <span>
                       </div>
                     ) : (
-                      <Copy className="w-4 h-4 text-gray-400" />
+                      <Copy className="w-4 h-4 text-g" />
                     )}
                   </div>
                 </Button>
                 
                 <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="justify-start h-auto p-3 hover:bg-green-50 transition-colors"
-                  onClick={() => handleCopy("Hi! Please send $[AMOUNT] to $JohnDoe23 on Cash App for our ride. Thanks!", "cashapp-template")}
+                  varianne" 
+                  size="s
+                rs"
+                  onClic
                 >
-                  <div className="flex items-center gap-3 w-full">
+                  <div classll">
                     <div className="bg-green-600 text-white p-1 rounded text-xs font-bold">$</div>
                     <div className="text-left flex-1">
-                      <p className="text-sm font-medium">Copy Cash App Request</p>
-                      <p className="text-xs text-gray-500">Template message for riders</p>
+                 st</p>
+                      <p className="text-xs text-gray-500">Templat>
                     </div>
-                    {copySuccess === 'cashapp-template' ? (
+                    {copySuccess === 'cashapp-template
                       <div className="flex items-center gap-1 text-green-600">
                         <Check className="w-4 h-4" />
-                        <span className="text-xs font-medium">Copied!</span>
+                        <sspan>
                       </div>
                     ) : (
-                      <Copy className="w-4 h-4 text-gray-400" />
+                      <Copy className="w-4 h-4 text-g>
                     )}
                   </div>
                 </Button>
               </div>
             </div>
 
-            {/* Positive Security Message */}
-            <Alert className="bg-green-50 border-green-200">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              <AlertDescription className="text-green-800">
-                <strong>✅ All transactions are secured directly via your chosen payment method.</strong>
+            {/* Positive 
+            <Alert c0">
+              <Che" />
+800">
+                <strong>✅ All transactions ar>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Info className="w-3 h-3 ml-1 cursor-help inline" />
+                    <Info className="w-3 h-3 ml-1 cursor-he
                   </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p>Rydify doesn't process payments. All transactions happen directly between you and riders. Always confirm payment before starting the ride.</p>
+                  <Toolti
+                    <p>Rydify doesn't proc
                   </TooltipContent>
                 </Tooltip>
               </AlertDescription>
@@ -628,386 +624,392 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   }
 
   const ContactCard = () => (
-    <Card className="bg-white shadow-lg border-0 h-full">
-      <CardHeader className="border-b border-gray-100 pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
-          <div className="bg-gray-100 p-2 rounded-lg">
-            <User className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
+    <
+   ">
+>
+          <div className="bg-
+            <User className="w-4 h-4 sm:w-5 sm:h-5 text-g
           </div>
           Contact Information
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 flex-1">
-        <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
-              <Mail className="w-4 h-4 text-blue-600" />
+      <CardConte">
+        <div className="space
+          <div classlors">
+            <div clk-0">
+              <Mail className="w-4 h-4 text-blue
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{userData.email}</p>
-              <p className="text-xs text-gray-500 flex items-center gap-1">
-                📧 Email
+              <p className="text-sm font-medium truncate">{userData.em>
+              <p className="text-xs text-gray-500 flex i-1">
+                📧l
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-            <div className="bg-green-100 p-2 rounded-lg flex-shrink-0">
-              <Phone className="w-4 h-4 text-green-600" />
-            </div>
+          <div clas">
+            <div c>
+              <P>
+/div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium">{userData.phone}</p>
-              <p className="text-xs text-gray-500 flex items-center gap-1">
-                📱 Phone
+              <p className="text-xs text-gray-500 flex itep-1">
+                📱e
               </p>
             </div>
           </div>
         </div>
 
-        <div className="mt-auto pt-4">
-          <Button variant="outline" className="w-full hover:bg-gray-50 transition-colors">
-            <Edit className="w-4 h-4 mr-2" />
-            Update Contact Info
+        <div class
+          <Butto>
+            <E
+Info
           </Button>
         </div>
       </CardContent>
     </Card>
   )
 
-  const RideHistoryCard = () => {
-    const upcomingRides = rideHistory.filter(ride => ride.date > new Date())
-    const pastRides = rideHistory.filter(ride => ride.date <= new Date())
-    
+  const RideHistoryC{
     return (
-      <Card className="bg-white shadow-lg border-0">
-        <CardHeader className="border-b border-gray-100 pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
+   0">
+-4">
+          <div className="flex fl>
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl>
               <div className="bg-gray-100 p-2 rounded-lg">
-                <History className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-              </div>
+    " />
+            /div>
               Ride History
             </CardTitle>
-            <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 hover:bg-gray-50 flex-shrink-0">
+            <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 ho
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent clap-6">
           {/* Enhanced Filter Pills */}
           <div className="flex flex-wrap gap-2 mb-6">
             <Button
-              variant={historyFilter === 'all' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setHistoryFilter('all')}
-              className={cn(
-                "transition-all duration-200",
+              variantoutline'}
+              sism"
+              onClick')}
+              classNae={cn(
+                "transition-all duratio",
                 historyFilter === 'all' 
-                  ? "bg-teal-600 hover:bg-teal-700 text-white shadow-md" 
+                  ?" 
                   : "hover:bg-gray-50"
               )}
             >
-              All ({rideHistory.length})
+              All ({rideHist)
             </Button>
             <Button
               variant={historyFilter === 'driver' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setHistoryFilter('driver')}
-              className={cn(
-                "flex items-center gap-2 transition-all duration-200",
-                historyFilter === 'driver' 
-                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md" 
+              onriver')}
+             n(
+                "flex items-center gap-1
+                historiver' 
+                  ?
                   : "hover:bg-blue-50"
               )}
             >
-              🚗 Driver ({rideHistory.filter(r => r.type === 'driver').length})
+              🚗 Driver ({ri
             </Button>
             <Button
               variant={historyFilter === 'passenger' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setHistoryFilter('passenger')}
-              className={cn(
-                "flex items-center gap-2 transition-all duration-200",
-                historyFilter === 'passenger' 
-                  ? "bg-green-600 hover:bg-green-700 text-white shadow-md" 
+              on)}
+             (
+                "flex items-center gap-1 transition-all duration-200",
+                histoger' 
+                  ? 
                   : "hover:bg-green-50"
               )}
             >
-              🧑‍🤝‍🧑 Passenger ({rideHistory.filter(r => r.type === 'passenger').length})
+              🧑‍🤝‍🧑 Passe)
             </Button>
           </div>
 
-          {/* Timeline Style Layout */}
-          <div className="relative">
-            {/* Timeline line */}
-            {filteredHistory.length > 0 && (
-              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-300 to-gray-200"></div>
-            )}
-            
-            <div className="space-y-3">
-            {filteredHistory.map((ride, index) => (
-              <div
-                key={ride.id}
-                className="p-3 border rounded-lg hover:bg-gray-50 transition-colors relative"
-              >
-                {/* Timeline dot */}
-                <div className="absolute left-6 top-1/2 transform -translate-y-1/2 -translate-x-1/2 w-3 h-3 bg-white border-2 border-teal-500 rounded-full z-10 shadow-sm hover:scale-110 transition-transform"></div>
+          {/* Ride List */}
+          <div c-4">
+            { ? (
+              filteredHistory.map((ride) => (
+                <div
+                {ride.id}
+s"
+                >
+                  <div className="fl-0">
+                    {/* Status Ic/}
+                    <div className={cn(
+                      "w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0",
+              -100"
+             )}>
+                      {ride.type === 'd(
+                        <Car className="w-5 h-5 tex00" />
+                   (
+                        <User>
+                      )}
+               iv>
+
+                    {/* Ride Details */}
                 
-                <div className="flex items-center justify-between gap-3 ml-8">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center flex-wrap gap-2 mb-1">
-                      <Badge 
-                        variant={ride.type === 'driver' ? 'default' : 'secondary'}
-                        className="text-xs px-2 py-0"
-                      >
-                        {ride.type === 'driver' ? '🚗 Driver' : '🧑‍🤝‍🧑 Passenger'}
-                      </Badge>
-                      <Badge 
-                        variant={ride.status === 'completed' ? 'default' : 'secondary'}
-                        className={cn(
-                          "text-xs px-2 py-0",
-                          ride.status === 'completed' && "bg-green-100 text-green-800 border-green-200"
-                        )}
-                      >
-                        {ride.status === 'completed' ? '✅ Completed' : ride.status}
-                      </Badge>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge 
+                          className={cn(
+                            "",
+                            ride.type === 'driver' 
+                              ? "bg-blue-100 text-blu
+                       
+                          )}
+                        >
+                          {ri'}
+                        </Badge>
+                        <Badge classNa
+                          ✅ Completed
+                        </Badge>
+                      </div>
+                      
+                      <p className="font-medium text-sm text-gray-900 mb-1">
+                        {ride.
+                      </p>
+                      
+                      <p className="text-xs text-gray-500">
+                        {ride.date.toLocaleDateString('en { 
+                          month: 'short', 
+                          day: 'numeric', 
+                          year: 'numeric' 
+                       
+                        
+                        person` 
+                          : ` Driver: ${ride.dd`
+                        }
+                      </p>
                     </div>
-                    <p className="font-medium text-sm truncate mb-1">{ride.from} → {ride.to}</p>
-                    <p className="text-xs text-gray-500">
-                      {ride.date.toLocaleDateString()} • 
-                      {ride.type === 'driver' 
-                        ? ` ${ride.passengers} seats • $${ride.amount.toFixed(2)} per person` 
-                        : ` Driver: ${ride.driver} • $${ride.amount.toFixed(2)} paid`
-                      }
-                    </p>
                   </div>
-                  <div className="text-right">
+
+                  {/* Am
+                  <div className="text-right flex-shrink->
                     <p className={cn(
-                      "font-bold text-base",
-                      ride.type === 'driver' ? "text-green-600" : "text-blue-600"
+                      "f",
+                      ride.type === '00"
                     )}>
                       {ride.type === 'driver' ? '+' : '-'}${ride.amount.toFixed(2)}
                     </p>
-                    <p className="text-xs text-gray-500">
-                      {ride.type === 'driver' ? 'earned' : 'paid'}
+                    <p class">
+                      'paid'}
                     </p>
-                    {ride.rating && (
-                      <div className="flex items-center gap-1 justify-end mt-1">
-                        <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                        <span className="text-xs">{ride.rating}</span>
-                      </div>
-                    )}
+                    {rting && (
+                    d">
+               
+                  
+                iv>
+ )}
                   </div>
                 </div>
-              </div>
-            ))}
-            </div>
-          </div>
-
-          {/* Enhanced Empty States */}
-          {filteredHistory.length === 0 && (
-            <div className="text-center py-12">
-              {historyFilter === 'all' ? (
-                <>
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Car className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <p className="text-gray-600 mb-2 font-medium">No rides yet</p>
-                  <p className="text-sm text-gray-500 mb-6">Start your Rydify journey today</p>
-                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/rides">
-                      <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
-                        🔍 Find a ride
-                      </Button>
-                    </Link>
-                    <Link href="/rides/create">
-                      <Button variant="outline" size="sm" className="hover:bg-gray-50">
-                        🚗 Offer your first ride
-                      </Button>
-                    </Link>
-                  </div>
-                </>
-              ) : historyFilter === 'driver' ? (
-                <>
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">🚗</span>
-                  </div>
-                  <p className="text-gray-600 mb-2 font-medium">No rides offered yet</p>
-                  <p className="text-sm text-gray-500 mb-6">Start earning by helping fellow students</p>
-                  <Link href="/rides/create">
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-                      🚗 Offer your first ride
-                    </Button>
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">🧑‍🤝‍🧑</span>
-                  </div>
-                  <p className="text-gray-600 mb-2 font-medium">No rides taken yet</p>
-                  <p className="text-sm text-gray-500 mb-6">Find your first ride today</p>
-                  <Link href="/rides">
-                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                      🔍 Find a ride
-                    </Button>
-                  </Link>
-                </>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+              ))
+            ) : (
+              /* E*/
+              <div className="text-center py-12">
+                {historyFilter === 'all' ? (
+                  <>
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex item">
+                      <Car className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <p className="text-g
+                    <p className="text-sm text-gray-500 mb-6">Start your Rydify jo/p>
+                    <div className="fl
+                      <Link hredes">
+                        <Bu0">
+                          🔍 Find a ride
+                        </Button>
+                      </Link>
+                      <Link hre">
+                        <Bu-50">
+                        ride
+                   ton>
+                      </Link>
+                  >
+                  </>
+                ) : historyFilter === 'driver' ? (
+                  <>
+                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center
+                      <Car className="w-8 h-8 text-blue-600" />
+                    </div>
+                    <p className="text-gray-600 mb-2 font-medium">No rides offer/p>
+                    <p className="text-sm text
+                    <Link hre
+                      <Bu
+                   
+                   >
+                  Link>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-cen
+                      <User className="w-8 h-8 text-green-600" />
+                    </div>
+                    <p className="text-gray-600 mb-2 font-medium">No rides taken y
+                    <p className="te>
+                    <Link hre">
+                      <Bu00">
+                   e
+                >
+                  nk>
+            >
+                )}
+             iv>
+     
+   </div>
+t>
+d>
     )
   }
-
-
 
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {/* Enhanced User Info Card - Hero Section */}
+          {/* Enhanced User Info Card - Hero Sec*/}
           <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl mb-8">
             <CardContent className="p-6 sm:p-8">
-              <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:sp>
                 <div className="relative flex-shrink-0">
                   <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white/30 shadow-lg">
-                    <AvatarImage src="/placeholder-avatar.jpg" alt={`${userData.name}'s profile picture`} />
-                    <AvatarFallback className="bg-white/20 text-white text-xl sm:text-2xl font-bold">
-                      {userData.name.split(' ').map(n => n[0]).join('')}
+                    <AvatarImage src="/placeholder-avatar.jpg" alt={`${u`} />
+                    <AvatarFallback c">
+                      {user
                     </AvatarFallback>
                   </Avatar>
                   {userData.eduVerified && (
-                    <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1 border-2 border-white">
-                      <CheckCircle className="w-4 h-4 text-white" />
+                    <div c">
+                    ite" />
                     </div>
-                  )}
+                
                 </div>
                 
                 <div className="flex-1 min-w-0 w-full lg:w-auto">
                   <div className="mb-4">
-                    <h1 className="text-2xl sm:text-3xl font-bold mb-2">Welcome back, {userData.name.split(' ')[0]}!</h1>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-2"</h1>
                     <p className="text-teal-100 text-base sm:text-lg">
-                      Member since {userData.joinedAt.getFullYear()} • 
-                      <span className="ml-2 inline-flex items-center gap-1">
-                        <Users className="w-4 h-4" />
-                        {stats.totalRides} rides completed
+                      Member since {userData.joinedAt)} • 
+                      <span className="ml-2 inline-flex it>
+                        <User-4" />
+                        leted
                       </span>
-                    </p>
+                  /p>
                   </div>
                   
                   <div className="flex flex-wrap items-center gap-3 mb-6">
-                    <div className="flex items-center space-x-1 bg-white/20 px-3 py-2 rounded-full">
+                    <div className="flex items-center space-x-1 bg-white/20 px-3 py-2 rounde">
                       <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span className="font-semibold">{userData.ratingAvg.toFixed(1)}</span>
-                      <span className="text-teal-100 text-sm">({userData.ratingCount})</span>
+                      <spa1)}</span>
+                    
                     </div>
                     
                     {userData.eduVerified && (
-                      <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
-                        <Shield className="w-3 h-3 mr-1" />
-                        Student verified
-                      </Badge>
+                      <Badge className=">
+                        <Shiel
+                      d
+                    
                     )}
                     
                     {getVerificationProgress() === 100 && (
-                      <Badge className="bg-green-500/20 text-green-100 border-green-300/30">
-                        <Sparkles className="w-3 h-3 mr-1" />
-                        Fully verified
-                      </Badge>
-                    )}
+                      <Badge className0">
+                        <Spark>
+                      ified
+                      </ge>
+      )}
                   </div>
 
                   {/* Stats Row */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-white">{stats.totalRides}</div>
-                      <div className="text-xs text-teal-100">Total Rides</div>
+                      <divv>
+                      <div className="text-xs tex>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-green-300">${stats.totalEarned.toFixed(0)}</div>
-                      <div className="text-xs text-teal-100">Earned</div>
+                      <div)}</div>
+                      <div className="text-xs tex</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-xl sm:text-2xl font-bold text-blue-300">${stats.totalSpent.toFixed(0)}</div>
-                      <div className="text-xs text-teal-100">Spent</div>
+                      <divv>
+                      <div className="text-xs tex
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center gap-1">
-                        <span className="text-xl sm:text-2xl font-bold text-yellow-300">{stats.avgRating.toFixed(1)}</span>
-                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <span>
+                        <Star className="w-4 h-4 fill-yellow-400 text-yel" />
                       </div>
-                      <div className="text-xs text-teal-100">Rating</div>
+                      <d</div>
                     </div>
-                  </div>
+                >
                 </div>
                 
-                <div className="flex items-center gap-2 w-full lg:w-auto justify-end">
+                <div className="flex items-cd">
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+                       s"
                         aria-label="Notifications"
                       >
-                        <Bell className="w-4 h-4" />
+                        <Bell classNa />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Notifications</p>
-                    </TooltipContent>
-                  </Tooltip>
+                      <p>Not
+                  
+                  </Toolti
                   
                   <Button 
                     variant="secondary" 
-                    size="sm" 
-                    className="hover:shadow-md transition-all duration-200"
+                   ="sm" 
+                    className="hover:shadow-md transiion-200"
                   >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Profile
-                  </Button>
+                    <Edit c>
+                    Edile
+                  </>
                 </div>
-              </div>
-            </CardContent>
+              </d>
+ntent>
           </Card>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 xl:grid-c-8">
             {/* Left Column - Primary Actions */}
-            <div className="space-y-6 lg:space-y-8">
-              {/* Verification Status - Primary */}
+            <div className="space->
+              mary */}
               <VerificationCard />
               
-              {/* Contact Information - Secondary */}
-              <ContactCard />
+              {/* ondary */}
+
             </div>
 
-            {/* Right Column - Payment & Settings */}
-            <div className="space-y-6 lg:space-y-8">
-              {/* Payment Settings - Primary */}
-              <PaymentCard />
-            </div>
+            {/* Right Column - Payment & Setting
+            <div className="se-y-8">
+              {/* 
+              <P
+
           </div>
 
-          {/* Full Width Ride History - Bottom Section */}
-          <div className="mt-8">
-            <RideHistoryCard />
-          </div>
+          {/* Full Width Ride Hn */}
+          <div c"mt-8">
+            <R />
+
         </div>
 
         {/* Toast Notification */}
         {copySuccess && (
-          <div className="fixed bottom-4 right-4 z-50 animate-in slide-in-from-bottom-2 duration-300">
-            <div className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
-              <Check className="w-4 h-4" />
-              <span className="text-sm font-medium">Copied to clipboard!</span>
-            </div>
-          </div>
+          <div className="fixed bottom-4 ri>
+            <div className="bg-green-600 text-white px-4 py-2 rounded-lg shadow2">
+              <Che
+              <s
+          
+          </v>
         )}
-      </div>
-    </TooltipProvider>
-  )
-}
+   
+   )
+}r>
+ipProvideolt   </To
