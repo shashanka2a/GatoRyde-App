@@ -21,6 +21,7 @@
     "test:e2e": "playwright test __tests__/e2e/",
     "test:offplatform": "tsx scripts/test-offplatform.ts",
     "test:gmail": "tsx scripts/test-gmail-smtp.ts",
+    "test:auth": "tsx scripts/test-auth-gates.ts",
     "test:all": "npm run test && npm run test:e2e"
   },
   "dependencies": {

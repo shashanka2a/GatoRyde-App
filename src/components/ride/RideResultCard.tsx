@@ -18,6 +18,7 @@ import {
   Mail,
   Eye
 } from 'lucide-react'
+import { ContactDriverActions } from '@/src/components/auth/ProtectedActions'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -123,25 +124,10 @@ export function RideResultCard({ ride, userEduVerified, onContact }: RideResultC
   }
 
   const handleContactDriver = () => {
-    if (!userEduVerified) {
-      alert('Please verify your student email to contact drivers.')
-      return
-    }
-
     if (onContact) {
       onContact(ride)
     } else {
       setShowContactOptions(true)
-    }
-  }
-
-  const generateContactLinks = () => {
-    const driverName = ride.driver.user.name || 'Driver'
-    const rideInfo = `${ride.originText} to ${ride.destText} on ${ride.departAt.toLocaleDateString()}`
-    
-    return {
-      sms: `sms:${ride.driver.user.phone}?body=Hi ${driverName}! I'm interested in your ride: ${rideInfo}. I found you on Rydify.`,
-      email: `mailto:${ride.driver.user.email}?subject=Ride Request via Rydify&body=Hi ${driverName},%0A%0AI'm interested in your ride: ${rideInfo}.%0A%0APlease let me know if you have space available.%0A%0AThanks!`
     }
   }
 
@@ -293,7 +279,7 @@ export function RideResultCard({ ride, userEduVerified, onContact }: RideResultC
                   </div>
 
                   {/* Contact Options */}
-                  {showContactOptions && userEduVerified && (
+                  {showContactOptions && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}
@@ -301,46 +287,13 @@ export function RideResultCard({ ride, userEduVerified, onContact }: RideResultC
                       className="mt-4 pt-4 border-t border-gray-200"
                     >
                       <p className="text-sm text-gray-600 mb-3">Choose how to contact the driver:</p>
-                      <div className="flex gap-3">
-                        {ride.driver.user.phone && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            asChild
-                            className="flex-1"
-                          >
-                            <a href={generateContactLinks().sms}>
-                              <Phone className="w-4 h-4 mr-2" />
-                              Send SMS
-                            </a>
-                          </Button>
-                        )}
-                        
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          asChild
-                          className="flex-1"
-                        >
-                          <a href={generateContactLinks().email}>
-                            <Mail className="w-4 h-4 mr-2" />
-                            Send Email
-                          </a>
-                        </Button>
-                      </div>
+                      <ContactDriverActions
+                        driverEmail={ride.driver.user.email}
+                        driverPhone={ride.driver.user.phone || undefined}
+                        rideId={ride.id}
+                        className="flex gap-3"
+                      />
                     </motion.div>
-                  )}
-
-                  {/* Verification Warning */}
-                  {!userEduVerified && (
-                    <div className="mt-4 pt-4 border-t border-gray-200">
-                      <div className="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                        <p className="text-sm text-orange-800">
-                          <Shield className="w-4 h-4 inline mr-1" />
-                          Verify your student email to contact drivers
-                        </p>
-                      </div>
-                    </div>
                   )}
                 </div>
               </div>
