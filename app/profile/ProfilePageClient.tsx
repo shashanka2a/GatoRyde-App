@@ -166,250 +166,9 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     }
   }
 
-  const ProfileHeader = () => (
-    <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-lg">
-      <CardContent className="p-6">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
-          <div className="relative">
-            <Avatar className="w-20 h-20 border-4 border-white/30 shadow-lg">
-              <AvatarImage src="/placeholder-avatar.jpg" alt={`${userData.name}'s profile picture`} />
-              <AvatarFallback className="bg-white/20 text-white text-xl font-bold">
-                {userData.name.split(' ').map(n => n[0]).join('')}
-              </AvatarFallback>
-            </Avatar>
-            {userData.eduVerified && (
-              <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1 border-2 border-white">
-                <CheckCircle className="w-4 h-4 text-white" />
-              </div>
-            )}
-          </div>
-          
-          <div className="flex-1 min-w-0">
-            <h1 className="text-xl sm:text-2xl font-bold mb-2 truncate">{userData.name}</h1>
-            <p className="text-teal-100 mb-3 text-sm">
-              Member since {userData.joinedAt.getFullYear()} • 
-              <span className="ml-2 inline-flex items-center gap-1">
-                <Users className="w-3 h-3" />
-                {stats.totalRides} rides completed
-              </span>
-            </p>
-            
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center space-x-1 bg-white/20 px-3 py-1 rounded-full">
-                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                <span className="font-semibold">{userData.ratingAvg.toFixed(1)}</span>
-                <span className="text-teal-100 text-sm">({userData.ratingCount})</span>
-              </div>
-              
-              {userData.eduVerified && (
-                <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
-                  <Shield className="w-3 h-3 mr-1" />
-                  Student verified
-                </Badge>
-              )}
-              
-              {getVerificationProgress() === 100 && (
-                <Badge className="bg-green-500/20 text-green-100 border-green-300/30">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Fully verified
-                </Badge>
-              )}
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white/80 hover:text-white hover:bg-white/20 transition-colors"
-                  aria-label="Notifications"
-                >
-                  <Bell className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Notifications</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-white/80 hover:text-white hover:bg-white/20 transition-colors"
-                  aria-label="Settings"
-                >
-                  <Settings className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Account Settings</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Button 
-              variant="secondary" 
-              size="sm" 
-              className="flex-1 sm:flex-none hover:shadow-md transition-all duration-200"
-            >
-              <Edit className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Edit Profile</span>
-              <span className="sm:hidden">Edit</span>
-            </Button>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  )
 
-  const StatsCards = () => (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <TooltipProvider>
-        <Card className="hover:shadow-md transition-shadow duration-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-blue-100 p-3 rounded-xl">
-                  <Car className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 flex items-center gap-1">
-                    Total Rides
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-gray-400" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Combined rides as driver and passenger</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </p>
-                  <p className="text-2xl font-bold">{stats.totalRides}</p>
-                </div>
-              </div>
-              {stats.totalRides > 0 && (
-                <div className="text-green-600">
-                  <TrendingUp className="w-4 h-4" />
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card className="hover:shadow-md transition-shadow duration-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-green-100 p-3 rounded-xl">
-                  <TrendingUp className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 flex items-center gap-1">
-                    Earned
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-gray-400" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Total earnings from driving rides</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </p>
-                  <p className="text-2xl font-bold text-green-600">${stats.totalEarned.toFixed(2)}</p>
-                </div>
-              </div>
-              {stats.totalEarned > 0 && (
-                <Badge variant="outline" className="text-green-600 border-green-200">
-                  +{Math.round((stats.totalEarned / Math.max(stats.totalSpent, 1)) * 100)}%
-                </Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
 
-        <Card className="hover:shadow-md transition-shadow duration-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-purple-100 p-3 rounded-xl">
-                  <DollarSign className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 flex items-center gap-1">
-                    Spent
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-gray-400" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Total spent on rides as passenger</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </p>
-                  <p className="text-2xl font-bold text-purple-600">${stats.totalSpent.toFixed(2)}</p>
-                </div>
-              </div>
-              {stats.totalSpent > 0 && (
-                <div className="text-purple-600">
-                  <Target className="w-4 h-4" />
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="hover:shadow-md transition-shadow duration-200">
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="bg-yellow-100 p-3 rounded-xl">
-                  <Award className="w-6 h-6 text-yellow-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 flex items-center gap-1">
-                    Rating
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Info className="w-3 h-3 text-gray-400" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Average rating from {userData.ratingCount} reviews</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-2xl font-bold text-yellow-600">{stats.avgRating.toFixed(1)}</p>
-                    <div className="flex">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          className={cn(
-                            "w-4 h-4",
-                            star <= stats.avgRating
-                              ? "fill-yellow-400 text-yellow-400"
-                              : "text-gray-300"
-                          )}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {stats.avgRating >= 4.5 && (
-                <Badge variant="outline" className="text-yellow-600 border-yellow-200">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Excellent
-                </Badge>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </TooltipProvider>
-    </div>
-  )
 
   const VerificationCard = () => {
     const getVerificationProgress = () => {
@@ -460,15 +219,17 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
 
     return (
       <TooltipProvider>
-        <Card className="relative overflow-hidden">
+        <Card className="bg-white shadow-lg border-0 relative overflow-hidden">
           {progress === 100 && (
             <div className="absolute top-0 right-0 bg-gradient-to-l from-green-500 to-transparent w-32 h-1"></div>
           )}
           
-          <CardHeader>
+          <CardHeader className="border-b border-gray-100 pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Shield className="w-5 h-5" />
+              <CardTitle className="flex items-center gap-2 text-xl font-bold text-gray-900">
+                <div className="bg-teal-100 p-2 rounded-lg">
+                  <Shield className="w-5 h-5 text-teal-600" />
+                </div>
                 Verification Status
                 <Tooltip>
                   <TooltipTrigger>
@@ -486,7 +247,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 </Badge>
               )}
             </div>
-            <CardDescription>
+            <CardDescription className="text-gray-600">
               3-step verification process • Review time: 24-48 hours
             </CardDescription>
           </CardHeader>
@@ -602,12 +363,14 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     
     return (
       <TooltipProvider>
-        <Card>
-          <CardHeader>
+        <Card className="bg-white shadow-lg border-0">
+          <CardHeader className="border-b border-gray-100 pb-4">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="flex items-center gap-2">
-                  <QrCode className="w-5 h-5" />
+                <CardTitle className="flex items-center gap-2 text-xl font-bold text-gray-900">
+                  <div className="bg-teal-100 p-2 rounded-lg">
+                    <QrCode className="w-5 h-5 text-teal-600" />
+                  </div>
                   Payment Settings
                   <Tooltip>
                     <TooltipTrigger>
@@ -618,11 +381,11 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                     </TooltipContent>
                   </Tooltip>
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-gray-600">
                   Rydify doesn't process payments; riders pay you directly
                 </CardDescription>
               </div>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="border-teal-200 text-teal-600 hover:bg-teal-50">
                 <Edit className="w-4 h-4 mr-2" />
                 Edit
               </Button>
@@ -861,10 +624,12 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   }
 
   const ContactCard = () => (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <User className="w-5 h-5" />
+    <Card className="bg-white shadow-md border border-gray-200">
+      <CardHeader className="border-b border-gray-100 pb-4">
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+          <div className="bg-gray-100 p-2 rounded-lg">
+            <User className="w-4 h-4 text-gray-600" />
+          </div>
           Contact Information
         </CardTitle>
       </CardHeader>
@@ -908,14 +673,16 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     const pastRides = rideHistory.filter(ride => ride.date <= new Date())
     
     return (
-      <Card>
-        <CardHeader>
+      <Card className="bg-white shadow-md border border-gray-200">
+        <CardHeader className="border-b border-gray-100 pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <CardTitle className="flex items-center gap-2">
-              <History className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-2 text-lg font-semibold text-gray-800">
+              <div className="bg-gray-100 p-2 rounded-lg">
+                <History className="w-4 h-4 text-gray-600" />
+              </div>
               Ride History
             </CardTitle>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 hover:bg-gray-50">
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </Button>
@@ -1094,97 +861,132 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50">
-        {/* Enhanced Header with Breadcrumbs */}
-        <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
-          <div className="container mx-auto py-8 px-4">
-            <div className="max-w-6xl mx-auto">
-              {/* Breadcrumb Navigation */}
-              <nav className="flex items-center gap-2 text-sm text-teal-100 mb-4">
-                <Link href="/" className="hover:text-white transition-colors">
-                  Home
-                </Link>
-                <ChevronRight className="w-4 h-4" />
-                <span className="text-white font-medium">Profile</span>
-              </nav>
-              
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-white/20 p-2 rounded-xl">
-                    <User className="w-8 h-8 text-yellow-300" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl lg:text-3xl font-bold">Profile</h1>
-                    <p className="text-teal-100 text-lg">Welcome back, {userData.name.split(' ')[0]}!</p>
-                  </div>
-                </div>
-                <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full border border-white/30">
-                  <Shield className="h-4 w-4" />
-                  <span>Verified Students Only</span>
-                </div>
-              </div>
-              
-              <p className="text-teal-100 max-w-xl mb-6">
-                Manage your account, verification, and ride history. Keep your profile updated for the best experience.
-              </p>
-              
-              {/* Enhanced Navigation Pills */}
-              <div className="flex flex-wrap gap-3 text-sm">
-                <Tooltip>
-                  <TooltipTrigger>
-                    <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full hover:bg-white/30 transition-colors cursor-pointer">
-                      <Shield className="h-4 w-4" />
-                      <span>Verification</span>
-                      {getVerificationProgress() < 100 && (
-                        <Badge className="bg-yellow-500 text-yellow-900 text-xs px-2 py-0">
-                          {Math.round(getVerificationProgress())}%
-                        </Badge>
-                      )}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Complete verification to unlock all features</p>
-                  </TooltipContent>
-                </Tooltip>
-                
-                <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-                  <History className="h-4 w-4" />
-                  <span>Ride History</span>
-                  <Badge className="bg-white/30 text-white text-xs px-2 py-0">
-                    {stats.totalRides}
-                  </Badge>
-                </div>
-                
-                <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-                  <QrCode className="h-4 w-4" />
-                  <span>Payment Settings</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
         <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-          {/* Profile Header */}
-          <ProfileHeader />
+          {/* Enhanced User Info Card - Only Teal Container */}
+          <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl">
+            <CardContent className="p-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-6 sm:space-y-0 sm:space-x-8">
+                <div className="relative">
+                  <Avatar className="w-24 h-24 border-4 border-white/30 shadow-lg">
+                    <AvatarImage src="/placeholder-avatar.jpg" alt={`${userData.name}'s profile picture`} />
+                    <AvatarFallback className="bg-white/20 text-white text-2xl font-bold">
+                      {userData.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  {userData.eduVerified && (
+                    <div className="absolute -bottom-1 -right-1 bg-green-500 rounded-full p-1 border-2 border-white">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                  )}
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="mb-4">
+                    <h1 className="text-3xl font-bold mb-2">Welcome back, {userData.name.split(' ')[0]}!</h1>
+                    <p className="text-teal-100 text-lg">
+                      Member since {userData.joinedAt.getFullYear()} • 
+                      <span className="ml-2 inline-flex items-center gap-1">
+                        <Users className="w-4 h-4" />
+                        {stats.totalRides} rides completed
+                      </span>
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-4 mb-6">
+                    <div className="flex items-center space-x-1 bg-white/20 px-4 py-2 rounded-full">
+                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      <span className="font-semibold">{userData.ratingAvg.toFixed(1)}</span>
+                      <span className="text-teal-100 text-sm">({userData.ratingCount})</span>
+                    </div>
+                    
+                    {userData.eduVerified && (
+                      <Badge className="bg-white/20 text-white border-white/30 hover:bg-white/30 transition-colors">
+                        <Shield className="w-3 h-3 mr-1" />
+                        Student verified
+                      </Badge>
+                    )}
+                    
+                    {getVerificationProgress() === 100 && (
+                      <Badge className="bg-green-500/20 text-green-100 border-green-300/30">
+                        <Sparkles className="w-3 h-3 mr-1" />
+                        Fully verified
+                      </Badge>
+                    )}
+                  </div>
 
-          {/* Stats Cards */}
-          <StatsCards />
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white">{stats.totalRides}</div>
+                      <div className="text-xs text-teal-100">Total Rides</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-300">${stats.totalEarned.toFixed(0)}</div>
+                      <div className="text-xs text-teal-100">Earned</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-300">${stats.totalSpent.toFixed(0)}</div>
+                      <div className="text-xs text-teal-100">Spent</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        <span className="text-2xl font-bold text-yellow-300">{stats.avgRating.toFixed(1)}</span>
+                        <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      </div>
+                      <div className="text-xs text-teal-100">Rating</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-white/80 hover:text-white hover:bg-white/20 transition-colors"
+                        aria-label="Notifications"
+                      >
+                        <Bell className="w-4 h-4" />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Notifications</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  
+                  <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="hover:shadow-md transition-all duration-200"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-          {/* Main Content Grid */}
+          {/* Primary Sections Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Left Column */}
-            <div className="space-y-6">
-              <VerificationCard />
-              <ContactCard />
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-6">
-              <PaymentCard />
-            </div>
+            {/* Verification Status - Primary */}
+            <VerificationCard />
+            
+            {/* Payment Settings - Primary */}
+            <PaymentCard />
           </div>
 
-          {/* Full Width Ride History */}
+          {/* Secondary Sections Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Contact Information - Secondary */}
+            <ContactCard />
+            
+            {/* Placeholder for future secondary section */}
+            <div></div>
+          </div>
+
+          {/* Full Width Ride History - Secondary */}
           <RideHistoryCard />
         </div>
 
