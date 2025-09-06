@@ -15,6 +15,9 @@ import { Search, MapPin, Clock, DollarSign, Users, Filter, Car, MessageSquare, P
 const LocationAutocomplete = lazy(() => import('./LocationAutocomplete').then(m => ({ default: m.LocationAutocomplete })))
 const Slider = lazy(() => import('@/src/components/ui/slider').then(m => ({ default: m.Slider })))
 const DatePicker = lazy(() => import('@/src/components/ui/date-picker').then(m => ({ default: m.DatePicker })))
+
+// Import SimpleLocationInput for fallback
+import { SimpleLocationInput } from './SimpleLocationInput'
 import type { Location } from '@/lib/maps/mapbox'
 import type { SearchFilters, UniversityScope } from '@/lib/rides/types'
 import { getAvailableScopeOptions, getDefaultUniversityScope, getFilterScopeDescription } from '@/lib/rides/university-filter'
@@ -50,6 +53,11 @@ export function RideSearchForm({
 
   const [showAdvanced, setShowAdvanced] = useState(false)
   const [isRoundTrip, setIsRoundTrip] = useState(false)
+  
+  // Simple input mode for fallback
+  const [useSimpleInputs] = useState(false) // Set to false to use LocationAutocomplete by default
+  const [simpleOrigin, setSimpleOrigin] = useState('')
+  const [simpleDestination, setSimpleDestination] = useState('')
 
 
 
