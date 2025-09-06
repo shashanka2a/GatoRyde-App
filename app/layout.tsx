@@ -4,7 +4,11 @@ import { AppNavigation } from '../src/components/layout/AppNavigation'
 import { BottomNavigation } from '../src/components/layout/BottomNavigation'
 import '../src/styles/globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
 
 export const metadata: Metadata = {
   title: 'Rydify - Student Rideshare App',
