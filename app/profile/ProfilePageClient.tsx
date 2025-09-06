@@ -1098,7 +1098,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                     <User className="w-8 h-8 text-yellow-300" />
                   </div>
                   <div>
-                    <h1 className="text-2xl lg:text-3xl font-bold">Profile</h1>
+                    <h1 className="text-xl lg:text-2xl font-bold">Profile</h1>
                     <p className="text-teal-100 text-sm">Welcome back, {userData.name.split(' ')[0]}!</p>
                   </div>
                 </div>
