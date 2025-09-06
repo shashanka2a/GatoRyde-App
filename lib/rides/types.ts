@@ -25,6 +25,9 @@ export const CreateRideSchema = z.object({
   notes: z.string().max(500, 'Notes cannot exceed 500 characters').optional(),
 })
 
+// University scope options for filtering
+export const UniversityScopeSchema = z.enum(['my_university', 'florida_schools', 'all'])
+
 // Ride search schema
 export const SearchRidesSchema = z.object({
   origin: LocationSchema.optional(),
@@ -35,6 +38,7 @@ export const SearchRidesSchema = z.object({
   departBefore: z.string().optional(),
   maxCostPerPerson: z.number().min(0).optional(), // Max cost per person (total/riders)
   minSeats: z.number().min(1).max(8).default(1),
+  universityScope: UniversityScopeSchema.default('florida_schools'), // New filtering option
 })
 
 // Ride with driver info for display
@@ -83,6 +87,7 @@ export type LocationData = z.infer<typeof LocationSchema>
 export type CreateRideRequest = z.infer<typeof CreateRideSchema>
 export type SearchRidesRequest = z.infer<typeof SearchRidesSchema>
 export type RideWithDriver = z.infer<typeof RideWithDriverSchema>
+export type UniversityScope = z.infer<typeof UniversityScopeSchema>
 
 // Utility interfaces
 export interface RideFormData {
@@ -103,6 +108,7 @@ export interface SearchFilters {
   departBefore?: string
   maxCostPerPerson?: number
   minSeats: number
+  universityScope: 'my_university' | 'florida_schools' | 'all'
 }
 
 // Contact tracking

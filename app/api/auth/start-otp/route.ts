@@ -4,6 +4,7 @@ import { rateLimiter } from "@/lib/auth/rate-limit"
 import { otpManager } from "@/lib/auth/otp"
 import { sendOTPEmail } from "@/lib/auth/email"
 import { sendOTPSMS, validatePhoneNumber, normalizePhoneNumber } from "@/lib/auth/sms"
+import { validateEduEmail, getUniversityName } from "@/lib/auth/university-detector"
 import { CookieManager } from "@/lib/auth/cookies"
 import { z } from "zod"
 
@@ -16,6 +17,16 @@ export async function POST(request: NextRequest) {
     if (type === "email") {
       const emailSchema = z.string().email("Invalid email address")
       emailSchema.parse(identifier)
+      
+      // Validate .edu email
+      const eduValidation = validateEduEmail(identifier)
+      if (!eduValidation.isValid) {
+        throw new OTPError(
+          eduValidation.error || "Only .edu email addresses are accepted",
+          "INVALID_EDU_EMAIL",
+          400
+        )
+      }
     } else if (type === "sms") {
       if (!validatePhoneNumber(identifier)) {
         throw new OTPError("Invalid phone number format", "INVALID_PHONE", 400)
@@ -34,7 +45,8 @@ export async function POST(request: NextRequest) {
     const otp = await otpManager.generateOTP(normalizedIdentifier, type)
 
     if (type === "email") {
-      await sendOTPEmail(normalizedIdentifier, otp)
+      const universityName = getUniversityName(normalizedIdentifier)
+      await sendOTPEmail(normalizedIdentifier, otp, universityName)
     } else {
       await sendOTPSMS(normalizedIdentifier, otp)
     }
@@ -43,9 +55,12 @@ export async function POST(request: NextRequest) {
     await rateLimiter.incrementAttempts(normalizedIdentifier, "otp_request")
 
     // Create response
+    const universityName = type === "email" ? getUniversityName(normalizedIdentifier) : null
     const response = NextResponse.json({
       success: true,
-      message: `Verification code sent to your ${type === "email" ? "email" : "phone"}`,
+      message: type === "email" && universityName
+        ? `Verification code sent to your ${universityName} email`
+        : `Verification code sent to your ${type === "email" ? "email" : "phone"}`,
     })
 
     // Set referral cookie if provided

@@ -13,6 +13,8 @@ export const dynamic = 'force-dynamic' // Since we need user-specific data
 export default async function RidesPage() {
   // Simplified for MVP - assume user is verified
   const userEduVerified = true
+  // Demo user email for Florida university filtering
+  const userEmail = 'student@ufl.edu' // This would come from session in real app
 
   return (
     <Suspense fallback={
@@ -27,7 +29,10 @@ export default async function RidesPage() {
         </div>
       </div>
     }>
-      <RidesPageClient userEduVerified={userEduVerified} />
+      <RidesPageClient 
+        userEduVerified={userEduVerified} 
+        userEmail={userEmail}
+      />
     </Suspense>
   )
 }

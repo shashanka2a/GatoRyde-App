@@ -16,6 +16,9 @@ model User {
   email        String   @unique
   phone        String?  @unique
   eduVerified  Boolean  @default(false)
+  universityId String?
+  state        String?
+  city         String?
   photoUrl     String?
   ratingAvg    Float?
   ratingCount  Int      @default(0)

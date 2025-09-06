@@ -13,6 +13,7 @@ import {
   type RideWithDriver,
   type RideSearchResult
 } from './types'
+import { getUniversityFilter } from './university-filter'
 import { computeAuthEstimate, computeFinalShare, getRidersAfterBooking } from './pricing'
 import { sendOTPEmail } from '@/lib/auth/email'
 import { sendOTPSMS } from '@/lib/auth/sms'

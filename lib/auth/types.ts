@@ -28,6 +28,9 @@ export const VerifyResponseSchema = z.object({
     email: z.string().nullable(),
     phone: z.string().nullable(),
     eduVerified: z.boolean(),
+    universityId: z.string().nullable(),
+    state: z.string().nullable(),
+    city: z.string().nullable(),
     photoUrl: z.string().nullable(),
   }).optional(),
 })
@@ -62,6 +65,9 @@ export interface ExtendedUser {
   email: string | null
   phone: string | null
   eduVerified: boolean
+  universityId: string | null
+  state: string | null
+  city: string | null
   photoUrl: string | null
   name?: string | null
 }
@@ -80,6 +86,9 @@ declare module "next-auth/jwt" {
     email: string | null
     phone: string | null
     eduVerified: boolean
+    universityId: string | null
+    state: string | null
+    city: string | null
     photoUrl: string | null
   }
 }

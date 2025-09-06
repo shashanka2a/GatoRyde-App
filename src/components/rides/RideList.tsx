@@ -28,6 +28,7 @@ import {
   type RideWithDriver 
 } from '@/lib/rides/types'
 import { ContactDriverModal } from './ContactDriverModal'
+import { UniversityBadge } from './UniversityBadge'
 import { cn } from '@/lib/utils'
 
 interface RideListProps {
@@ -38,6 +39,7 @@ interface RideListProps {
   userLocation?: { lat: number; lng: number }
   userEduVerified?: boolean
   className?: string
+  driverEmails?: Record<string, string> // Map of driverId to email for university badges
 }
 
 export function RideList({ 
@@ -47,7 +49,8 @@ export function RideList({
   showDistance = false,
   userLocation,
   userEduVerified = false,
-  className 
+  className,
+  driverEmails = {}
 }: RideListProps) {
   const [expandedRide, setExpandedRide] = useState<string | null>(null)
 
@@ -154,6 +157,9 @@ export function RideList({
                               <DriverCardBadge 
                                 driver={ride.driver} 
                                 size="sm"
+                              />
+                              <UniversityBadge 
+                                driverEmail={driverEmails[ride.driver.userId]}
                               />
                             </div>
                             

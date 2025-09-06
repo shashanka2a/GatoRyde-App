@@ -9,14 +9,15 @@ import { Label } from '@/src/components/ui/label'
 import { Card, CardContent } from '@/src/components/ui/card'
 import { Badge } from '@/src/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
-import { Search, MapPin, Clock, DollarSign, Users, Filter, Car, MessageSquare, Plus, Minus, Calendar } from 'lucide-react'
+import { Search, MapPin, Clock, DollarSign, Users, Filter, Car, MessageSquare, Plus, Minus, Calendar, GraduationCap } from 'lucide-react'
 
 // Lazy load heavy components
 const LocationAutocomplete = lazy(() => import('./LocationAutocomplete').then(m => ({ default: m.LocationAutocomplete })))
 const Slider = lazy(() => import('@/src/components/ui/slider').then(m => ({ default: m.Slider })))
 const DatePicker = lazy(() => import('@/src/components/ui/date-picker').then(m => ({ default: m.DatePicker })))
 import type { Location } from '@/lib/maps/mapbox'
-import type { SearchFilters } from '@/lib/rides/types'
+import type { SearchFilters, UniversityScope } from '@/lib/rides/types'
+import { getAvailableScopeOptions, getDefaultUniversityScope, getFilterScopeDescription } from '@/lib/rides/university-filter'
 
 interface RideSearchFormProps {
   onSearch: (filters: SearchFilters) => void
@@ -24,6 +25,7 @@ interface RideSearchFormProps {
   className?: string
   searchType?: 'drivers' | 'requests'
   onSearchTypeChange?: (type: 'drivers' | 'requests') => void
+  userEmail?: string // For university filtering
 }
 
 export function RideSearchForm({ 
@@ -31,7 +33,8 @@ export function RideSearchForm({
   isLoading = false, 
   className,
   searchType = 'drivers',
-  onSearchTypeChange 
+  onSearchTypeChange,
+  userEmail = 'user@ufl.edu' // Default for demo
 }: RideSearchFormProps) {
   const [filters, setFilters] = useState<SearchFilters>({
     origin: undefined,
@@ -42,6 +45,7 @@ export function RideSearchForm({
     departBefore: '',
     maxCostPerPerson: undefined,
     minSeats: 1,
+    universityScope: getDefaultUniversityScope(userEmail),
   })
 
   const [showAdvanced, setShowAdvanced] = useState(false)
@@ -143,6 +147,7 @@ export function RideSearchForm({
       departBefore: '',
       maxCostPerPerson: undefined,
       minSeats: 1,
+      universityScope: getDefaultUniversityScope(userEmail),
     })
   }
 
@@ -194,6 +199,31 @@ export function RideSearchForm({
         </Tabs>
 
         <form onSubmit={handleSearch} className="space-y-8">
+          {/* University Scope Selector */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <GraduationCap className="w-5 h-5 text-teal-600" />
+              Who can you ride with?
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {getAvailableScopeOptions(userEmail).map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => setFilters(prev => ({ ...prev, universityScope: option.value }))}
+                  className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                    filters.universityScope === option.value
+                      ? 'border-teal-500 bg-teal-50 text-teal-900'
+                      : 'border-gray-200 hover:border-teal-300 hover:bg-teal-50/50'
+                  }`}
+                >
+                  <div className="font-medium text-sm">{option.label}</div>
+                  <div className="text-xs text-gray-600 mt-1">{option.description}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Enhanced Basic Search */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">

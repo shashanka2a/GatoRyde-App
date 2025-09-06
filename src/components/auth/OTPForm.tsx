@@ -82,7 +82,7 @@ export function OTPForm({ onSuccess, referral }: OTPFormProps) {
   }
 
   const isValidEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    return /^[^\s@]+@[^\s@]+\.edu$/.test(email)
   }
 
   const isValidPhone = (phone: string) => {
@@ -123,16 +123,21 @@ export function OTPForm({ onSuccess, referral }: OTPFormProps) {
 
             <div className="space-y-2">
               <Label htmlFor="identifier">
-                {type === 'email' ? 'Email Address' : 'Phone Number'}
+                {type === 'email' ? 'Student Email Address (.edu)' : 'Phone Number'}
               </Label>
               <Input
                 id="identifier"
                 type={type === 'email' ? 'email' : 'tel'}
-                placeholder={type === 'email' ? 'you@example.com' : '+1 (555) 123-4567'}
+                placeholder={type === 'email' ? 'you@university.edu' : '+1 (555) 123-4567'}
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
                 required
               />
+              {type === 'email' && (
+                <p className="text-xs text-gray-600">
+                  Only .edu email addresses are accepted for student verification
+                </p>
+              )}
             </div>
 
             {error && (

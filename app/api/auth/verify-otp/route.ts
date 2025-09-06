@@ -6,6 +6,7 @@ import { validatePhoneNumber, normalizePhoneNumber } from "@/lib/auth/sms"
 import { CookieManager } from "@/lib/auth/cookies"
 import { prisma } from "@/lib/db/client"
 import { UserRepository } from "@/lib/db/repositories"
+import { validateEduEmail, getUniversityInfo } from "@/lib/auth/university-detector"
 import { signIn } from "next-auth/react"
 import { z } from "zod"
 
@@ -56,10 +57,29 @@ export async function POST(request: NextRequest) {
 
     if (type === "email") {
       user = await userRepository.findByEmail(normalizedIdentifier)
+      
+      // Check if this is a .edu email and handle verification
+      const eduValidation = validateEduEmail(normalizedIdentifier)
+      const universityInfo = getUniversityInfo(normalizedIdentifier)
+      
       if (!user) {
         user = await userRepository.create({
           email: normalizedIdentifier,
-          eduVerified: false,
+          eduVerified: eduValidation.isValid,
+          universityId: universityInfo?.name || null,
+          state: universityInfo?.state || null,
+          city: universityInfo?.city || null,
+        })
+      } else if (eduValidation.isValid && !user.eduVerified) {
+        // Update existing user with .edu verification
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: {
+            eduVerified: true,
+            universityId: universityInfo?.name || user.universityId,
+            state: universityInfo?.state || user.state,
+            city: universityInfo?.city || user.city,
+          }
         })
       }
     } else {
@@ -84,12 +104,17 @@ export async function POST(request: NextRequest) {
     // Create response
     const response = NextResponse.json({
       success: true,
-      message: "Verification successful",
+      message: user.eduVerified && type === "email" 
+        ? "Student email verified successfully!" 
+        : "Verification successful",
       user: {
         id: user.id,
         email: user.email,
         phone: user.phone,
         eduVerified: user.eduVerified,
+        universityId: user.universityId,
+        state: user.state,
+        city: user.city,
         photoUrl: user.photoUrl,
       },
     })

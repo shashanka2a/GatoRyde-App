@@ -1,13 +1,14 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { searchRides } from '@/lib/rides/actions'
+import { searchRidesWithUniversity } from '@/lib/rides/search-with-university'
 import { Button } from '@/src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { Alert, AlertDescription } from '@/src/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
 import Link from 'next/link'
 import type { SearchFilters, RideWithDriver } from '@/lib/rides/types'
+import { getFilterScopeDescription } from '@/lib/rides/university-filter'
 
 // Direct imports for now to fix build issues
 import { RideSearchForm } from '@/src/components/rides/RideSearchForm'
@@ -30,9 +31,10 @@ import {
 
 interface RidesPageClientProps {
   userEduVerified: boolean
+  userEmail?: string
 }
 
-export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
+export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientProps) {
   const [rides, setRides] = useState<RideWithDriver[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
@@ -41,6 +43,8 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [showMapboxWarning, setShowMapboxWarning] = useState(false)
   const [searchType, setSearchType] = useState<'drivers' | 'requests'>('drivers')
+  const [currentFilters, setCurrentFilters] = useState<SearchFilters | null>(null)
+  const [driverEmails, setDriverEmails] = useState<Record<string, string>>({})
 
   // Optimized initialization - defer non-critical operations
   useEffect(() => {
@@ -97,12 +101,22 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
     setIsLoading(true)
     setError(null)
     setHasSearched(true)
+    setCurrentFilters(filters)
 
     try {
-      const result = await searchRides(filters)
+      const result = await searchRidesWithUniversity(filters)
 
       if (result.success && result.data) {
         setRides(result.data.rides)
+
+        // Extract driver emails for university badges (from mock data)
+        const emails: Record<string, string> = {}
+        result.data.rides.forEach((ride: any) => {
+          if (ride.driverEmail) {
+            emails[ride.driver.userId] = ride.driverEmail
+          }
+        })
+        setDriverEmails(emails)
       } else {
         setError(result.message || 'Failed to search rides')
         setRides([])
@@ -215,6 +229,7 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
                   isLoading={isLoading}
                   searchType={searchType}
                   onSearchTypeChange={setSearchType}
+                  userEmail={userEmail}
                 />
               </CardContent>
             </Card>
@@ -241,13 +256,24 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
                   </TabsTrigger>
                 </TabsList>
 
-                {hasSearched && !isLoading && (
-                  <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-gray-200">
-                    <p className="text-sm font-medium text-gray-700">
-                      <span className="text-teal-600 font-bold">{rides.length}</span> ride{rides.length !== 1 ? 's' : ''} found
-                    </p>
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  {/* University Filter Status */}
+                  {currentFilters && userEmail && (
+                    <div className="bg-gradient-to-r from-teal-100 to-emerald-100 px-4 py-2 rounded-full border border-teal-200">
+                      <p className="text-sm font-medium text-teal-800">
+                        🎓 {getFilterScopeDescription(userEmail, currentFilters.universityScope)}
+                      </p>
+                    </div>
+                  )}
+
+                  {hasSearched && !isLoading && (
+                    <div className="bg-white px-4 py-2 rounded-full shadow-lg border border-gray-200">
+                      <p className="text-sm font-medium text-gray-700">
+                        <span className="text-teal-600 font-bold">{rides.length}</span> ride{rides.length !== 1 ? 's' : ''} found
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Error Message */}
@@ -272,6 +298,7 @@ export function RidesPageClient({ userEduVerified }: RidesPageClientProps) {
                   showDistance={!!userLocation}
                   userLocation={userLocation || undefined}
                   userEduVerified={userEduVerified}
+                  driverEmails={driverEmails}
                 />
               </TabsContent>
 

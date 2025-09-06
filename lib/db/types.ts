@@ -7,6 +7,9 @@ export const UserSchema = z.object({
   email: z.string().email(),
   phone: z.string().nullable(),
   eduVerified: z.boolean(),
+  universityId: z.string().nullable(),
+  state: z.string().nullable(),
+  city: z.string().nullable(),
   photoUrl: z.string().nullable(),
   ratingAvg: z.number().nullable(),
   ratingCount: z.number(),
@@ -18,6 +21,9 @@ export const CreateUserSchema = z.object({
   email: z.string().email(),
   phone: z.string().optional(),
   eduVerified: z.boolean().default(false),
+  universityId: z.string().optional(),
+  state: z.string().optional(),
+  city: z.string().optional(),
   photoUrl: z.string().optional(),
 })
 
