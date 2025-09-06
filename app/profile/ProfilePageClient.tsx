@@ -234,11 +234,11 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </Card>
 
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8 mb-8">
             {/* Left Column */}
             <div className="space-y-6 lg:space-y-8">
               {/* Verification Status - Enhanced with Icons */}
-              <Card className="bg-white shadow-lg border-0 h-full">
+              <Card className="bg-white shadow-lg border-0">
                 <CardHeader className="border-b border-gray-100 pb-4">
                   <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
                     <div className="bg-teal-100 p-2 rounded-lg">
@@ -332,7 +332,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
               </Card>
               
               {/* Contact Information */}
-              <Card className="bg-white shadow-lg border-0 h-full">
+              <Card className="bg-white shadow-lg border-0">
                 <CardHeader className="border-b border-gray-100 pb-4">
                   <CardTitle className="flex items-center gap-2 text-lg sm:text-xl font-bold text-gray-900">
                     <div className="bg-gray-100 p-2 rounded-lg">
@@ -375,7 +375,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
             {/* Right Column */}
             <div className="space-y-6 lg:space-y-8">
               {/* Payment Settings */}
-              <Card className="bg-white shadow-lg border-0 h-full">
+              <Card className="bg-white shadow-lg border-0">
                 <CardHeader className="border-b border-gray-100 pb-4">
                   <div className="flex justify-between items-start">
                     <div>
@@ -482,7 +482,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </div>
 
           {/* Ride History - Compact Collapsible Cards */}
-          <div className="mt-8">
+          <div className="mt-12 clear-both">
             <Card className="bg-white shadow-lg border-0">
               <CardHeader className="border-b border-gray-100 pb-4">
                 <div className="flex justify-between items-center">
