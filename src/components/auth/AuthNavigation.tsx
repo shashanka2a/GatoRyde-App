@@ -25,7 +25,11 @@ export function AuthNavigation() {
   if (!user) {
     return (
       <Link href="/auth/login">
-        <Button variant="outline" size="sm">
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="border-teal-300 text-teal-700 hover:bg-teal-50 dark:border-teal-600 dark:text-teal-400 dark:hover:bg-teal-900/30 rounded-xl transition-all duration-200"
+        >
           <Mail className="h-4 w-4 mr-2" />
           Sign In
         </Button>
@@ -40,7 +44,7 @@ export function AuthNavigation() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+        <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-teal-50 dark:hover:bg-teal-900/30 transition-all duration-200">
           <Avatar className="h-8 w-8">
             <AvatarImage src={user.photoUrl || undefined} alt={user.name || user.email} />
             <AvatarFallback>{initials}</AvatarFallback>
