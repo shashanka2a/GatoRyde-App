@@ -185,7 +185,7 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
                 transition={{ duration: 0.8 }}
               >
                 <Car className="w-8 h-8 text-yellow-300" />
-                <h1 className="text-2xl lg:text-3xl font-bold">Become a Driver</h1>
+                <h1 className="text-3xl lg:text-4xl font-bold">Become a Driver</h1>
               </motion.div>
               <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-3 py-1 rounded-full">
                 <Shield className="h-4 w-4" />
@@ -193,7 +193,7 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
               </div>
             </div>
             <motion.p
-              className="text-teal-100 max-w-xl mb-6"
+              className="text-xl text-teal-100 max-w-xl mb-6"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
