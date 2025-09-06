@@ -57,7 +57,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AppNavigation />
-        <main className="pb-16 lg:pb-0 min-h-screen">{children}</main>
+        <main className="pb-16 lg:pb-0 min-h-screen bg-gray-50">{children}</main>
         <BottomNavigation />
       </body>
     </html>

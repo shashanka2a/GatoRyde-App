@@ -131,7 +131,7 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
   // Show simple loading state for initial render
   if (isInitialLoad) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen">
         {/* Loading Content */}
         <div className="container mx-auto py-8 px-4">
           <div className="max-w-6xl mx-auto">
@@ -154,8 +154,8 @@ export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientP
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-8 px-4 pb-24 md:pb-8" id="search-section">
+    <div className="min-h-screen">
+      <div className="container mx-auto py-8 px-4" id="search-section">
         <div className="max-w-6xl mx-auto">
 
           {/* Edu Verification Warning */}

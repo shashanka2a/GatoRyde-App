@@ -26,18 +26,14 @@ export function AppNavigation() {
   }
 
   const navigationItems = [
-    { href: '/browse-rides', label: 'Browse Rides', icon: Search },
-    { href: '/ride', label: 'Search', icon: Search },
+    { href: '/rides', label: 'Search', icon: Search },
     { href: getDriveHref(), label: 'Drive', icon: Car },
     { href: '/profile', label: 'Profile', icon: User },
   ]
 
   const isActive = (href: string, label: string) => {
-    if (href === '/browse-rides') {
-      return pathname === '/browse-rides' || pathname === '/'
-    }
-    if (href === '/ride') {
-      return pathname === '/ride' || pathname === '/rides'
+    if (href === '/rides') {
+      return pathname === '/rides' || pathname === '/browse-rides' || pathname === '/ride'
     }
     if (label === 'Drive') {
       // Check for all possible drive-related paths

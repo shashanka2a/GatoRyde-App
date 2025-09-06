@@ -15,14 +15,14 @@ export function BottomNavigation() {
   const pathname = usePathname()
 
   const navigationItems = [
-    { href: '/browse-rides', label: 'Browse', icon: Search },
+    { href: '/rides', label: 'Search', icon: Search },
     { href: '/rides/create', label: 'Drive', icon: Car },
     { href: '/profile', label: 'Profile', icon: User },
   ]
 
   const isActive = (href: string, label: string) => {
-    if (href === '/browse-rides') {
-      return pathname === '/browse-rides' || pathname === '/' || pathname === '/rides'
+    if (href === '/rides') {
+      return pathname === '/rides' || pathname === '/browse-rides' || pathname === '/ride' || pathname === '/'
     }
     if (label === 'Drive') {
       // Check for all possible drive-related paths
