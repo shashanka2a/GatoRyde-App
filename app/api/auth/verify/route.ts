@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
     try {
       body = await request.json()
     } catch (jsonError) {
+      console.error("JSON Parse Error:", jsonError)
       return NextResponse.json(
         {
           success: false,
@@ -43,10 +44,11 @@ export async function POST(request: NextRequest) {
 
     const normalizedEmail = email.toLowerCase().trim()
 
-    // Check rate limit
+    // Check rate limit with error handling
     try {
       await rateLimiter.checkRateLimit(normalizedEmail, "otp_request")
     } catch (error) {
+      console.error("Rate limit error:", error)
       return NextResponse.json(
         {
           success: false,
@@ -57,21 +59,58 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate OTP and store in local storage (10-minute TTL)
-    const otp = await otpManager.generateOTP(normalizedEmail, "email")
+    // Generate OTP with error handling
+    let otp
+    try {
+      otp = await otpManager.generateOTP(normalizedEmail, "email")
+    } catch (error) {
+      console.error("OTP generation error:", error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to generate verification code",
+          code: "OTP_GENERATION_FAILED"
+        },
+        { status: 500 }
+      )
+    }
 
-    // Send OTP via Nodemailer (Gmail SMTP)
-    await OTPEmailService.sendOTP({
-      to: normalizedEmail,
-      code: otp,
-      expiresInMinutes: 10
-    })
+    // Send OTP via email with detailed error handling
+    try {
+      await OTPEmailService.sendOTP({
+        to: normalizedEmail,
+        code: otp,
+        expiresInMinutes: 10
+      })
+    } catch (error) {
+      console.error("Email sending error:", error)
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Failed to send verification email. Please try again.",
+          code: "EMAIL_SEND_FAILED"
+        },
+        { status: 500 }
+      )
+    }
 
-    // Increment rate limit counter
-    await rateLimiter.incrementAttempts(normalizedEmail, "otp_request")
+    // Increment rate limit counter (non-critical, don't fail if this errors)
+    try {
+      await rateLimiter.incrementAttempts(normalizedEmail, "otp_request")
+    } catch (error) {
+      console.error("Rate limit increment error:", error)
+      // Don't fail the request for this
+    }
 
     // Get expiry time for client
-    const expiry = await otpManager.getOTPExpiry(normalizedEmail, "email")
+    let expiry
+    try {
+      expiry = await otpManager.getOTPExpiry(normalizedEmail, "email")
+    } catch (error) {
+      console.error("OTP expiry error:", error)
+      // Use default expiry if this fails
+      expiry = new Date(Date.now() + 10 * 60 * 1000)
+    }
 
     return NextResponse.json({
       success: true,
@@ -81,7 +120,7 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error("Send OTP error:", error)
+    console.error("Send OTP unexpected error:", error)
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -97,7 +136,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to send verification email"
+        error: "Failed to send verification email",
+        code: "UNEXPECTED_ERROR"
       },
       { status: 500 }
     )
