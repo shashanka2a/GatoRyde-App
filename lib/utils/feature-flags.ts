@@ -7,13 +7,11 @@
 
 export interface FeatureFlags {
   OFF_PLATFORM_PAYMENTS: boolean
-  TWILIO_PROXY_ENABLED: boolean
 }
 
 export class FeatureFlagManager {
   private static flags: FeatureFlags = {
     OFF_PLATFORM_PAYMENTS: process.env.OFF_PLATFORM_PAYMENTS === 'true' || true, // Default true
-    TWILIO_PROXY_ENABLED: process.env.TWILIO_PROXY_ENABLED === 'true' || false, // Default false
   }
 
   /**
@@ -43,7 +41,6 @@ export class FeatureFlagManager {
   static reset(): void {
     this.flags = {
       OFF_PLATFORM_PAYMENTS: process.env.OFF_PLATFORM_PAYMENTS === 'true' || true,
-      TWILIO_PROXY_ENABLED: process.env.TWILIO_PROXY_ENABLED === 'true' || false,
     }
   }
 
@@ -54,10 +51,5 @@ export class FeatureFlagManager {
     return this.isEnabled('OFF_PLATFORM_PAYMENTS')
   }
 
-  /**
-   * Check if Twilio proxy is enabled for contact methods
-   */
-  static isTwilioProxyEnabled(): boolean {
-    return this.isEnabled('TWILIO_PROXY_ENABLED')
-  }
+  // Twilio proxy removed - using direct contact methods only
 }

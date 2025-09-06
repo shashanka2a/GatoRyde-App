@@ -1,66 +1,53 @@
 import { NextRequest, NextResponse } from "next/server"
-import { StartOTPSchema, OTPError, RateLimitError } from "@/lib/auth/types"
+import { OTPError, RateLimitError } from "@/lib/auth/types"
 import { rateLimiter } from "@/lib/auth/rate-limit"
 import { otpManager } from "@/lib/auth/otp"
 import { sendOTPEmail } from "@/lib/auth/email"
-import { sendOTPSMS, validatePhoneNumber, normalizePhoneNumber } from "@/lib/auth/sms"
 import { validateEduEmail, getUniversityName } from "@/lib/auth/university-detector"
 import { CookieManager } from "@/lib/auth/cookies"
 import { z } from "zod"
 
+// Schema for email-only OTP requests
+const EmailOTPSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  referral: z.string().optional(),
+})
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { identifier, type, referral } = StartOTPSchema.parse(body)
+    const { email, referral } = EmailOTPSchema.parse(body)
 
-    // Validate identifier based on type
-    if (type === "email") {
-      const emailSchema = z.string().email("Invalid email address")
-      emailSchema.parse(identifier)
-      
-      // Validate .edu email
-      const eduValidation = validateEduEmail(identifier)
-      if (!eduValidation.isValid) {
-        throw new OTPError(
-          eduValidation.error || "Only .edu email addresses are accepted",
-          "INVALID_EDU_EMAIL",
-          400
-        )
-      }
-    } else if (type === "sms") {
-      if (!validatePhoneNumber(identifier)) {
-        throw new OTPError("Invalid phone number format", "INVALID_PHONE", 400)
-      }
+    // Validate .edu email
+    const eduValidation = validateEduEmail(email)
+    if (!eduValidation.isValid) {
+      throw new OTPError(
+        eduValidation.error || "Only .edu email addresses are accepted",
+        "INVALID_EDU_EMAIL",
+        400
+      )
     }
 
-    // Normalize identifier
-    const normalizedIdentifier = type === "sms" 
-      ? normalizePhoneNumber(identifier)
-      : identifier.toLowerCase()
+    // Normalize email
+    const normalizedEmail = email.toLowerCase().trim()
 
     // Check rate limit
-    await rateLimiter.checkRateLimit(normalizedIdentifier, "otp_request")
+    await rateLimiter.checkRateLimit(normalizedEmail, "otp_request")
 
-    // Generate and send OTP
-    const otp = await otpManager.generateOTP(normalizedIdentifier, type)
-
-    if (type === "email") {
-      const universityName = getUniversityName(normalizedIdentifier)
-      await sendOTPEmail(normalizedIdentifier, otp, universityName)
-    } else {
-      await sendOTPSMS(normalizedIdentifier, otp)
-    }
+    // Generate and send OTP via email
+    const otp = await otpManager.generateOTP(normalizedEmail, "email")
+    const universityName = getUniversityName(normalizedEmail)
+    await sendOTPEmail(normalizedEmail, otp, universityName)
 
     // Increment rate limit counter
-    await rateLimiter.incrementAttempts(normalizedIdentifier, "otp_request")
+    await rateLimiter.incrementAttempts(normalizedEmail, "otp_request")
 
     // Create response
-    const universityName = type === "email" ? getUniversityName(normalizedIdentifier) : null
     const response = NextResponse.json({
       success: true,
-      message: type === "email" && universityName
+      message: universityName
         ? `Verification code sent to your ${universityName} email`
-        : `Verification code sent to your ${type === "email" ? "email" : "phone"}`,
+        : "Verification code sent to your email",
     })
 
     // Set referral cookie if provided
@@ -72,6 +59,11 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error("Start OTP error:", error)
+    console.error("Error details:", {
+      name: error instanceof Error ? error.name : 'Unknown',
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'No stack trace'
+    })
 
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -109,6 +101,9 @@ export async function POST(request: NextRequest) {
       {
         success: false,
         message: "Failed to send verification code. Please try again.",
+        debug: process.env.NODE_ENV === 'development' ? {
+          error: error instanceof Error ? error.message : 'Unknown error'
+        } : undefined
       },
       { status: 500 }
     )

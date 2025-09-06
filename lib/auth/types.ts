@@ -1,16 +1,14 @@
 import { z } from "zod"
 
-// OTP Request schemas
+// Email OTP Request schemas (SMS removed - only .edu email verification)
 export const StartOTPSchema = z.object({
-  identifier: z.string().min(1, "Email or phone is required"),
-  type: z.enum(["email", "sms"]),
+  email: z.string().email("Invalid email address"),
   referral: z.string().optional(),
 })
 
 export const VerifyOTPSchema = z.object({
-  identifier: z.string().min(1, "Email or phone is required"),
+  email: z.string().email("Invalid email address"),
   otp: z.string().length(6, "OTP must be 6 digits"),
-  type: z.enum(["email", "sms"]),
 })
 
 // Response types
@@ -25,12 +23,11 @@ export const VerifyResponseSchema = z.object({
   message: z.string(),
   user: z.object({
     id: z.string(),
-    email: z.string().nullable(),
+    email: z.string(),
     phone: z.string().nullable(),
     eduVerified: z.boolean(),
-    universityId: z.string().nullable(),
-    state: z.string().nullable(),
-    city: z.string().nullable(),
+    university: z.string().nullable(),
+    name: z.string().nullable(),
     photoUrl: z.string().nullable(),
   }).optional(),
 })
@@ -59,17 +56,15 @@ export type VerifyOTPRequest = z.infer<typeof VerifyOTPSchema>
 export type OTPResponse = z.infer<typeof OTPResponseSchema>
 export type VerifyResponse = z.infer<typeof VerifyResponseSchema>
 
-// Session types
+// Session types (email-only authentication)
 export interface ExtendedUser {
   id: string
-  email: string | null
+  email: string
   phone: string | null
   eduVerified: boolean
-  universityId: string | null
-  state: string | null
-  city: string | null
+  university: string | null
+  name: string | null
   photoUrl: string | null
-  name?: string | null
 }
 
 declare module "next-auth" {
@@ -83,12 +78,11 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     id: string
-    email: string | null
+    email: string
     phone: string | null
     eduVerified: boolean
-    universityId: string | null
-    state: string | null
-    city: string | null
+    university: string | null
+    name: string | null
     photoUrl: string | null
   }
 }

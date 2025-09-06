@@ -55,7 +55,7 @@ export class TwilioSMSProvider implements SMSProvider {
   constructor() {
     this.accountSid = process.env.TWILIO_ACCOUNT_SID!
     this.authToken = process.env.TWILIO_AUTH_TOKEN!
-    this.fromPhone = process.env.TWILIO_FROM_PHONE!
+    this.fromPhone = process.env.TWILIO_PHONE_NUMBER!
   }
 
   async sendSMS(to: string, content: string): Promise<void> {

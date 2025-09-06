@@ -84,8 +84,6 @@ export async function POST(request: NextRequest) {
           email: normalizedEmail,
           eduVerified: true,
           university: universityName,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         }
       })
 
@@ -103,7 +101,6 @@ export async function POST(request: NextRequest) {
         data: {
           eduVerified: true,
           university: universityName,
-          updatedAt: new Date(),
         }
       })
     }
