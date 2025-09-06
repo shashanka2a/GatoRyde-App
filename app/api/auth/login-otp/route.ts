@@ -124,6 +124,7 @@ export async function POST(request: NextRequest) {
         id: user.id,
         email: user.email,
         name: user.name,
+        phone: user.phone, // Include phone for profile completion check
         eduVerified: user.eduVerified,
         university: user.university,
         photoUrl: user.photoUrl,
