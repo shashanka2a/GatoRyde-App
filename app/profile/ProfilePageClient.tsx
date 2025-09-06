@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { Badge } from '@/src/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/src/components/ui/avatar'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
+import { Tabs, TabsList, TabsTrigger } from '@/src/components/ui/tabs'
 import { Label } from '@/src/components/ui/label'
 import { Input } from '@/src/components/ui/input'
 import { 
@@ -32,16 +32,11 @@ import {
   ArrowRight,
   AlertCircle,
   Smartphone,
-  CreditCard,
   Zap,
   Target,
   ChevronRight,
-  ExternalLink,
   Copy,
   Check,
-  Loader2,
-  Upload,
-  Camera,
   FileText,
   AlertTriangle,
   Sparkles
@@ -89,6 +84,8 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   const [copySuccess, setCopySuccess] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [showVerificationHelp, setShowVerificationHelp] = useState(false)
+  const [qrHovered, setQrHovered] = useState(false)
+  const [qrEnlarged, setQrEnlarged] = useState(false)
 
   // Mock data
   useEffect(() => {
@@ -149,7 +146,6 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
 
   const handleCopy = async (text: string, type: string) => {
     try {
-      setIsLoading(true)
       await navigator.clipboard.writeText(text)
       setCopySuccess(type)
       
@@ -158,7 +154,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
         navigator.vibrate(50)
       }
       
-      setTimeout(() => setCopySuccess(null), 3000)
+      setTimeout(() => setCopySuccess(null), 2000)
     } catch (err) {
       console.error('Failed to copy:', err)
       // Fallback for older browsers
@@ -169,9 +165,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
       document.execCommand('copy')
       document.body.removeChild(textArea)
       setCopySuccess(type)
-      setTimeout(() => setCopySuccess(null), 3000)
-    } finally {
-      setIsLoading(false)
+      setTimeout(() => setCopySuccess(null), 2000)
     }
   }
 
@@ -427,30 +421,6 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
       return (completed / steps.length) * 100
     }
 
-    const getStepStatus = (verified: boolean, isNext: boolean = false) => {
-      if (verified) return { 
-        icon: CheckCircle, 
-        color: "text-green-600", 
-        bgColor: "bg-green-100",
-        text: "Verified",
-        description: "✓ Complete"
-      }
-      if (isNext) return { 
-        icon: AlertCircle, 
-        color: "text-blue-600", 
-        bgColor: "bg-blue-100",
-        text: "Next Step",
-        description: "Action required"
-      }
-      return { 
-        icon: Clock, 
-        color: "text-gray-400", 
-        bgColor: "bg-gray-100",
-        text: "Pending",
-        description: "Complete previous steps first"
-      }
-    }
-
     const getNextStep = () => {
       if (!userData.eduVerified) return 0
       if (!userData.kycVerified) return 1
@@ -464,7 +434,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     const verificationSteps = [
       { 
         key: 'eduVerified', 
-        label: 'Student Email', 
+        label: 'Email', 
         verified: userData.eduVerified,
         icon: Mail,
         description: 'Verify your .edu email address',
@@ -473,7 +443,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
       },
       { 
         key: 'kycVerified', 
-        label: 'ID Verification', 
+        label: 'ID', 
         verified: userData.kycVerified,
         icon: FileText,
         description: 'Upload government-issued ID',
@@ -482,7 +452,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
       },
       { 
         key: 'licenseVerified', 
-        label: 'Driver License', 
+        label: 'License', 
         verified: userData.licenseVerified,
         icon: Car,
         description: 'Upload valid driver\'s license',
@@ -505,7 +475,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 Verification Status
                 <Tooltip>
                   <TooltipTrigger>
-                    <HelpCircle className="w-4 h-4 text-gray-400" />
+                    <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" />
                   </TooltipTrigger>
                   <TooltipContent className="max-w-xs">
                     <p>Complete all steps to unlock full platform features including driving and enhanced safety features.</p>
@@ -525,101 +495,85 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </CardHeader>
           
           <CardContent className="space-y-6">
-            {/* Enhanced Progress Section */}
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-sm">
-                <span className="font-medium">Progress</span>
-                <span className="text-teal-600 font-semibold">{Math.round(progress)}% complete</span>
+            {/* Stepper UI replacing progress bar */}
+            <div className="flex items-center justify-between relative">
+              {/* Progress line */}
+              <div className="absolute top-4 left-8 right-8 h-0.5 bg-gray-200">
+                <div 
+                  className="h-full bg-green-500 transition-all duration-500"
+                  style={{ width: `${Math.max(0, (progress - 33.33) / 66.67 * 100)}%` }}
+                />
               </div>
-              <Progress value={progress} className="h-3" />
               
-              {progress < 100 && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <Clock className="w-4 h-4" />
-                  <span>
-                    {nextStepIndex !== -1 
-                      ? `Next: ${verificationSteps[nextStepIndex].label} (${verificationSteps[nextStepIndex].estimatedTime})`
-                      : 'All steps completed!'
-                    }
-                  </span>
-                </div>
-              )}
-            </div>
-
-            {/* Enhanced Verification Steps */}
-            <div className="space-y-3">
               {verificationSteps.map((step, index) => {
-                const isNext = index === nextStepIndex
-                const status = getStepStatus(step.verified, isNext)
-                const StepIcon = step.icon
+                const isCompleted = step.verified
+                const isCurrent = index === nextStepIndex
+                const isLocked = index > nextStepIndex && nextStepIndex !== -1
                 
                 return (
-                  <div 
-                    key={step.key} 
-                    className={cn(
-                      "p-4 rounded-lg border-2 transition-all duration-200",
-                      step.verified 
-                        ? "bg-green-50 border-green-200" 
-                        : isNext 
-                          ? "bg-blue-50 border-blue-200 shadow-sm" 
-                          : "bg-gray-50 border-gray-200"
-                    )}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-start space-x-3 flex-1">
-                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white border-2 border-current">
-                          {step.verified ? (
-                            <CheckCircle className="w-5 h-5 text-green-600" />
-                          ) : (
-                            <span className="text-sm font-medium text-gray-600">{index + 1}</span>
-                          )}
-                        </div>
-                        
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <StepIcon className={cn("w-4 h-4", status.color)} />
-                            <span className="font-medium text-gray-900">{step.label}</span>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-2">{step.description}</p>
-                          
-                          {!step.verified && isNext && (
-                            <div className="flex items-center gap-2 text-sm text-blue-600">
-                              <ArrowRight className="w-3 h-3" />
-                              <span>{step.action}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      <div className="flex flex-col items-end gap-2">
-                        <Badge 
-                          variant={step.verified ? "default" : isNext ? "secondary" : "outline"}
-                          className={cn(
-                            step.verified && "bg-green-100 text-green-800 border-green-200",
-                            isNext && "bg-blue-100 text-blue-800 border-blue-200"
-                          )}
-                        >
-                          {status.text}
-                        </Badge>
-                        
-                        {!step.verified && isNext && (
-                          <Button size="sm" className="text-xs">
-                            Start Now
-                            <ChevronRight className="w-3 h-3 ml-1" />
-                          </Button>
-                        )}
-                      </div>
+                  <div key={step.key} className="flex flex-col items-center relative z-10">
+                    <div className={cn(
+                      "w-8 h-8 rounded-full border-2 flex items-center justify-center transition-all duration-300",
+                      isCompleted 
+                        ? "bg-green-500 border-green-500 text-white" 
+                        : isCurrent 
+                          ? "bg-blue-500 border-blue-500 text-white animate-pulse" 
+                          : "bg-gray-200 border-gray-300 text-gray-500"
+                    )}>
+                      {isCompleted ? (
+                        <CheckCircle className="w-5 h-5" />
+                      ) : isCurrent ? (
+                        <Clock className="w-4 h-4" />
+                      ) : (
+                        <span className="text-xs font-medium">{isLocked ? '🔒' : index + 1}</span>
+                      )}
+                    </div>
+                    <div className="mt-2 text-center">
+                      <p className={cn(
+                        "text-xs font-medium",
+                        isCompleted ? "text-green-600" : isCurrent ? "text-blue-600" : "text-gray-500"
+                      )}>
+                        {step.label}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        {isCompleted ? '✅' : isCurrent ? '⏳' : '🔒'}
+                      </p>
                     </div>
                   </div>
                 )
               })}
             </div>
 
+            {/* Current step details */}
+            {nextStepIndex !== -1 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <div className="bg-blue-100 p-2 rounded-lg">
+                    {React.createElement(verificationSteps[nextStepIndex].icon, {
+                      className: "w-5 h-5 text-blue-600"
+                    })}
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-medium text-blue-900 mb-1">
+                      Next: {verificationSteps[nextStepIndex].label} Verification
+                    </h4>
+                    <p className="text-sm text-blue-700 mb-2">
+                      {verificationSteps[nextStepIndex].description}
+                    </p>
+                    <div className="flex items-center gap-2 text-xs text-blue-600">
+                      <Clock className="w-3 h-3" />
+                      <span>Estimated time: {verificationSteps[nextStepIndex].estimatedTime}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Action Buttons */}
             {progress < 100 ? (
               <div className="space-y-3">
                 <Link href="/dashboard/kyc" className="w-full">
-                  <Button className="w-full" size="lg">
+                  <Button className="w-full bg-green-600 hover:bg-green-700 text-white sticky bottom-4 shadow-lg" size="lg">
                     {nextStepIndex !== -1 ? (
                       <>
                         Continue Verification
@@ -630,13 +584,6 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                     )}
                   </Button>
                 </Link>
-                
-                <Alert>
-                  <Info className="h-4 w-4" />
-                  <AlertDescription className="text-sm">
-                    <strong>Why verify?</strong> Verified users can offer rides, access premium features, and build trust with the community.
-                  </AlertDescription>
-                </Alert>
               </div>
             ) : (
               <Alert className="bg-green-50 border-green-200">
@@ -652,233 +599,269 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     )
   }
 
-  const PaymentCard = () => (
-    <TooltipProvider>
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <QrCode className="w-5 h-5" />
-                Payment Settings
-                <Tooltip>
-                  <TooltipTrigger>
-                    <HelpCircle className="w-4 h-4 text-gray-400" />
-                  </TooltipTrigger>
-                  <TooltipContent className="max-w-xs">
-                    <p>Set up your payment methods so riders can easily pay you after rides. QR codes make payments quick and contactless.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </CardTitle>
-              <CardDescription>
-                Rydify doesn't process payments; riders pay you directly
-              </CardDescription>
+  const PaymentCard = () => {
+    const [qrHovered, setQrHovered] = useState(false)
+    const [qrEnlarged, setQrEnlarged] = useState(false)
+    
+    return (
+      <TooltipProvider>
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="flex items-center gap-2">
+                  <QrCode className="w-5 h-5" />
+                  Payment Settings
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-4 h-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p>Riders can scan this to pay you instantly. Set up your payment methods for quick transfers.</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </CardTitle>
+                <CardDescription>
+                  Rydify doesn't process payments; riders pay you directly
+                </CardDescription>
+              </div>
+              <Button variant="outline" size="sm">
+                <Edit className="w-4 h-4 mr-2" />
+                Edit
+              </Button>
             </div>
-            <Button variant="outline" size="sm">
-              <Edit className="w-4 h-4 mr-2" />
-              Edit
-            </Button>
-          </div>
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          {/* QR Code Section with Better Context */}
-          <div className="text-center p-6 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl border border-teal-200 relative overflow-hidden">
-            <div className="absolute top-2 right-2">
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            {/* Enhanced QR Code Section */}
+            <div className="text-center p-6 bg-gradient-to-br from-teal-50 to-emerald-50 rounded-xl border border-teal-200 relative overflow-hidden">
               <Tooltip>
-                <TooltipTrigger>
-                  <Info className="w-4 h-4 text-teal-600" />
+                <TooltipTrigger asChild>
+                  <div 
+                    className={cn(
+                      "bg-white p-6 rounded-xl inline-block shadow-sm border-2 border-white cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-105",
+                      qrEnlarged && "scale-150 z-50"
+                    )}
+                    onMouseEnter={() => setQrHovered(true)}
+                    onMouseLeave={() => setQrHovered(false)}
+                    onClick={() => setQrEnlarged(!qrEnlarged)}
+                  >
+                    <QrCode className="w-28 h-28 text-teal-600 mx-auto" />
+                    {qrHovered && (
+                      <div className="absolute inset-0 bg-black/10 rounded-xl flex items-center justify-center">
+                        <span className="text-xs text-teal-700 font-medium bg-white/90 px-2 py-1 rounded">
+                          Tap to enlarge
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Show this QR code to riders for quick payment</p>
+                  <p>Riders can scan this to pay you instantly</p>
                 </TooltipContent>
               </Tooltip>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl inline-block shadow-sm border-2 border-white">
-              <QrCode className="w-28 h-28 text-teal-600 mx-auto" />
-            </div>
-            
-            <div className="mt-4 space-y-2">
-              <p className="text-sm font-semibold text-teal-900">Your Payment QR Code</p>
-              <p className="text-xs text-teal-700">Riders scan this to access your payment info</p>
               
-              <div className="flex items-center justify-center gap-4 mt-3 text-xs text-teal-600">
-                <div className="flex items-center gap-1">
-                  <Smartphone className="w-3 h-3" />
-                  <span>Contactless</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Zap className="w-3 h-3" />
-                  <span>Instant</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Shield className="w-3 h-3" />
-                  <span>Secure</span>
+              <div className="mt-4 space-y-2">
+                <p className="text-sm font-semibold text-teal-900">Your Payment QR Code</p>
+                <p className="text-xs text-teal-700">Riders scan this to access your payment info</p>
+                
+                <div className="flex items-center justify-center gap-4 mt-3 text-xs text-teal-600">
+                  <div className="flex items-center gap-1">
+                    <Smartphone className="w-3 h-3" />
+                    <span>Contactless</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Zap className="w-3 h-3" />
+                    <span>Instant</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Shield className="w-3 h-3" />
+                    <span>Secure</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Enhanced Payment Methods */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-semibold">Payment Methods</Label>
-              <Badge variant="outline" className="text-xs">
-                2 methods active
-              </Badge>
+            {/* Enhanced Payment Methods with Logos */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-semibold">Payment Methods</Label>
+                <Badge variant="outline" className="text-xs">
+                  2 methods active
+                </Badge>
+              </div>
+              
+              <div className="space-y-3">
+                {/* Zelle with Logo */}
+                <div className="p-4 border rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      {/* Zelle Logo Placeholder */}
+                      <div className="bg-blue-600 text-white p-2 rounded-lg font-bold text-sm">
+                        Z
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-blue-900 flex items-center gap-2">
+                          Zelle
+                          <Badge className="bg-blue-100 text-blue-800 border-blue-200 text-xs px-2 py-0">
+                            Primary
+                          </Badge>
+                        </Label>
+                        <p className="text-xs text-blue-700">Bank-to-bank transfer</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="your-email@ufl.edu" 
+                      className="flex-1 bg-white border-blue-200"
+                      defaultValue="john.doe@ufl.edu"
+                      readOnly
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-blue-200 text-blue-700 hover:bg-blue-100 transition-colors"
+                      onClick={() => handleCopy("john.doe@ufl.edu", "zelle")}
+                    >
+                      {copySuccess === 'zelle' ? (
+                        <>
+                          <Check className="w-4 h-4 mr-1 text-green-600" />
+                          <span className="text-green-600">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4 mr-1" />
+                          Copy
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Cash App with Logo */}
+                <div className="p-4 border rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      {/* Cash App Logo Placeholder */}
+                      <div className="bg-green-600 text-white p-2 rounded-lg font-bold text-sm">
+                        $
+                      </div>
+                      <div>
+                        <Label className="text-sm font-semibold text-green-900 flex items-center gap-2">
+                          Cash App
+                          <Badge variant="outline" className="text-green-600 border-green-200 text-xs px-2 py-0">
+                            Active
+                          </Badge>
+                        </Label>
+                        <p className="text-xs text-green-700">Mobile payments</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="$YourCashApp" 
+                      className="flex-1 bg-white border-green-200"
+                      defaultValue="$JohnDoe23"
+                      readOnly
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-green-200 text-green-700 hover:bg-green-100 transition-colors"
+                      onClick={() => handleCopy("$JohnDoe23", "cashapp")}
+                    >
+                      {copySuccess === 'cashapp' ? (
+                        <>
+                          <Check className="w-4 h-4 mr-1 text-green-600" />
+                          <span className="text-green-600">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4 mr-1" />
+                          Copy
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
-            
+
+            {/* Quick Actions with Success Feedback */}
             <div className="space-y-3">
-              {/* Zelle */}
-              <div className="p-4 border rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-blue-100 p-2 rounded-lg">
-                      <Mail className="w-5 h-5 text-blue-600" />
+              <Label className="text-sm font-semibold">Quick Actions</Label>
+              <div className="grid grid-cols-1 gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="justify-start h-auto p-3 hover:bg-blue-50 transition-colors"
+                  onClick={() => handleCopy("Hi! Please send $[AMOUNT] via Zelle to john.doe@ufl.edu for our ride. Thanks!", "zelle-template")}
+                >
+                  <div className="flex items-center gap-3 w-full">
+                    <div className="bg-blue-600 text-white p-1 rounded text-xs font-bold">Z</div>
+                    <div className="text-left flex-1">
+                      <p className="text-sm font-medium">Copy Zelle Request</p>
+                      <p className="text-xs text-gray-500">Template message for riders</p>
                     </div>
-                    <div>
-                      <Label className="text-sm font-semibold text-blue-900">Zelle</Label>
-                      <p className="text-xs text-blue-700">Bank-to-bank transfer</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-blue-100 text-blue-800 border-blue-200">
-                    Primary
-                  </Badge>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="your-email@ufl.edu" 
-                    className="flex-1 bg-white border-blue-200"
-                    defaultValue="john.doe@ufl.edu"
-                    readOnly
-                  />
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="border-blue-200 text-blue-700 hover:bg-blue-100"
-                    onClick={() => handleCopy("john.doe@ufl.edu", "zelle")}
-                  >
-                    {copySuccess === 'zelle' ? (
-                      <>
-                        <Check className="w-4 h-4 mr-1" />
-                        Copied!
-                      </>
+                    {copySuccess === 'zelle-template' ? (
+                      <div className="flex items-center gap-1 text-green-600">
+                        <Check className="w-4 h-4" />
+                        <span className="text-xs font-medium">Copied!</span>
+                      </div>
                     ) : (
-                      <>
-                        <Copy className="w-4 h-4 mr-1" />
-                        Copy
-                      </>
+                      <Copy className="w-4 h-4 text-gray-400" />
                     )}
-                  </Button>
-                </div>
-              </div>
-              
-              {/* Cash App */}
-              <div className="p-4 border rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-green-100 p-2 rounded-lg">
-                      <Smartphone className="w-5 h-5 text-green-600" />
-                    </div>
-                    <div>
-                      <Label className="text-sm font-semibold text-green-900">Cash App</Label>
-                      <p className="text-xs text-green-700">Mobile payments</p>
-                    </div>
                   </div>
-                  <Badge variant="outline" className="text-green-600 border-green-200">
-                    Active
-                  </Badge>
-                </div>
+                </Button>
                 
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="$YourCashApp" 
-                    className="flex-1 bg-white border-green-200"
-                    defaultValue="$JohnDoe23"
-                    readOnly
-                  />
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="border-green-200 text-green-700 hover:bg-green-100"
-                    onClick={() => handleCopy("$JohnDoe23", "cashapp")}
-                  >
-                    {copySuccess === 'cashapp' ? (
-                      <>
-                        <Check className="w-4 h-4 mr-1" />
-                        Copied!
-                      </>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="justify-start h-auto p-3 hover:bg-green-50 transition-colors"
+                  onClick={() => handleCopy("Hi! Please send $[AMOUNT] to $JohnDoe23 on Cash App for our ride. Thanks!", "cashapp-template")}
+                >
+                  <div className="flex items-center gap-3 w-full">
+                    <div className="bg-green-600 text-white p-1 rounded text-xs font-bold">$</div>
+                    <div className="text-left flex-1">
+                      <p className="text-sm font-medium">Copy Cash App Request</p>
+                      <p className="text-xs text-gray-500">Template message for riders</p>
+                    </div>
+                    {copySuccess === 'cashapp-template' ? (
+                      <div className="flex items-center gap-1 text-green-600">
+                        <Check className="w-4 h-4" />
+                        <span className="text-xs font-medium">Copied!</span>
+                      </div>
                     ) : (
-                      <>
-                        <Copy className="w-4 h-4 mr-1" />
-                        Copy
-                      </>
+                      <Copy className="w-4 h-4 text-gray-400" />
                     )}
-                  </Button>
-                </div>
+                  </div>
+                </Button>
               </div>
             </div>
-          </div>
 
-          {/* Quick Actions */}
-          <div className="space-y-3">
-            <Label className="text-sm font-semibold">Quick Actions</Label>
-            <div className="grid grid-cols-1 gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="justify-start h-auto p-3"
-                onClick={() => handleCopy("Hi! Please send $[AMOUNT] via Zelle to john.doe@ufl.edu for our ride. Thanks!", "zelle-template")}
-              >
-                <div className="flex items-center gap-3 w-full">
-                  <Mail className="w-4 h-4 text-blue-600" />
-                  <div className="text-left flex-1">
-                    <p className="text-sm font-medium">Copy Zelle Request</p>
-                    <p className="text-xs text-gray-500">Template message for riders</p>
-                  </div>
-                  {copySuccess === 'zelle-template' ? (
-                    <Check className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <Copy className="w-4 h-4 text-gray-400" />
-                  )}
-                </div>
-              </Button>
-              
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="justify-start h-auto p-3"
-                onClick={() => handleCopy("Hi! Please send $[AMOUNT] to $JohnDoe23 on Cash App for our ride. Thanks!", "cashapp-template")}
-              >
-                <div className="flex items-center gap-3 w-full">
-                  <Smartphone className="w-4 h-4 text-green-600" />
-                  <div className="text-left flex-1">
-                    <p className="text-sm font-medium">Copy Cash App Request</p>
-                    <p className="text-xs text-gray-500">Template message for riders</p>
-                  </div>
-                  {copySuccess === 'cashapp-template' ? (
-                    <Check className="w-4 h-4 text-green-600" />
-                  ) : (
-                    <Copy className="w-4 h-4 text-gray-400" />
-                  )}
-                </div>
-              </Button>
-            </div>
-          </div>
-
-          {/* Enhanced Info Alert */}
-          <Alert className="bg-amber-50 border-amber-200">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
-            <AlertDescription className="text-amber-800">
-              <strong>Payment Security:</strong> Rydify doesn't process payments. All transactions happen directly between you and riders using your preferred payment methods. Always confirm payment before starting the ride.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
-    </TooltipProvider>
-  )
+            {/* Positive Security Message */}
+            <Alert className="bg-green-50 border-green-200">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription className="text-green-800">
+                <strong>✅ All transactions are secured directly via your chosen payment method.</strong>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Info className="w-3 h-3 ml-1 cursor-help inline" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p>Rydify doesn't process payments. All transactions happen directly between you and riders. Always confirm payment before starting the ride.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </AlertDescription>
+            </Alert>
+          </CardContent>
+        </Card>
+      </TooltipProvider>
+    )
+  }
 
   const ContactCard = () => (
     <Card>
@@ -890,24 +873,32 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-3">
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-            <Mail className="w-4 h-4 text-gray-600" />
-            <div>
+          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div className="bg-blue-100 p-2 rounded-lg">
+              <Mail className="w-4 h-4 text-blue-600" />
+            </div>
+            <div className="flex-1">
               <p className="text-sm font-medium">{userData.email}</p>
-              <p className="text-xs text-gray-500">Email</p>
+              <p className="text-xs text-gray-500 flex items-center gap-1">
+                📧 Email
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-            <Phone className="w-4 h-4 text-gray-600" />
-            <div>
+          <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+            <div className="bg-green-100 p-2 rounded-lg">
+              <Phone className="w-4 h-4 text-green-600" />
+            </div>
+            <div className="flex-1">
               <p className="text-sm font-medium">{userData.phone}</p>
-              <p className="text-xs text-gray-500">Phone</p>
+              <p className="text-xs text-gray-500 flex items-center gap-1">
+                📱 Phone
+              </p>
             </div>
           </div>
         </div>
 
-        <Button variant="outline" className="w-full">
+        <Button variant="outline" className="w-full hover:bg-gray-50 transition-colors">
           <Edit className="w-4 h-4 mr-2" />
           Update Contact Info
         </Button>
@@ -934,35 +925,58 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           </div>
         </CardHeader>
         <CardContent>
-          {/* Filter Tabs */}
-          <Tabs value={historyFilter} onValueChange={(value: any) => setHistoryFilter(value)} className="mb-6">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="all" className="flex items-center gap-2">
-                All ({rideHistory.length})
-              </TabsTrigger>
-              <TabsTrigger value="driver" className="flex items-center gap-2">
-                <Car className="w-4 h-4" />
-                Driver ({rideHistory.filter(r => r.type === 'driver').length})
-              </TabsTrigger>
-              <TabsTrigger value="passenger" className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                Passenger ({rideHistory.filter(r => r.type === 'passenger').length})
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {/* Upcoming vs Past Pills */}
-          <div className="flex gap-2 mb-4">
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-              Upcoming: {upcomingRides.length}
-            </Badge>
-            <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
-              Past: {pastRides.length}
-            </Badge>
+          {/* Enhanced Filter Pills */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            <Button
+              variant={historyFilter === 'all' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setHistoryFilter('all')}
+              className={cn(
+                "transition-all duration-200",
+                historyFilter === 'all' 
+                  ? "bg-teal-600 hover:bg-teal-700 text-white shadow-md" 
+                  : "hover:bg-gray-50"
+              )}
+            >
+              All ({rideHistory.length})
+            </Button>
+            <Button
+              variant={historyFilter === 'driver' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setHistoryFilter('driver')}
+              className={cn(
+                "flex items-center gap-2 transition-all duration-200",
+                historyFilter === 'driver' 
+                  ? "bg-blue-600 hover:bg-blue-700 text-white shadow-md" 
+                  : "hover:bg-blue-50"
+              )}
+            >
+              🚗 Driver ({rideHistory.filter(r => r.type === 'driver').length})
+            </Button>
+            <Button
+              variant={historyFilter === 'passenger' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setHistoryFilter('passenger')}
+              className={cn(
+                "flex items-center gap-2 transition-all duration-200",
+                historyFilter === 'passenger' 
+                  ? "bg-green-600 hover:bg-green-700 text-white shadow-md" 
+                  : "hover:bg-green-50"
+              )}
+            >
+              🧑‍🤝‍🧑 Passenger ({rideHistory.filter(r => r.type === 'passenger').length})
+            </Button>
           </div>
 
-          <div className="space-y-3">
-            {filteredHistory.map((ride) => (
+          {/* Timeline Style Layout */}
+          <div className="relative">
+            {/* Timeline line */}
+            {filteredHistory.length > 0 && (
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+            )}
+            
+            <div className="space-y-4">
+            {filteredHistory.map((ride, index) => (
               <div
                 key={ride.id}
                 className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
@@ -1000,41 +1014,56 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
-          {/* Empty States */}
+          {/* Enhanced Empty States */}
           {filteredHistory.length === 0 && (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
               {historyFilter === 'all' ? (
                 <>
-                  <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">No rides yet</p>
-                  <p className="text-sm text-gray-500 mb-4">Start your Rydify journey</p>
-                  <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Car className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="text-gray-600 mb-2 font-medium">No rides yet</p>
+                  <p className="text-sm text-gray-500 mb-6">Start your Rydify journey today</p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
                     <Link href="/rides">
-                      <Button size="sm">Find a ride</Button>
+                      <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
+                        🔍 Find a ride
+                      </Button>
                     </Link>
                     <Link href="/rides/create">
-                      <Button variant="outline" size="sm">Offer your first ride</Button>
+                      <Button variant="outline" size="sm" className="hover:bg-gray-50">
+                        🚗 Offer your first ride
+                      </Button>
                     </Link>
                   </div>
                 </>
               ) : historyFilter === 'driver' ? (
                 <>
-                  <Car className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">No rides offered yet</p>
-                  <p className="text-sm text-gray-500 mb-4">Start earning by helping fellow students</p>
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl">🚗</span>
+                  </div>
+                  <p className="text-gray-600 mb-2 font-medium">No rides offered yet</p>
+                  <p className="text-sm text-gray-500 mb-6">Start earning by helping fellow students</p>
                   <Link href="/rides/create">
-                    <Button size="sm">Offer your first ride</Button>
+                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
+                      🚗 Offer your first ride
+                    </Button>
                   </Link>
                 </>
               ) : (
                 <>
-                  <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  <p className="text-gray-600 mb-2">No rides taken yet</p>
-                  <p className="text-sm text-gray-500 mb-4">Find your first ride</p>
+                  <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <span className="text-2xl">🧑‍🤝‍🧑</span>
+                  </div>
+                  <p className="text-gray-600 mb-2 font-medium">No rides taken yet</p>
+                  <p className="text-sm text-gray-500 mb-6">Find your first ride today</p>
                   <Link href="/rides">
-                    <Button size="sm">Find a ride</Button>
+                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                      🔍 Find a ride
+                    </Button>
                   </Link>
                 </>
               )}
@@ -1143,6 +1172,16 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
           {/* Full Width Ride History */}
           <RideHistoryCard />
         </div>
+
+        {/* Toast Notification */}
+        {copySuccess && (
+          <div className="fixed bottom-4 right-4 z-50 animate-in slide-in-from-bottom-2 duration-300">
+            <div className="bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2">
+              <Check className="w-4 h-4" />
+              <span className="text-sm font-medium">Copied to clipboard!</span>
+            </div>
+          </div>
+        )}
       </div>
     </TooltipProvider>
   )
