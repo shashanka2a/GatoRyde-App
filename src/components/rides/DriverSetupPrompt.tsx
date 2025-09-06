@@ -93,45 +93,60 @@ export function DriverSetupPrompt({ onStartSetup, userEduVerified }: DriverSetup
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        
-        {/* Static Background Elements for better performance */}
-        <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full" />
-        <div className="absolute bottom-20 right-32 w-24 h-24 bg-white/10 rounded-full" />
-        
-        <div className="container mx-auto py-20 px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <Car className="w-12 h-12 text-yellow-300" />
-                <h1 className="text-3xl lg:text-4xl font-bold">
-                  Become a <span className="text-yellow-300">Driver</span>
-                </h1>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
+        <div className="container mx-auto py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            {/* Breadcrumb Navigation */}
+            <nav className="flex items-center gap-2 text-sm text-teal-100 mb-4">
+              <a href="/" className="hover:text-white transition-colors">
+                Home
+              </a>
+              <ArrowRight className="w-4 h-4" />
+              <span className="text-white font-medium">Become a Driver</span>
+            </nav>
+            
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-xl">
+                  <Car className="w-8 h-8 text-yellow-300" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold">
+                    Become a <span className="text-yellow-300">Driver</span>
+                  </h1>
+                  <p className="text-teal-100 text-lg">Start earning with fellow students</p>
+                </div>
+              </div>
+              <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full border border-white/30">
+                <Shield className="h-4 w-4" />
+                <span>Verified Students Only</span>
+              </div>
+            </div>
+            
+            <p className="text-teal-100 max-w-xl mb-6">
+              Join thousands of UF students earning money while helping their community get around campus and beyond.
+            </p>
+            
+            {/* Navigation Pills */}
+            <div className="flex flex-wrap gap-3 text-sm">
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+                <DollarSign className="h-4 w-4" />
+                <span>Earn Money</span>
               </div>
               
-              <p className="text-xl text-teal-100 mb-8 max-w-3xl mx-auto">
-                Join thousands of UF students earning money while helping their community get around campus and beyond.
-              </p>
-
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+                <Users className="h-4 w-4" />
+                <span>Help Community</span>
+              </div>
+              
               {userEduVerified && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <Badge className="bg-green-500 text-white px-4 py-2 text-sm font-medium">
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Student Verification Complete ✓
-                  </Badge>
-                </motion.div>
+                <div className="flex items-center gap-2 bg-green-500/20 px-4 py-2 rounded-full border border-green-300/30">
+                  <CheckCircle className="h-4 w-4" />
+                  <span>Verified ✓</span>
+                </div>
               )}
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

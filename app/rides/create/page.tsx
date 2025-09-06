@@ -274,83 +274,61 @@ function CreateRideContent() {
   // All checks passed - show the create ride form
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
-      {/* Hero Header */}
-      {(
-        <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <motion.div
-            className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full"
-            animate={{
-              y: [0, -20, 0],
-              rotate: [0, 180, 360]
-            }}
-            transition={{
-              duration: 6,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          <motion.div
-            className="absolute bottom-10 right-20 w-16 h-16 bg-white/10 rounded-full"
-            animate={{
-              y: [0, 20, 0],
-              rotate: [0, -180, -360]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          />
-          
-          <div className="container mx-auto py-16 px-4 relative z-10">
-            <div className="max-w-4xl mx-auto text-center">
-              <motion.div
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <motion.h1 
-                  className="text-3xl lg:text-4xl font-bold mb-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  Offer a <span className="text-yellow-300">Ride</span>
-                </motion.h1>
-                <motion.p 
-                  className="text-xl text-teal-100 mb-8 max-w-2xl mx-auto"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.4 }}
-                >
-                  Share your journey and earn money while helping fellow students get around campus and beyond.
-                </motion.p>
-                
-                <motion.div 
-                  className="flex flex-wrap justify-center gap-4 text-sm"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                >
-                  <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-                    <DollarSign className="h-4 w-4" />
-                    <span>Earn Extra Cash</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-                    <Users className="h-4 w-4" />
-                    <span>Help Fellow Students</span>
-                  </div>
-                  <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
-                    <MapPin className="h-4 w-4" />
-                    <span>Share Your Route</span>
-                  </div>
-                </motion.div>
-              </motion.div>
+      {/* Header */}
+      <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
+        <div className="container mx-auto py-8 px-4">
+          <div className="max-w-6xl mx-auto">
+            {/* Breadcrumb Navigation */}
+            <nav className="flex items-center gap-2 text-sm text-teal-100 mb-4">
+              <Link href="/" className="hover:text-white transition-colors">
+                Home
+              </Link>
+              <Car className="w-4 h-4" />
+              <span className="text-white font-medium">Offer a Ride</span>
+            </nav>
+            
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="bg-white/20 p-2 rounded-xl">
+                  <Car className="w-8 h-8 text-yellow-300" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold">
+                    Offer a <span className="text-yellow-300">Ride</span>
+                  </h1>
+                  <p className="text-teal-100 text-lg">Share your journey and earn money</p>
+                </div>
+              </div>
+              <div className="hidden md:flex items-center gap-2 text-sm bg-white/20 px-4 py-2 rounded-full border border-white/30">
+                <Shield className="h-4 w-4" />
+                <span>Verified Students Only</span>
+              </div>
+            </div>
+            
+            <p className="text-teal-100 max-w-xl mb-6">
+              Help fellow students get where they need to go while earning money for yourself. Safe, verified riders only.
+            </p>
+            
+            {/* Navigation Pills */}
+            <div className="flex flex-wrap gap-3 text-sm">
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+                <DollarSign className="h-4 w-4" />
+                <span>Earn Money</span>
+              </div>
+              
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+                <Users className="h-4 w-4" />
+                <span>Help Students</span>
+              </div>
+              
+              <div className="flex items-center gap-2 bg-white/20 px-4 py-2 rounded-full">
+                <MapPin className="h-4 w-4" />
+                <span>Share Routes</span>
+              </div>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       <div className="container mx-auto px-4 py-12">
         <motion.div
