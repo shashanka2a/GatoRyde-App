@@ -1,4 +1,5 @@
 import { NotificationChannel } from './types'
+import nodemailer from 'nodemailer'
 
 export interface EmailProvider {
   sendEmail(to: string, subject: string, content: string): Promise<void>
@@ -8,38 +9,40 @@ export interface SMSProvider {
   sendSMS(to: string, content: string): Promise<void>
 }
 
-// Resend Email Provider
-export class ResendEmailProvider implements EmailProvider {
-  private apiKey: string
+// Gmail SMTP Email Provider
+export class GmailSMTPProvider implements EmailProvider {
+  private transporter: nodemailer.Transporter
   private fromEmail: string
 
   constructor() {
-    this.apiKey = process.env.RESEND_API_KEY!
-    this.fromEmail = process.env.FROM_EMAIL || 'noreply@rydify.com'
+    this.fromEmail = process.env.SMTP_USER!
+    
+    this.transporter = nodemailer.createTransporter({
+      host: process.env.SMTP_HOST!,
+      port: parseInt(process.env.SMTP_PORT!),
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.SMTP_USER!,
+        pass: process.env.SMTP_PASS!,
+      },
+    })
   }
 
   async sendEmail(to: string, subject: string, content: string): Promise<void> {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    try {
+      const info = await this.transporter.sendMail({
         from: this.fromEmail,
-        to: [to],
+        to,
         subject,
         text: content,
-      }),
-    })
+        html: content.replace(/\n/g, '<br>'), // Simple HTML conversion
+      })
 
-    if (!response.ok) {
-      const error = await response.text()
-      throw new Error(`Resend API error: ${response.status} - ${error}`)
+      console.log(`Email sent via Gmail SMTP: ${info.messageId}`)
+    } catch (error) {
+      console.error('Gmail SMTP error:', error)
+      throw new Error(`Gmail SMTP error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
-
-    const result = await response.json()
-    console.log(`Email sent via Resend: ${result.id}`)
   }
 }
 
@@ -122,7 +125,7 @@ export class NotificationProviders {
   static getEmailProvider(): EmailProvider {
     if (!this.emailProvider) {
       if (process.env.NODE_ENV === 'production') {
-        this.emailProvider = new ResendEmailProvider()
+        this.emailProvider = new GmailSMTPProvider()
       } else {
         this.emailProvider = new MockEmailProvider()
       }
