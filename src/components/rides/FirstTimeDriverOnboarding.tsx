@@ -17,8 +17,10 @@ import {
   AlertTriangle, 
   Info,
   MapPin,
-  Clock
+  Clock,
+  Camera
 } from 'lucide-react'
+import { CameraCapture } from '@/src/components/driver/CameraCapture'
 
 interface VehicleData {
   make: string
@@ -43,6 +45,8 @@ export function FirstTimeDriverOnboarding({ onComplete }: FirstTimeDriverOnboard
   const [step, setStep] = useState(1)
   const [isLocalRidesOnly, setIsLocalRidesOnly] = useState(false)
   const [licenseUploaded, setLicenseUploaded] = useState(false)
+  const [showCameraCapture, setShowCameraCapture] = useState(false)
+  const [capturedLicenseImage, setCapturedLicenseImage] = useState<string | null>(null)
   const [vehicleInfo, setVehicleInfo] = useState<VehicleData>({
     make: '',
     model: '',
@@ -106,6 +110,23 @@ export function FirstTimeDriverOnboarding({ onComplete }: FirstTimeDriverOnboard
       licenseUploaded,
       vehicleInfo
     })
+  }
+
+  const handleLicenseCapture = (imageData: string) => {
+    setCapturedLicenseImage(imageData)
+    setLicenseUploaded(true)
+    setShowCameraCapture(false)
+    // Image has been submitted to API for verification
+    console.log('License image captured and submitted for verification')
+  }
+
+  const handleVerificationSuccess = (verificationData: any) => {
+    console.log('Verification submitted successfully:', verificationData)
+    // Could show additional success messaging or update UI based on verification data
+  }
+
+  const handleCameraCaptureCancel = () => {
+    setShowCameraCapture(false)
   }
 
   const renderStep1 = () => (
@@ -277,105 +298,119 @@ export function FirstTimeDriverOnboarding({ onComplete }: FirstTimeDriverOnboard
     </Card>
   )
 
-  const renderStep3 = () => (
-    <Card className="shadow-xl border-0 bg-white overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <Shield className="w-5 h-5" />
-          Driver's License Verification
-        </CardTitle>
-        <CardDescription className="text-teal-100">
-          Optional but recommended for higher rider trust and long-distance rides
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="p-6 space-y-6">
-        <div className="text-center space-y-4">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-            <Upload className="w-8 h-8 text-blue-600" />
-          </div>
-          <h3 className="text-lg font-semibold text-gray-900">
-            Upload Your Driver's License (Optional)
-          </h3>
-          <p className="text-gray-600 max-w-md mx-auto">
-            Uploading your license increases rider trust and allows you to offer long-distance rides.
-          </p>
-        </div>
+  const renderStep3 = () => {
+    // Show camera capture if user chose to verify
+    if (showCameraCapture) {
+      return (
+        <CameraCapture
+          documentType="license"
+          onCapture={handleLicenseCapture}
+          onCancel={handleCameraCaptureCancel}
+          onSubmitSuccess={handleVerificationSuccess}
+          userId="demo_user_123" // In real implementation, get from auth context
+        />
+      )
+    }
 
-        <div className="space-y-4">
-          {/* Trust Score Impact */}
-          <div className="bg-gradient-to-r from-blue-50 to-teal-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-medium text-blue-900 mb-2">📈 Trust Score Impact:</h4>
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-blue-800">Current: Student Verified Only</span>
-              <span className="text-blue-600 font-semibold">50%</span>
+    return (
+      <Card className="shadow-xl border-0 bg-white overflow-hidden">
+        <CardHeader className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <Shield className="w-5 h-5" />
+            Driver's License Verification
+          </CardTitle>
+          <CardDescription className="text-teal-100">
+            Optional but recommended for higher rider trust and long-distance rides
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          <div className="text-center space-y-4">
+            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+              <Camera className="w-8 h-8 text-blue-600" />
             </div>
-            <div className="flex items-center justify-between text-sm mt-1">
-              <span className="text-teal-800">With License: Student + License Verified</span>
-              <span className="text-teal-600 font-semibold">75%</span>
-            </div>
-          </div>
-
-          <div 
-            className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-teal-400 transition-colors cursor-pointer"
-            onClick={() => setLicenseUploaded(true)}
-          >
-            <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-            <p className="text-sm text-gray-600 mb-1">
-              Click to upload or drag and drop
-            </p>
-            <p className="text-xs text-gray-500">
-              PNG, JPG up to 10MB
+            <h3 className="text-lg font-semibold text-gray-900">
+              Verify Your Driver's License (Optional)
+            </h3>
+            <p className="text-gray-600 max-w-md mx-auto">
+              Take a photo of your license to increase rider trust and unlock long-distance rides.
             </p>
           </div>
 
-          <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-            <h4 className="font-medium text-amber-900 mb-2">📸 Photo Tips:</h4>
-            <ul className="text-sm text-amber-800 space-y-1">
-              <li>• Ensure all text is clearly readable</li>
-              <li>• Take photo in good lighting</li>
-              <li>• Include the entire license in frame</li>
-              <li>• Avoid glare and shadows</li>
-            </ul>
+          <div className="space-y-4">
+            {/* Trust Score Impact */}
+            <div className="bg-gradient-to-r from-blue-50 to-teal-50 p-4 rounded-lg border border-blue-200">
+              <h4 className="font-medium text-blue-900 mb-2">📈 Trust Score Impact:</h4>
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-800">Current: Student Verified Only</span>
+                <span className="text-blue-600 font-semibold">50%</span>
+              </div>
+              <div className="flex items-center justify-between text-sm mt-1">
+                <span className="text-teal-800">With License: Student + License Verified</span>
+                <span className="text-teal-600 font-semibold">75%</span>
+              </div>
+            </div>
+
+            {/* Camera Capture Button */}
+            <div 
+              className="border-2 border-dashed border-teal-300 bg-teal-50 rounded-lg p-6 text-center hover:border-teal-400 hover:bg-teal-100 transition-colors cursor-pointer"
+              onClick={() => setShowCameraCapture(true)}
+            >
+              <Camera className="w-8 h-8 text-teal-600 mx-auto mb-2" />
+              <p className="text-sm text-teal-800 mb-1 font-medium">
+                Take Photo with Camera
+              </p>
+              <p className="text-xs text-teal-600">
+                Guided photo capture for best results
+              </p>
+            </div>
+
+            <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+              <h4 className="font-medium text-amber-900 mb-2">📸 What to Expect:</h4>
+              <ul className="text-sm text-amber-800 space-y-1">
+                <li>• Step-by-step photo guidance</li>
+                <li>• Camera will open automatically</li>
+                <li>• Review and retake if needed</li>
+                <li>• Secure processing and storage</li>
+              </ul>
+            </div>
+
+            {licenseUploaded && (
+              <Alert className="border-green-200 bg-green-50">
+                <CheckCircle className="w-4 h-4 text-green-600" />
+                <AlertDescription className="text-green-800">
+                  License photo captured successfully! We'll review it within 24 hours and update your trust score.
+                </AlertDescription>
+              </Alert>
+            )}
           </div>
 
-          {licenseUploaded && (
-            <Alert className="border-green-200 bg-green-50">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-              <AlertDescription className="text-green-800">
-                License uploaded successfully! We'll review it within 24 hours.
-              </AlertDescription>
-            </Alert>
-          )}
-        </div>
-
-        <div className="flex gap-3">
-          <Button
-            onClick={() => setStep(2)}
-            variant="outline"
-            className="border-gray-300"
-          >
-            Back
-          </Button>
-          <Button
-            onClick={handleNext}
-            variant="outline"
-            className="border-gray-400 text-gray-700 hover:bg-gray-50"
-          >
-            Skip for Now
-          </Button>
-          <Button
-            onClick={() => {
-              setLicenseUploaded(true)
-              handleNext()
-            }}
-            className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700"
-          >
-            Upload & Continue
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  )
+          <div className="flex gap-3">
+            <Button
+              onClick={() => setStep(2)}
+              variant="outline"
+              className="border-gray-300"
+            >
+              Back
+            </Button>
+            <Button
+              onClick={handleNext}
+              variant="outline"
+              className="border-gray-400 text-gray-700 hover:bg-gray-50"
+            >
+              Skip for Now
+            </Button>
+            <Button
+              onClick={() => setShowCameraCapture(true)}
+              className="flex-1 bg-gradient-to-r from-teal-600 to-emerald-600 hover:from-teal-700 hover:to-emerald-700"
+            >
+              <Camera className="w-5 h-5 mr-2" />
+              Take Photo
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
 
   const renderStep4 = () => (
     <Card className="shadow-xl border-0 bg-white overflow-hidden">

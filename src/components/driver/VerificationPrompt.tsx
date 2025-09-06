@@ -126,10 +126,10 @@ export function VerificationPrompt({
 
         {/* Action Buttons */}
         <div className="flex gap-2 pt-2">
-          <Link href="/driver/onboarding" className="flex-1">
+          <Link href="/driver/verify" className="flex-1">
             <Button className="w-full bg-teal-600 hover:bg-teal-700 text-white">
               <Upload className="w-4 h-4 mr-2" />
-              Upload Documents
+              Verify Documents
             </Button>
           </Link>
           <Button 
