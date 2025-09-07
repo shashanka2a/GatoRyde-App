@@ -165,7 +165,7 @@ export function RidesPageClient() {
               <AlertTriangle className="w-4 h-4 text-blue-600" />
               <AlertDescription className="text-blue-800">
                 <strong>Student Verification:</strong> Verify your .edu email to contact drivers and post rides.
-                <Link href="/verify-edu" className="ml-2 text-blue-600 hover:text-blue-700 underline font-medium">
+                <Link href="/auth/login" className="ml-2 text-blue-600 hover:text-blue-700 underline font-medium">
                   Verify Now →
                 </Link>
               </AlertDescription>

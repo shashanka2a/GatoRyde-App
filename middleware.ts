@@ -43,11 +43,11 @@ export async function middleware(request: NextRequest) {
     const authCookies = getAuthCookies(request)
     
     if (!authCookies.uid || !authCookies.eduVerified) {
-      // Redirect to verification for page requests
+      // Redirect to login for page requests
       if (!pathname.startsWith('/api/')) {
-        const verifyUrl = new URL('/verify-edu', request.url)
-        verifyUrl.searchParams.set('next', pathname)
-        return NextResponse.redirect(verifyUrl)
+        const loginUrl = new URL('/auth/login', request.url)
+        loginUrl.searchParams.set('redirect', pathname)
+        return NextResponse.redirect(loginUrl)
       }
 
       // Return 401 for API requests
@@ -61,10 +61,10 @@ export async function middleware(request: NextRequest) {
     const user = await getTokenFromRequest(request)
     if (!user || !user.eduVerified) {
       if (!pathname.startsWith('/api/')) {
-        const verifyUrl = new URL('/verify-edu', request.url)
-        verifyUrl.searchParams.set('next', pathname)
-        verifyUrl.searchParams.set('error', 'session-expired')
-        return NextResponse.redirect(verifyUrl)
+        const loginUrl = new URL('/auth/login', request.url)
+        loginUrl.searchParams.set('redirect', pathname)
+        loginUrl.searchParams.set('error', 'session-expired')
+        return NextResponse.redirect(loginUrl)
       }
 
       return NextResponse.json(
