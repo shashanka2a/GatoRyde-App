@@ -1,8 +1,7 @@
 import crypto from "crypto"
+import { PrismaClient } from "@prisma/client"
 
-// Simple in-memory OTP storage for MVP
-const otpStore = new Map<string, { otp: string; expiry: number }>()
-
+const prisma = new PrismaClient()
 const OTP_EXPIRY_MINUTES = 10
 
 export class OTPManager {
@@ -16,13 +15,29 @@ export class OTPManager {
     
     console.log(`🔍 [OTP MANAGER] Generated OTP for ${identifier} (${type}): ${otp}`)
     
-    const key = this.getOTPKey(identifier, type)
-    const expiry = Date.now() + (OTP_EXPIRY_MINUTES * 60 * 1000)
+    const expiresAt = new Date(Date.now() + (OTP_EXPIRY_MINUTES * 60 * 1000))
 
-    // Store OTP with expiry
-    otpStore.set(key, { otp, expiry })
+    // Store OTP in database (upsert to replace existing)
+    await prisma.oTP.upsert({
+      where: {
+        identifier_type: {
+          identifier: identifier.toLowerCase().trim(),
+          type: type
+        }
+      },
+      update: {
+        code: otp,
+        expiresAt: expiresAt
+      },
+      create: {
+        identifier: identifier.toLowerCase().trim(),
+        type: type,
+        code: otp,
+        expiresAt: expiresAt
+      }
+    })
     
-    console.log(`🔍 [OTP MANAGER] Stored OTP with expiry: ${new Date(expiry).toISOString()}`)
+    console.log(`🔍 [OTP MANAGER] Stored OTP in database with expiry: ${expiresAt.toISOString()}`)
 
     return otp
   }
@@ -32,48 +47,78 @@ export class OTPManager {
     otp: string,
     type: "email" | "sms"
   ): Promise<boolean> {
-    const key = this.getOTPKey(identifier, type)
-    const stored = otpStore.get(key)
-
     console.log(`🔍 [OTP MANAGER] Verifying OTP for ${identifier} (${type})`)
     console.log(`🔍 [OTP MANAGER] Provided OTP: ${otp}`)
-    console.log(`🔍 [OTP MANAGER] Stored OTP: ${stored?.otp || 'NOT FOUND'}`)
     console.log(`🔍 [OTP MANAGER] Current time: ${new Date().toISOString()}`)
-    console.log(`🔍 [OTP MANAGER] Stored expiry: ${stored ? new Date(stored.expiry).toISOString() : 'N/A'}`)
 
-    if (!stored || Date.now() > stored.expiry) {
+    // Get OTP from database
+    const stored = await prisma.oTP.findUnique({
+      where: {
+        identifier_type: {
+          identifier: identifier.toLowerCase().trim(),
+          type: type
+        }
+      }
+    })
+
+    console.log(`🔍 [OTP MANAGER] Stored OTP: ${stored?.code || 'NOT FOUND'}`)
+    console.log(`🔍 [OTP MANAGER] Stored expiry: ${stored ? stored.expiresAt.toISOString() : 'N/A'}`)
+
+    if (!stored || new Date() > stored.expiresAt) {
       console.log(`❌ [OTP MANAGER] OTP expired or doesn't exist`)
-      otpStore.delete(key)
+      // Clean up expired OTP
+      if (stored) {
+        await prisma.oTP.delete({
+          where: { id: stored.id }
+        })
+      }
       return false // OTP expired or doesn't exist
     }
 
-    const isValid = stored.otp === otp
+    const isValid = stored.code === otp
     console.log(`🔍 [OTP MANAGER] OTP verification result: ${isValid}`)
 
     if (isValid) {
-      console.log(`✅ [OTP MANAGER] OTP verified successfully, deleting from store`)
+      console.log(`✅ [OTP MANAGER] OTP verified successfully, deleting from database`)
       // Delete OTP after successful verification
-      otpStore.delete(key)
+      await prisma.oTP.delete({
+        where: { id: stored.id }
+      })
     }
 
     return isValid
   }
 
   async getOTPExpiry(identifier: string, type: "email" | "sms"): Promise<number | null> {
-    const key = this.getOTPKey(identifier, type)
-    const stored = otpStore.get(key)
+    const stored = await prisma.oTP.findUnique({
+      where: {
+        identifier_type: {
+          identifier: identifier.toLowerCase().trim(),
+          type: type
+        }
+      }
+    })
     
-    if (!stored || Date.now() > stored.expiry) {
-      otpStore.delete(key)
+    if (!stored || new Date() > stored.expiresAt) {
+      // Clean up expired OTP
+      if (stored) {
+        await prisma.oTP.delete({
+          where: { id: stored.id }
+        })
+      }
       return null
     }
-
-    return stored.expiry
+    
+    return stored.expiresAt.getTime()
   }
 
   async deleteOTP(identifier: string, type: "email" | "sms"): Promise<void> {
-    const key = this.getOTPKey(identifier, type)
-    otpStore.delete(key)
+    await prisma.oTP.deleteMany({
+      where: {
+        identifier: identifier.toLowerCase().trim(),
+        type: type
+      }
+    })
   }
 }
 

@@ -230,3 +230,15 @@ model Dispute {
 
   @@map("disputes")
 }
+
+model OTP {
+  id         String   @id @default(cuid())
+  identifier String   // Email or phone number
+  type       String   // "email" or "sms"
+  code       String   // The 6-digit OTP code
+  expiresAt  DateTime // When the OTP expires
+  createdAt  DateTime @default(now())
+
+  @@unique([identifier, type])
+  @@map("otps")
+}
