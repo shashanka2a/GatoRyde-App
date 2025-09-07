@@ -15,6 +15,15 @@ export async function POST(request: NextRequest) {
   try {
     // Get authenticated user
     const session = await requireAuth()
+    console.log('🔍 [CONTACT LOG] Session:', session)
+    
+    if (!session || !session.user) {
+      return NextResponse.json(
+        { success: false, message: 'Authentication required' },
+        { status: 401 }
+      )
+    }
+    
     const userId = session.user.id
 
     // Parse request body
