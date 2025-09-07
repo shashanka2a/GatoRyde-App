@@ -17,7 +17,7 @@ export class GmailSMTPProvider implements EmailProvider {
   constructor() {
     this.fromEmail = process.env.SMTP_USER!
     
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST!,
       port: parseInt(process.env.SMTP_PORT!),
       secure: process.env.SMTP_SECURE === 'true',
