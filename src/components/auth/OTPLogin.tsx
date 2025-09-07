@@ -26,6 +26,17 @@ export function OTPLogin() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirectTo = searchParams.get('redirect') || '/rides'
+  
+  // Smart redirect based on the intended destination
+  const getSmartRedirect = (redirect: string) => {
+    if (redirect.includes('/profile')) return '/profile'
+    if (redirect.includes('/drive')) return '/drive'
+    if (redirect.includes('/rides')) return '/rides'
+    if (redirect.includes('/dashboard')) return '/dashboard'
+    return '/rides' // default fallback
+  }
+  
+  const smartRedirectTo = getSmartRedirect(redirectTo)
 
   // Countdown timer for resend
   React.useEffect(() => {
@@ -132,7 +143,7 @@ export function OTPLogin() {
           await login(data.user)
           toast.success('Successfully signed in!')
           // Redirect to the intended page
-          router.push(redirectTo)
+          router.push(smartRedirectTo)
         }
       } else {
         setErrors({ otp: data.error || 'Invalid verification code' })
@@ -170,7 +181,7 @@ export function OTPLogin() {
         await login(data.user)
         toast.success('Profile completed! Welcome to Rydify!')
         // Redirect to the intended page
-        router.push(redirectTo)
+        router.push(smartRedirectTo)
       } else {
         console.log('❌ [FRONTEND] Profile completion failed:', data.message)
         throw new Error(data.message || 'Failed to complete profile')
@@ -216,10 +227,19 @@ export function OTPLogin() {
   // Redirect if user is already logged in
   React.useEffect(() => {
     if (user) {
-      console.log('🔍 [FRONTEND] User already logged in, redirecting to:', redirectTo)
-      router.push(redirectTo)
+      console.log('🔍 [FRONTEND] User already logged in, redirecting to:', smartRedirectTo)
+      console.log('🔍 [FRONTEND] Original redirect:', redirectTo)
+      console.log('🔍 [FRONTEND] Current pathname:', window.location.pathname)
+      
+      // Use window.location for immediate redirect
+      if (window.location.pathname !== smartRedirectTo) {
+        console.log('🔍 [FRONTEND] Performing redirect to:', smartRedirectTo)
+        window.location.href = smartRedirectTo
+      } else {
+        console.log('🔍 [FRONTEND] Already on target page')
+      }
     }
-  }, [user, router, redirectTo])
+  }, [user, router, smartRedirectTo, redirectTo])
 
   if (user) {
     return (
