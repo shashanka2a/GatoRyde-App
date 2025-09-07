@@ -258,8 +258,8 @@ export function RideList({
                 )}
               </div>
 
-                        {/* Expanded Details */}
-                        {isExpanded && (
+              {/* Expanded Details */}
+              {isExpanded && (
                           <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                               <div>
@@ -276,9 +276,9 @@ export function RideList({
                                 <h4 className="font-medium text-gray-900 mb-2">Departure</h4>
                                 <div className="flex items-center gap-2 text-gray-600">
                                   <Calendar className="w-4 h-4" />
-                                  <span>{ride.departAt.toLocaleDateString()}</span>
+                                  <span>{new Date(ride.departAt).toLocaleDateString()}</span>
                                   <Clock className="w-4 h-4 ml-2" />
-                                  <span>{ride.departAt.toLocaleTimeString([], { 
+                                  <span>{new Date(ride.departAt).toLocaleTimeString([], { 
                                     hour: '2-digit', 
                                     minute: '2-digit' 
                                   })}</span>
@@ -309,13 +309,9 @@ export function RideList({
                               </div>
                             </div>
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </div>
-              </div>
-            </Card>
+              )}
+            </CardContent>
+          </Card>
         )
       })}
     </div>
