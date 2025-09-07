@@ -25,6 +25,7 @@ import { motion } from 'framer-motion'
 
 import { CreateRideForm } from '@/src/components/rides/CreateRideForm'
 import Link from 'next/link'
+import { DebugNavigation } from '../../debug-navigation'
 
 interface DrivePageClientProps {
   userEduVerified: boolean
@@ -174,6 +175,7 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
+      <DebugNavigation />
       {/* Enhanced Header to match Find Ride style */}
       <div className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white">
         <div className="container mx-auto py-8 px-4">
