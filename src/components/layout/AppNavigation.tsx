@@ -41,6 +41,7 @@ export function AppNavigation() {
              pathname.startsWith('/rides/create') || 
              pathname === '/driver/onboarding' || 
              pathname.startsWith('/driver/onboarding') ||
+             pathname === '/drive' ||
              pathname.startsWith('/drive') ||
              pathname.startsWith('/dashboard/driver')
     }
