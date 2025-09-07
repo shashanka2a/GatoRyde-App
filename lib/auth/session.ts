@@ -21,13 +21,13 @@ export async function requireAuth() {
   if (!user) {
     throw new Error("Authentication required")
   }
-  return user
+  return { user }
 }
 
 export async function requireVerifiedUser() {
-  const user = await requireAuth()
-  if (!user.eduVerified) {
+  const session = await requireAuth()
+  if (!session.user.eduVerified) {
     throw new Error("Email verification required")
   }
-  return user
+  return session
 }
