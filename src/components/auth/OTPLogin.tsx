@@ -135,11 +135,18 @@ export function OTPLogin() {
       console.log('🔍 [FRONTEND] OTP verification response data:', data)
       
       if (data.success) {
+        console.log('🔍 [FRONTEND] User data received:', data.user)
+        console.log('🔍 [FRONTEND] User name:', data.user.name)
+        console.log('🔍 [FRONTEND] User phone:', data.user.phone)
+        console.log('🔍 [FRONTEND] Is first-time user?', !data.user.name || !data.user.phone)
+        
         // Check if this is a first-time user (no name/phone)
         if (!data.user.name || !data.user.phone) {
+          console.log('🔍 [FRONTEND] First-time user - showing profile completion')
           setStep('profile')
           toast.success('Email verified! Please complete your profile.')
         } else {
+          console.log('🔍 [FRONTEND] Existing user - redirecting to:', smartRedirectTo)
           await login(data.user)
           toast.success('Successfully signed in!')
           // Redirect to the intended page
