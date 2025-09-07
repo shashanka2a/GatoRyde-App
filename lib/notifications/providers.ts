@@ -30,6 +30,11 @@ export class GmailSMTPProvider implements EmailProvider {
 
   async sendEmail(to: string, subject: string, content: string): Promise<void> {
     try {
+      console.log('🔍 [GMAIL SMTP] Attempting to send email...')
+      console.log('🔍 [GMAIL SMTP] From:', this.fromEmail)
+      console.log('🔍 [GMAIL SMTP] To:', to)
+      console.log('🔍 [GMAIL SMTP] Subject:', subject)
+      
       const info = await this.transporter.sendMail({
         from: this.fromEmail,
         to,
@@ -38,9 +43,11 @@ export class GmailSMTPProvider implements EmailProvider {
         html: content.replace(/\n/g, '<br>'), // Simple HTML conversion
       })
 
-      console.log(`Email sent via Gmail SMTP: ${info.messageId}`)
+      console.log(`✅ [GMAIL SMTP] Email sent successfully: ${info.messageId}`)
     } catch (error) {
-      console.error('Gmail SMTP error:', error)
+      console.error('❌ [GMAIL SMTP] Error details:', error)
+      console.error('❌ [GMAIL SMTP] Error message:', error instanceof Error ? error.message : 'Unknown error')
+      console.error('❌ [GMAIL SMTP] Error stack:', error instanceof Error ? error.stack : 'No stack trace')
       throw new Error(`Gmail SMTP error: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
@@ -90,6 +97,7 @@ export class TwilioSMSProvider implements SMSProvider {
 // Mock providers for development/testing
 export class MockEmailProvider implements EmailProvider {
   async sendEmail(to: string, subject: string, content: string): Promise<void> {
+    console.log('🔍 [MOCK EMAIL] Sending mock email...')
     console.log('=== MOCK EMAIL ===')
     console.log(`To: ${to}`)
     console.log(`Subject: ${subject}`)
@@ -98,8 +106,11 @@ export class MockEmailProvider implements EmailProvider {
     
     // Simulate potential failure for testing
     if (Math.random() < 0.1) {
+      console.log('❌ [MOCK EMAIL] Simulated failure for testing')
       throw new Error('Mock email failure for testing')
     }
+    
+    console.log('✅ [MOCK EMAIL] Mock email sent successfully')
   }
 }
 
@@ -130,9 +141,18 @@ export class NotificationProviders {
                            process.env.SMTP_USER && 
                            process.env.SMTP_PASS
       
+      console.log('🔍 [EMAIL PROVIDER] NODE_ENV:', process.env.NODE_ENV)
+      console.log('🔍 [EMAIL PROVIDER] SMTP_HOST:', process.env.SMTP_HOST ? 'SET' : 'NOT SET')
+      console.log('🔍 [EMAIL PROVIDER] SMTP_PORT:', process.env.SMTP_PORT ? 'SET' : 'NOT SET')
+      console.log('🔍 [EMAIL PROVIDER] SMTP_USER:', process.env.SMTP_USER ? 'SET' : 'NOT SET')
+      console.log('🔍 [EMAIL PROVIDER] SMTP_PASS:', process.env.SMTP_PASS ? 'SET' : 'NOT SET')
+      console.log('🔍 [EMAIL PROVIDER] hasSMTPConfig:', hasSMTPConfig)
+      
       if (process.env.NODE_ENV === 'production' && hasSMTPConfig) {
+        console.log('🔍 [EMAIL PROVIDER] Using GmailSMTPProvider')
         this.emailProvider = new GmailSMTPProvider()
       } else {
+        console.log('🔍 [EMAIL PROVIDER] Using MockEmailProvider')
         this.emailProvider = new MockEmailProvider()
       }
     }
