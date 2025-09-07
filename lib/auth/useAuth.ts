@@ -100,6 +100,23 @@ export function useAuth() {
     }
   }
 
+  const login = async (userData: User) => {
+    try {
+      setAuthState({
+        user: userData,
+        loading: false,
+        error: null
+      })
+    } catch (error) {
+      console.error('Login error:', error)
+      setAuthState({
+        user: null,
+        loading: false,
+        error: 'Failed to login'
+      })
+    }
+  }
+
   const logout = async () => {
     try {
       await fetch('/api/auth/logout', {
@@ -120,6 +137,7 @@ export function useAuth() {
     ...authState,
     sendOTP,
     verifyOTP,
+    login,
     logout,
     refetch: checkSession
   }
