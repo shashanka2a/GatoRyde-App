@@ -21,7 +21,7 @@ export function BottomNavigation() {
   ]
 
   const isActive = (href: string, label: string) => {
-    if (href === '/rides') {
+    if (label === 'Search') {
       return pathname === '/rides' || pathname === '/browse-rides' || pathname === '/ride' || pathname === '/'
     }
     if (label === 'Drive') {
@@ -34,7 +34,7 @@ export function BottomNavigation() {
              pathname.startsWith('/drive') ||
              pathname.startsWith('/dashboard/driver')
     }
-    if (href === '/profile') {
+    if (label === 'Profile') {
       return pathname === '/profile' || pathname.startsWith('/profile')
     }
     return pathname.startsWith(href)

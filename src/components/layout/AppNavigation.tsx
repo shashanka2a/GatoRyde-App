@@ -32,8 +32,8 @@ export function AppNavigation() {
   ]
 
   const isActive = (href: string, label: string) => {
-    if (href === '/rides') {
-      return pathname === '/rides' || pathname === '/browse-rides' || pathname === '/ride'
+    if (label === 'Search') {
+      return pathname === '/rides' || pathname === '/browse-rides' || pathname === '/ride' || pathname === '/'
     }
     if (label === 'Drive') {
       // Check for all possible drive-related paths
@@ -45,7 +45,7 @@ export function AppNavigation() {
              pathname.startsWith('/drive') ||
              pathname.startsWith('/dashboard/driver')
     }
-    if (href === '/profile') {
+    if (label === 'Profile') {
       return pathname === '/profile' || pathname.startsWith('/profile')
     }
     return pathname.startsWith(href)
