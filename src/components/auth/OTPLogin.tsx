@@ -103,13 +103,21 @@ export function OTPLogin() {
     setLoading(true)
     
     try {
+      console.log('🔍 [FRONTEND] Sending OTP verification request')
+      console.log('🔍 [FRONTEND] Email:', email)
+      console.log('🔍 [FRONTEND] OTP:', otp)
+      
       const response = await fetch('/api/auth/login-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, otp })
       })
       
+      console.log('🔍 [FRONTEND] OTP verification response status:', response.status)
+      console.log('🔍 [FRONTEND] OTP verification response headers:', Object.fromEntries(response.headers.entries()))
+      
       const data = await response.json()
+      console.log('🔍 [FRONTEND] OTP verification response data:', data)
       
       if (data.success) {
         // Check if this is a first-time user (no name/phone)
