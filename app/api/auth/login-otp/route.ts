@@ -14,16 +14,27 @@ const LoginOTPSchema = z.object({
   otp: z.string().length(6, "OTP must be 6 digits"),
 })
 
+// Test endpoint to verify route is working
+export async function GET() {
+  console.log("🔍 [LOGIN OTP] GET request received - endpoint is working")
+  return NextResponse.json({ message: "Login OTP endpoint is working" })
+}
+
 export async function POST(request: NextRequest) {
+  console.log("🔍 [LOGIN OTP] ===== ENDPOINT REACHED =====")
   console.log("🔍 [LOGIN OTP] Request received")
   console.log("🔍 [LOGIN OTP] Request URL:", request.url)
   console.log("🔍 [LOGIN OTP] Request method:", request.method)
+  console.log("🔍 [LOGIN OTP] Request headers:", Object.fromEntries(request.headers.entries()))
   
   try {
+    console.log("🔍 [LOGIN OTP] Attempting to parse request body...")
     const body = await request.json()
-    console.log("🔍 [LOGIN OTP] Request body:", body)
+    console.log("🔍 [LOGIN OTP] Request body parsed successfully:", body)
     
+    console.log("🔍 [LOGIN OTP] Attempting to validate with schema...")
     const { email, otp } = LoginOTPSchema.parse(body)
+    console.log("🔍 [LOGIN OTP] Schema validation passed")
     console.log("🔍 [LOGIN OTP] Parsed email:", email)
     console.log("🔍 [LOGIN OTP] Parsed OTP:", otp)
 
