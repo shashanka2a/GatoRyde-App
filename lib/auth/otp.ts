@@ -14,11 +14,15 @@ export class OTPManager {
     // Generate 6-digit OTP
     const otp = crypto.randomInt(100000, 999999).toString()
     
+    console.log(`🔍 [OTP MANAGER] Generated OTP for ${identifier} (${type}): ${otp}`)
+    
     const key = this.getOTPKey(identifier, type)
     const expiry = Date.now() + (OTP_EXPIRY_MINUTES * 60 * 1000)
 
     // Store OTP with expiry
     otpStore.set(key, { otp, expiry })
+    
+    console.log(`🔍 [OTP MANAGER] Stored OTP with expiry: ${new Date(expiry).toISOString()}`)
 
     return otp
   }
@@ -31,14 +35,23 @@ export class OTPManager {
     const key = this.getOTPKey(identifier, type)
     const stored = otpStore.get(key)
 
+    console.log(`🔍 [OTP MANAGER] Verifying OTP for ${identifier} (${type})`)
+    console.log(`🔍 [OTP MANAGER] Provided OTP: ${otp}`)
+    console.log(`🔍 [OTP MANAGER] Stored OTP: ${stored?.otp || 'NOT FOUND'}`)
+    console.log(`🔍 [OTP MANAGER] Current time: ${new Date().toISOString()}`)
+    console.log(`🔍 [OTP MANAGER] Stored expiry: ${stored ? new Date(stored.expiry).toISOString() : 'N/A'}`)
+
     if (!stored || Date.now() > stored.expiry) {
+      console.log(`❌ [OTP MANAGER] OTP expired or doesn't exist`)
       otpStore.delete(key)
       return false // OTP expired or doesn't exist
     }
 
     const isValid = stored.otp === otp
+    console.log(`🔍 [OTP MANAGER] OTP verification result: ${isValid}`)
 
     if (isValid) {
+      console.log(`✅ [OTP MANAGER] OTP verified successfully, deleting from store`)
       // Delete OTP after successful verification
       otpStore.delete(key)
     }
