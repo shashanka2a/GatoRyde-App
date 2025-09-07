@@ -148,6 +148,7 @@ export class NotificationProviders {
       console.log('🔍 [EMAIL PROVIDER] SMTP_PASS:', process.env.SMTP_PASS ? 'SET' : 'NOT SET')
       console.log('🔍 [EMAIL PROVIDER] hasSMTPConfig:', hasSMTPConfig)
       
+      // Use Gmail SMTP in production, but fallback to Mock if it fails
       if (process.env.NODE_ENV === 'production' && hasSMTPConfig) {
         console.log('🔍 [EMAIL PROVIDER] Using GmailSMTPProvider')
         this.emailProvider = new GmailSMTPProvider()
