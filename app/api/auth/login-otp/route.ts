@@ -15,15 +15,26 @@ const LoginOTPSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  console.log("🔍 [LOGIN OTP] Request received")
+  console.log("🔍 [LOGIN OTP] Request URL:", request.url)
+  console.log("🔍 [LOGIN OTP] Request method:", request.method)
+  
   try {
     const body = await request.json()
+    console.log("🔍 [LOGIN OTP] Request body:", body)
+    
     const { email, otp } = LoginOTPSchema.parse(body)
+    console.log("🔍 [LOGIN OTP] Parsed email:", email)
+    console.log("🔍 [LOGIN OTP] Parsed OTP:", otp)
 
     const normalizedEmail = email.toLowerCase().trim()
+    console.log("🔍 [LOGIN OTP] Normalized email:", normalizedEmail)
 
     // Validate .edu email
     const eduValidation = validateEduEmail(normalizedEmail)
+    console.log("🔍 [LOGIN OTP] Email validation result:", eduValidation)
     if (!eduValidation.isValid) {
+      console.log("❌ [LOGIN OTP] Invalid .edu email:", eduValidation.error)
       return NextResponse.json(
         {
           success: false,
@@ -36,8 +47,11 @@ export async function POST(request: NextRequest) {
 
     // Check rate limit for verification attempts
     try {
+      console.log("🔍 [LOGIN OTP] Checking rate limit...")
       await rateLimiter.checkRateLimit(normalizedEmail, "otp_verify")
+      console.log("✅ [LOGIN OTP] Rate limit check passed")
     } catch (error) {
+      console.log("❌ [LOGIN OTP] Rate limit exceeded:", error)
       return NextResponse.json(
         {
           success: false,
@@ -49,9 +63,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify OTP from local storage
+    console.log("🔍 [LOGIN OTP] Verifying OTP...")
     const isValidOTP = await otpManager.verifyOTP(normalizedEmail, otp, "email")
+    console.log("🔍 [LOGIN OTP] OTP verification result:", isValidOTP)
 
     if (!isValidOTP) {
+      console.log("❌ [LOGIN OTP] Invalid OTP provided")
       // Increment failed verification attempts
       await rateLimiter.incrementAttempts(normalizedEmail, "otp_verify")
       
@@ -141,9 +158,11 @@ export async function POST(request: NextRequest) {
     return response
 
   } catch (error) {
-    console.error("Login OTP error:", error)
+    console.error("❌ [LOGIN OTP] Unexpected error:", error)
+    console.error("❌ [LOGIN OTP] Error stack:", error instanceof Error ? error.stack : 'No stack trace')
 
     if (error instanceof z.ZodError) {
+      console.log("❌ [LOGIN OTP] Zod validation error:", error.errors)
       return NextResponse.json(
         {
           success: false,
