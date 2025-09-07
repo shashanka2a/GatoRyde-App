@@ -65,6 +65,12 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   const [historyFilter, setHistoryFilter] = useState<'all' | 'driver' | 'passenger'>('all')
   const [copySuccess, setCopySuccess] = useState<string | null>(null)
   const [expandedRides, setExpandedRides] = useState<Set<string>>(new Set())
+  const [isEditing, setIsEditing] = useState(false)
+  const [editData, setEditData] = useState({
+    name: userData.name,
+    phone: userData.phone
+  })
+  const [editLoading, setEditLoading] = useState(false)
 
   // Add safety checks for userData
   if (!userData) {
@@ -137,6 +143,40 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
     }
   }
 
+  const handleEditSave = async () => {
+    setEditLoading(true)
+    try {
+      const response = await fetch('/api/profile/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editData)
+      })
+
+      if (response.ok) {
+        // Update local state
+        userData.name = editData.name
+        userData.phone = editData.phone
+        setIsEditing(false)
+        // You might want to show a success toast here
+      } else {
+        throw new Error('Failed to update profile')
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      // You might want to show an error toast here
+    } finally {
+      setEditLoading(false)
+    }
+  }
+
+  const handleEditCancel = () => {
+    setEditData({
+      name: userData.name,
+      phone: userData.phone
+    })
+    setIsEditing(false)
+  }
+
   const toggleRideExpansion = (rideId: string) => {
     const newExpanded = new Set(expandedRides)
     if (newExpanded.has(rideId)) {
@@ -170,7 +210,21 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 
                 <div className="flex-1 min-w-0 w-full lg:w-auto">
                   <div className="mb-3">
-                    <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {userData.name ? userData.name.split(' ')[0] : 'User'}!</h1>
+                    {isEditing ? (
+                      <div className="space-y-2">
+                        <Label htmlFor="name" className="text-teal-100 text-sm">Full Name</Label>
+                        <Input
+                          id="name"
+                          type="text"
+                          value={editData.name}
+                          onChange={(e) => setEditData(prev => ({ ...prev, name: e.target.value }))}
+                          placeholder="Enter your full name"
+                          className="bg-white/20 border-white/30 text-white placeholder:text-white/70"
+                        />
+                      </div>
+                    ) : (
+                      <h1 className="text-xl sm:text-2xl font-bold mb-1">Welcome back, {userData.name ? userData.name.split(' ')[0] : 'User'}!</h1>
+                    )}
                     <p className="text-teal-100 text-sm sm:text-base">
                       Member since {userData.joinedAt ? userData.joinedAt.getFullYear() : new Date().getFullYear()} • 
                       <span className="ml-2 inline-flex items-center gap-1">
@@ -220,14 +274,36 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Button 
-                    variant="secondary" 
-                    size="sm" 
-                    className="hover:shadow-md transition-all duration-200"
-                  >
-                    <Edit className="w-4 h-4 mr-2" />
-                    Edit Profile
-                  </Button>
+                  {!isEditing ? (
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      className="hover:shadow-md transition-all duration-200"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit Profile
+                    </Button>
+                  ) : (
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="secondary" 
+                        size="sm" 
+                        onClick={handleEditSave}
+                        disabled={editLoading}
+                      >
+                        {editLoading ? 'Saving...' : 'Save'}
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={handleEditCancel}
+                        disabled={editLoading}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </CardContent>
@@ -349,7 +425,7 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                       </div>
                       <div className="flex-1">
                         <p className="text-sm font-medium">{userData.email || 'No email provided'}</p>
-                        <p className="text-xs text-gray-500">📧 Email</p>
+                        <p className="text-xs text-gray-500">📧 Email (cannot be changed)</p>
                       </div>
                     </div>
 
@@ -358,16 +434,38 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
                         <Phone className="w-4 h-4 text-green-600" />
                       </div>
                       <div className="flex-1">
-                        <p className="text-sm font-medium">{userData.phone || 'No phone provided'}</p>
-                        <p className="text-xs text-gray-500">📱 Phone</p>
+                        {isEditing ? (
+                          <div className="space-y-2">
+                            <Label htmlFor="phone" className="text-xs text-gray-500">📱 Phone</Label>
+                            <Input
+                              id="phone"
+                              type="tel"
+                              value={editData.phone}
+                              onChange={(e) => setEditData(prev => ({ ...prev, phone: e.target.value }))}
+                              placeholder="Enter phone number"
+                              className="text-sm"
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <p className="text-sm font-medium">{userData.phone || 'No phone provided'}</p>
+                            <p className="text-xs text-gray-500">📱 Phone</p>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
 
-                  <Button variant="outline" className="w-full">
-                    <Edit className="w-4 h-4 mr-2" />
-                    Update Contact Info
-                  </Button>
+                  {!isEditing && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => setIsEditing(true)}
+                    >
+                      <Edit className="w-4 h-4 mr-2" />
+                      Update Contact Info
+                    </Button>
+                  )}
                 </CardContent>
               </Card>
             </div>
