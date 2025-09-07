@@ -24,6 +24,7 @@ import {
 } from 'lucide-react'
 import { calculateCostPerPerson, formatPrice } from '@/lib/rides/types'
 import type { RideWithDriver } from '@/lib/rides/types'
+import { cn } from '@/lib/utils'
 
 interface ContactDriverModalProps {
   ride: RideWithDriver
@@ -82,7 +83,12 @@ export function ContactDriverModal({ ride, userEduVerified, className }: Contact
     return (
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <Button className={className}>
+          <Button 
+            className={cn(
+              "bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200",
+              className
+            )}
+          >
             <MessageSquare className="w-4 h-4 mr-2" />
             Contact Driver
           </Button>
@@ -182,34 +188,121 @@ export function ContactDriverModal({ ride, userEduVerified, className }: Contact
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className={className} disabled={ride.seatsAvailable === 0}>
+        <Button 
+          className={cn(
+            "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200",
+            ride.seatsAvailable === 0 && "opacity-50 cursor-not-allowed",
+            className
+          )}
+          disabled={ride.seatsAvailable === 0}
+        >
           <MessageSquare className="w-4 h-4 mr-2" />
-          {ride.seatsAvailable === 0 ? 'Ride Full' : 'Contact Driver'}
+          {ride.seatsAvailable === 0 ? 'Ride Full' : 'Book Ride'}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-lg">
         <DialogHeader>
-          <DialogTitle>Contact Driver</DialogTitle>
+          <DialogTitle className="text-xl font-bold">Book This Ride</DialogTitle>
           <DialogDescription>
-            Request to join this ride
+            Join this ride and connect with your driver
           </DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
+          {/* Top: Departure time, price, seats left */}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-5 h-5 text-blue-600" />
+                  <span className="font-semibold text-gray-900">
+                    {new Date(ride.departAt).toLocaleDateString('en-US', { 
+                      weekday: 'short', 
+                      month: 'short', 
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit'
+                    })}
+                  </span>
+                </div>
+                <div className="w-px h-6 bg-blue-300" />
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium text-gray-700">
+                    {ride.seatsAvailable} seats left
+                  </span>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-green-600">
+                  {formatPrice(totalCostForRider)}
+                </div>
+                <div className="text-xs text-gray-500">total for {seatsRequested} seat{seatsRequested > 1 ? 's' : ''}</div>
+              </div>
+            </div>
+          </div>
+
           {/* Edu Verification Check */}
           {!userEduVerified && (
-            <Alert variant="destructive">
+            <Alert variant="destructive" className="border-red-200 bg-red-50">
               <AlertTriangle className="w-4 h-4" />
-              <AlertDescription>
-                Only edu-verified students can contact drivers. 
-                Please complete your student verification first.
+              <AlertDescription className="text-sm">
+                <strong>Student verification required</strong><br />
+                Only .edu verified students can book rides. Complete verification to continue.
               </AlertDescription>
             </Alert>
           )}
 
+          {/* Middle: Driver details with trust indicators */}
+          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
+                {ride.driver.user.name?.charAt(0) || 'D'}
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-semibold text-gray-900">
+                    {ride.driver.user.name || 'Anonymous Driver'}
+                  </span>
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    .edu Verified
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-3 text-sm text-gray-600">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span>{ride.driver.user.ratingAvg?.toFixed(1) || 'New'} ({ride.driver.user.ratingCount || 0} reviews)</span>
+                  </div>
+                  {ride.driver.vehicle && (
+                    <>
+                      <div className="w-px h-3 bg-gray-300" />
+                      <div className="flex items-center gap-1">
+                        <Car className="w-4 h-4" />
+                        <span>{ride.driver.vehicle.color} {ride.driver.vehicle.make}</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Trust indicators */}
+            <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-1">
+                <CheckCircle className="w-3 h-3 text-green-600" />
+                <span>OTP-secured ride</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <CheckCircle className="w-3 h-3 text-green-600" />
+                <span>Student-only platform</span>
+              </div>
+            </div>
+          </div>
+
           {/* Seats Selection */}
           <div className="space-y-2">
-            <Label htmlFor="seats" className="flex items-center gap-2">
+            <Label htmlFor="seats" className="flex items-center gap-2 font-medium">
               <Users className="w-4 h-4" />
               Seats Needed
             </Label>
@@ -221,8 +314,9 @@ export function ContactDriverModal({ ride, userEduVerified, className }: Contact
               value={seatsRequested}
               onChange={(e) => setSeatsRequested(Number(e.target.value))}
               disabled={!userEduVerified}
+              className="text-center font-semibold"
             />
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-600 text-center">
               {ride.seatsAvailable} seats available
             </p>
           </div>
@@ -254,33 +348,44 @@ export function ContactDriverModal({ ride, userEduVerified, className }: Contact
             </Alert>
           )}
 
-          {/* Contact Buttons */}
-          <div className="grid grid-cols-2 gap-3">
-            <Button
-              onClick={() => handleContact('sms')}
-              disabled={!userEduVerified || isContacting || seatsRequested > ride.seatsAvailable}
-              variant="outline"
-            >
-              {isContacting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Phone className="w-4 h-4 mr-2" />
-              )}
-              SMS
-            </Button>
+          {/* Primary Action Buttons */}
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                onClick={() => handleContact('sms')}
+                disabled={!userEduVerified || isContacting || seatsRequested > ride.seatsAvailable}
+                className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                size="lg"
+              >
+                {isContacting ? (
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                ) : (
+                  <Phone className="w-5 h-5 mr-2" />
+                )}
+                Contact via SMS
+              </Button>
 
-            <Button
-              onClick={() => handleContact('email')}
-              disabled={!userEduVerified || isContacting || seatsRequested > ride.seatsAvailable}
-              variant="outline"
-            >
-              {isContacting ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : (
-                <Mail className="w-4 h-4 mr-2" />
-              )}
-              Email
-            </Button>
+              <Button
+                onClick={() => handleContact('email')}
+                disabled={!userEduVerified || isContacting || seatsRequested > ride.seatsAvailable}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                size="lg"
+              >
+                {isContacting ? (
+                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                ) : (
+                  <Mail className="w-5 h-5 mr-2" />
+                )}
+                Contact via Email
+              </Button>
+            </div>
+            
+            {/* Secondary actions */}
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-500 pt-2 border-t border-gray-200">
+              <span>• Secure student-only platform</span>
+              <span>• OTP verification required</span>
+              <span>• 24/7 support available</span>
+            </div>
           </div>
 
           <Alert>
