@@ -260,55 +260,55 @@ export function RideList({
 
               {/* Expanded Details */}
               {isExpanded && (
-                          <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                              <div>
-                                <h4 className="font-medium text-gray-900 mb-2">Pickup Location</h4>
-                                <p className="text-gray-600">{ride.originText}</p>
-                              </div>
-                              
-                              <div>
-                                <h4 className="font-medium text-gray-900 mb-2">Destination</h4>
-                                <p className="text-gray-600">{ride.destText}</p>
-                              </div>
-                              
-                              <div>
-                                <h4 className="font-medium text-gray-900 mb-2">Departure</h4>
-                                <div className="flex items-center gap-2 text-gray-600">
-                                  <Calendar className="w-4 h-4" />
-                                  <span>{new Date(ride.departAt).toLocaleDateString()}</span>
-                                  <Clock className="w-4 h-4 ml-2" />
-                                  <span>{new Date(ride.departAt).toLocaleTimeString([], { 
-                                    hour: '2-digit', 
-                                    minute: '2-digit' 
-                                  })}</span>
-                                </div>
-                              </div>
-                              
-                              <div>
-                                <h4 className="font-medium text-gray-900 mb-2">Trip Cost</h4>
-                                <div className="space-y-1 text-sm text-gray-600">
-                                  <p>Total: {formatPrice(ride.totalTripCostCents)}</p>
-                                  <p>Per person: {formatPrice(calculateCostPerPerson(ride.totalTripCostCents, ride.seatsTotal, ride.seatsAvailable))}</p>
-                                  <p className="text-xs text-gray-500">Cost decreases as more riders join</p>
-                                </div>
-                              </div>
-                              
-                              <div>
-                                <h4 className="font-medium text-gray-900 mb-2">Vehicle</h4>
-                                {ride.driver.vehicle ? (
-                                  <div className="flex items-center gap-2 text-gray-600">
-                                    <Car className="w-4 h-4" />
-                                    <span>
-                                      {ride.driver.vehicle.year} {ride.driver.vehicle.make} {ride.driver.vehicle.model}
-                                    </span>
-                                  </div>
-                                ) : (
-                                  <span className="text-gray-500">Vehicle info not available</span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
+                <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Pickup Location</h4>
+                      <p className="text-gray-600">{ride.originText}</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Destination</h4>
+                      <p className="text-gray-600">{ride.destText}</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Departure</h4>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Calendar className="w-4 h-4" />
+                        <span>{new Date(ride.departAt).toLocaleDateString()}</span>
+                        <Clock className="w-4 h-4 ml-2" />
+                        <span>{new Date(ride.departAt).toLocaleTimeString([], { 
+                          hour: '2-digit', 
+                          minute: '2-digit' 
+                        })}</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Trip Cost</h4>
+                      <div className="space-y-1 text-sm text-gray-600">
+                        <p>Total: {formatPrice(ride.totalTripCostCents)}</p>
+                        <p>Per person: {formatPrice(calculateCostPerPerson(ride.totalTripCostCents, ride.seatsTotal, ride.seatsAvailable))}</p>
+                        <p className="text-xs text-gray-500">Cost decreases as more riders join</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-2">Vehicle</h4>
+                      {ride.driver.vehicle ? (
+                        <div className="flex items-center gap-2 text-gray-600">
+                          <Car className="w-4 h-4" />
+                          <span>
+                            {ride.driver.vehicle.year} {ride.driver.vehicle.make} {ride.driver.vehicle.model}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-gray-500">Vehicle info not available</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
             </CardContent>
           </Card>
