@@ -57,24 +57,31 @@ export function OTPLogin() {
     setLoading(true)
     
     try {
+      console.log('🔍 [FRONTEND] Sending OTP request for email:', email)
       const response = await fetch('/api/auth/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email })
       })
       
+      console.log('🔍 [FRONTEND] Response status:', response.status)
+      console.log('🔍 [FRONTEND] Response headers:', Object.fromEntries(response.headers.entries()))
+      
       const data = await response.json()
+      console.log('🔍 [FRONTEND] Response data:', data)
       
       if (data.success) {
+        console.log('✅ [FRONTEND] OTP request successful')
         setStep('otp')
         setCountdown(60)
         toast.success('Verification code sent to your email')
       } else {
+        console.log('❌ [FRONTEND] OTP request failed:', data.error)
         setErrors({ email: data.error || 'Failed to send verification code' })
         toast.error(data.error || 'Failed to send verification code')
       }
     } catch (error) {
-      console.error('Send OTP error:', error)
+      console.error('❌ [FRONTEND] Send OTP error:', error)
       setErrors({ email: 'Failed to send verification code' })
       toast.error('Failed to send verification code')
     } finally {
