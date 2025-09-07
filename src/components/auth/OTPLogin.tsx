@@ -12,6 +12,7 @@ import { ProfileCompletion } from './ProfileCompletion'
 import { toast } from 'sonner'
 import { Mail, ArrowLeft, Shield, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export function OTPLogin() {
   const [step, setStep] = useState<'email' | 'otp' | 'profile'>('email')
@@ -22,6 +23,9 @@ export function OTPLogin() {
   const [acceptedTerms, setAcceptedTerms] = useState(false)
   const [errors, setErrors] = useState<{ email?: string; otp?: string; terms?: string }>({})
   const { user, login } = useAuth()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') || '/dashboard'
 
   // Countdown timer for resend
   React.useEffect(() => {
@@ -127,6 +131,8 @@ export function OTPLogin() {
         } else {
           await login(data.user)
           toast.success('Successfully signed in!')
+          // Redirect to the intended page
+          router.push(redirectTo)
         }
       } else {
         setErrors({ otp: data.error || 'Invalid verification code' })
@@ -143,22 +149,34 @@ export function OTPLogin() {
 
   const handleProfileCompletion = async (profileData: { name: string; phone: string }) => {
     try {
+      console.log('🔍 [FRONTEND] Starting profile completion...')
+      console.log('🔍 [FRONTEND] Email:', email)
+      console.log('🔍 [FRONTEND] Profile data:', profileData)
+      
       const response = await fetch('/api/auth/complete-profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, ...profileData })
       })
       
+      console.log('🔍 [FRONTEND] Profile completion response status:', response.status)
+      console.log('🔍 [FRONTEND] Profile completion response headers:', Object.fromEntries(response.headers.entries()))
+      
       const data = await response.json()
+      console.log('🔍 [FRONTEND] Profile completion response data:', data)
       
       if (data.success) {
+        console.log('✅ [FRONTEND] Profile completion successful, logging in user...')
         await login(data.user)
         toast.success('Profile completed! Welcome to Rydify!')
+        // Redirect to the intended page
+        router.push(redirectTo)
       } else {
+        console.log('❌ [FRONTEND] Profile completion failed:', data.message)
         throw new Error(data.message || 'Failed to complete profile')
       }
     } catch (error) {
-      console.error('Profile completion error:', error)
+      console.error('❌ [FRONTEND] Profile completion error:', error)
       throw error
     }
   }
