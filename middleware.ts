@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getTokenFromRequest } from '@/lib/auth/jwt-edge'
+import { getAuthCookies } from '@/lib/auth/cookies'
 
 // Routes that require .edu verification + session
 const PROTECTED_ROUTES = [
   '/drive',
   '/profile',
+  '/rides',
   '/api/rides/create',
   '/api/rides/update',
   '/api/rides/delete',
@@ -24,6 +26,7 @@ const PUBLIC_ROUTES = [
   '/api/auth/session',
   '/api/rides/search',
   '/api/rides/public',
+  '/api/rides/[id]', // Individual ride details API
 ]
 
 export async function middleware(request: NextRequest) {
@@ -36,14 +39,15 @@ export async function middleware(request: NextRequest) {
 
   // Check if route requires authentication
   if (isProtectedRoute(pathname)) {
-    const user = await getTokenFromRequest(request)
-
-    if (!user) {
-      // Redirect to login for page requests
+    // First check cookies for quick authentication
+    const authCookies = getAuthCookies(request)
+    
+    if (!authCookies.uid || !authCookies.eduVerified) {
+      // Redirect to verification for page requests
       if (!pathname.startsWith('/api/')) {
-        const loginUrl = new URL('/auth/login', request.url)
-        loginUrl.searchParams.set('redirect', pathname)
-        return NextResponse.redirect(loginUrl)
+        const verifyUrl = new URL('/verify-edu', request.url)
+        verifyUrl.searchParams.set('next', pathname)
+        return NextResponse.redirect(verifyUrl)
       }
 
       // Return 401 for API requests
@@ -53,18 +57,19 @@ export async function middleware(request: NextRequest) {
       )
     }
 
-    // Check if user has .edu verification
-    if (!user.eduVerified) {
+    // For additional security, also verify JWT token
+    const user = await getTokenFromRequest(request)
+    if (!user || !user.eduVerified) {
       if (!pathname.startsWith('/api/')) {
-        const loginUrl = new URL('/auth/login', request.url)
-        loginUrl.searchParams.set('redirect', pathname)
-        loginUrl.searchParams.set('error', 'edu-verification-required')
-        return NextResponse.redirect(loginUrl)
+        const verifyUrl = new URL('/verify-edu', request.url)
+        verifyUrl.searchParams.set('next', pathname)
+        verifyUrl.searchParams.set('error', 'session-expired')
+        return NextResponse.redirect(verifyUrl)
       }
 
       return NextResponse.json(
-        { success: false, error: '.edu email verification required' },
-        { status: 403 }
+        { success: false, error: 'Session expired' },
+        { status: 401 }
       )
     }
 

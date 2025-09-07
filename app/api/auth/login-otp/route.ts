@@ -6,6 +6,7 @@ import { validateEduEmail, getUniversityName } from "@/lib/auth/university-detec
 import { PrismaClient } from "@prisma/client"
 import { signJWT } from "@/lib/auth/jwt-edge"
 import { OTPEmailService } from "@/lib/auth/otp-email"
+import { setAuthCookies } from "@/lib/auth/cookies"
 
 const prisma = new PrismaClient()
 
@@ -165,6 +166,9 @@ export async function POST(request: NextRequest) {
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: "/",
     })
+
+    // Set authentication cookies for middleware
+    setAuthCookies(user.id, user.eduVerified, response)
 
     return response
 

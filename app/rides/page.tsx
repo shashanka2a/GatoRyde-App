@@ -11,11 +11,8 @@ export const metadata = {
 export const dynamic = 'force-dynamic' // Since we need user-specific data
 
 export default async function RidesPage() {
-  // Simplified for MVP - assume user is verified
-  const userEduVerified = true
-  // Demo user email for Florida university filtering
-  const userEmail = 'student@ufl.edu' // This would come from session in real app
-
+  // Get user from session - this will be handled by middleware
+  // The page will only render if user is authenticated and edu-verified
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">
@@ -29,10 +26,7 @@ export default async function RidesPage() {
         </div>
       </div>
     }>
-      <RidesPageClient 
-        userEduVerified={userEduVerified} 
-        userEmail={userEmail}
-      />
+      <RidesPageClient />
     </Suspense>
   )
 }

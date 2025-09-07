@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/src/components/ui/ta
 import Link from 'next/link'
 import type { SearchFilters, RideWithDriver } from '@/lib/rides/types'
 import { getFilterScopeDescription } from '@/lib/rides/university-filter'
+import { useAuth } from '@/lib/auth/useAuth'
 
 // Direct imports for now to fix build issues
 import { RideSearchForm } from '@/src/components/rides/RideSearchForm'
@@ -27,12 +28,12 @@ import {
 } from 'lucide-react'
 
 
-interface RidesPageClientProps {
-  userEduVerified: boolean
-  userEmail?: string
-}
-
-export function RidesPageClient({ userEduVerified, userEmail }: RidesPageClientProps) {
+export function RidesPageClient() {
+  const { user } = useAuth()
+  
+  // Get user info from auth context
+  const userEduVerified = user?.eduVerified || false
+  const userEmail = user?.email
   const [rides, setRides] = useState<RideWithDriver[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isInitialLoad, setIsInitialLoad] = useState(true)

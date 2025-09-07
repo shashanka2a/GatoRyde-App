@@ -32,8 +32,11 @@ export function useAuth() {
 
   const checkSession = async () => {
     try {
+      console.log('🔍 [USE AUTH] Checking session...')
       const response = await fetch('/api/auth/session')
       const data = await response.json()
+      
+      console.log('🔍 [USE AUTH] Session response:', data)
       
       setAuthState({
         user: data.user || null,
@@ -41,6 +44,7 @@ export function useAuth() {
         error: null
       })
     } catch (error) {
+      console.error('❌ [USE AUTH] Session check error:', error)
       setAuthState({
         user: null,
         loading: false,

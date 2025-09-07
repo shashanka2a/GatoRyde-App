@@ -8,10 +8,13 @@ const prisma = new PrismaClient()
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
+  console.log("🔍 [SESSION] Session check request received")
   try {
     const tokenData = await getTokenFromRequest(request)
+    console.log("🔍 [SESSION] Token data:", tokenData)
     
     if (!tokenData) {
+      console.log("❌ [SESSION] No token data found")
       return NextResponse.json({
         success: false,
         user: null
@@ -33,12 +36,14 @@ export async function GET(request: NextRequest) {
     })
 
     if (!user) {
+      console.log("❌ [SESSION] User not found in database")
       return NextResponse.json({
         success: false,
         user: null
       })
     }
 
+    console.log("✅ [SESSION] User found:", user.email)
     return NextResponse.json({
       success: true,
       user
