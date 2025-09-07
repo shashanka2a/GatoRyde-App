@@ -124,7 +124,13 @@ export class NotificationProviders {
 
   static getEmailProvider(): EmailProvider {
     if (!this.emailProvider) {
-      if (process.env.NODE_ENV === 'production') {
+      // Use Gmail SMTP only if all required environment variables are present
+      const hasSMTPConfig = process.env.SMTP_HOST && 
+                           process.env.SMTP_PORT && 
+                           process.env.SMTP_USER && 
+                           process.env.SMTP_PASS
+      
+      if (process.env.NODE_ENV === 'production' && hasSMTPConfig) {
         this.emailProvider = new GmailSMTPProvider()
       } else {
         this.emailProvider = new MockEmailProvider()
@@ -135,7 +141,12 @@ export class NotificationProviders {
 
   static getSMSProvider(): SMSProvider {
     if (!this.smsProvider) {
-      if (process.env.NODE_ENV === 'production') {
+      // Use Twilio only if all required environment variables are present
+      const hasTwilioConfig = process.env.TWILIO_ACCOUNT_SID && 
+                             process.env.TWILIO_AUTH_TOKEN && 
+                             process.env.TWILIO_PHONE_NUMBER
+      
+      if (process.env.NODE_ENV === 'production' && hasTwilioConfig) {
         this.smsProvider = new TwilioSMSProvider()
       } else {
         this.smsProvider = new MockSMSProvider()

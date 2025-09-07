@@ -28,7 +28,6 @@ import {
 
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import { DebugNavigation } from '../../debug-navigation'
 import { TooltipProvider } from '@/src/components/ui/tooltip'
 
 interface UserData {
@@ -151,7 +150,6 @@ export function ProfilePageClient({ userData }: ProfilePageClientProps) {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-gray-50">
-        <DebugNavigation />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           {/* User Info Card - Reduced Padding */}
           <Card className="bg-gradient-to-r from-teal-600 to-emerald-600 text-white border-0 shadow-xl mb-6">
