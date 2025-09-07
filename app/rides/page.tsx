@@ -11,8 +11,8 @@ export const metadata = {
 export const dynamic = 'force-dynamic' // Since we need user-specific data
 
 export default async function RidesPage() {
-  // Get user from session - this will be handled by middleware
-  // The page will only render if user is authenticated and edu-verified
+  // This page is open access - no authentication required
+  // Authentication state will be handled client-side for UI gating
   return (
     <Suspense fallback={
       <div className="min-h-screen bg-gradient-to-br from-teal-50 to-emerald-50">

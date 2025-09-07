@@ -29,9 +29,9 @@ import {
 
 
 export function RidesPageClient() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   
-  // Get user info from auth context
+  // Get user info from auth context (user might be null for unauthenticated users)
   const userEduVerified = user?.eduVerified || false
   const userEmail = user?.email
   const [rides, setRides] = useState<RideWithDriver[]>([])
@@ -159,13 +159,13 @@ export function RidesPageClient() {
       <div className="container mx-auto py-8 px-4" id="search-section">
         <div className="max-w-6xl mx-auto">
 
-          {/* Edu Verification Warning */}
+          {/* Edu Verification Info */}
           {!userEduVerified && (
-            <Alert className="mb-6 border-orange-200 bg-orange-50">
-              <AlertTriangle className="w-4 h-4 text-orange-600" />
-              <AlertDescription className="text-orange-800">
-                <strong>Verification Required:</strong> Complete your student verification to contact drivers and join rides.
-                <Link href="/dashboard/kyc" className="ml-2 text-orange-600 hover:text-orange-700 underline font-medium">
+            <Alert className="mb-6 border-blue-200 bg-blue-50">
+              <AlertTriangle className="w-4 h-4 text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                <strong>Student Verification:</strong> Verify your .edu email to contact drivers and post rides.
+                <Link href="/verify-edu" className="ml-2 text-blue-600 hover:text-blue-700 underline font-medium">
                   Verify Now →
                 </Link>
               </AlertDescription>

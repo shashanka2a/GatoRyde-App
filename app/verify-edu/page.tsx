@@ -21,7 +21,7 @@ function VerifyEduContent() {
   const [errors, setErrors] = useState<{ email?: string; otp?: string }>({})
   const [countdown, setCountdown] = useState(0)
 
-  const nextUrl = searchParams.get('next') || '/profile'
+  const nextUrl = searchParams.get('next') || '/rides'
 
   const handleSendOTP = async (e: React.FormEvent) => {
     e.preventDefault()

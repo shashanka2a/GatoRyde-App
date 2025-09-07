@@ -33,7 +33,7 @@ export function OTPLogin() {
     if (redirect.includes('/drive')) return '/drive'
     if (redirect.includes('/rides')) return '/rides'
     if (redirect.includes('/dashboard')) return '/dashboard'
-    return '/rides' // default fallback
+    return '/rides' // default fallback - always go to rides
   }
   
   const smartRedirectTo = getSmartRedirect(redirectTo)

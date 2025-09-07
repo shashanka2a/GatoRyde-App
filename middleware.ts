@@ -6,7 +6,6 @@ import { getAuthCookies } from '@/lib/auth/cookies'
 const PROTECTED_ROUTES = [
   '/drive',
   '/profile',
-  '/rides',
   '/api/rides/create',
   '/api/rides/update',
   '/api/rides/delete',
@@ -19,6 +18,7 @@ const PUBLIC_ROUTES = [
   '/',
   '/ride',
   '/ride/search',
+  '/rides', // Open access to browse rides
   '/auth/login',
   '/auth/verify',
   '/api/auth/verify',
