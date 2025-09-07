@@ -25,7 +25,7 @@ export function OTPLogin() {
   const { user, login } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirect') || '/dashboard'
+  const redirectTo = searchParams.get('redirect') || '/rides'
 
   // Countdown timer for resend
   React.useEffect(() => {
@@ -213,6 +213,14 @@ export function OTPLogin() {
     return <ProfileCompletion userEmail={email} onComplete={handleProfileCompletion} />
   }
 
+  // Redirect if user is already logged in
+  React.useEffect(() => {
+    if (user) {
+      console.log('🔍 [FRONTEND] User already logged in, redirecting to:', redirectTo)
+      router.push(redirectTo)
+    }
+  }, [user, router, redirectTo])
+
   if (user) {
     return (
       <div className="text-center">
@@ -224,6 +232,7 @@ export function OTPLogin() {
           Logged in as {user.email}
           {user.university && ` (${user.university})`}
         </p>
+        <p className="text-sm text-gray-500">Redirecting...</p>
       </div>
     )
   }
