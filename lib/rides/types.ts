@@ -171,32 +171,40 @@ export function validateSeatConstraints(
 }
 
 // Time formatting
-export function formatDepartureTime(date: Date): string {
+export function formatDepartureTime(date: Date | string): string {
+  // Ensure we have a proper Date object
+  const dateObj = date instanceof Date ? date : new Date(date)
+  
+  // Check if the date is valid
+  if (isNaN(dateObj.getTime())) {
+    return 'Invalid date'
+  }
+  
   const now = new Date()
-  const diffMs = date.getTime() - now.getTime()
+  const diffMs = dateObj.getTime() - now.getTime()
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24))
   
   if (diffDays === 0) {
-    return `Today at ${date.toLocaleTimeString('en-US', { 
+    return `Today at ${dateObj.toLocaleTimeString('en-US', { 
       hour: 'numeric', 
       minute: '2-digit',
       hour12: true 
     })}`
   } else if (diffDays === 1) {
-    return `Tomorrow at ${date.toLocaleTimeString('en-US', { 
+    return `Tomorrow at ${dateObj.toLocaleTimeString('en-US', { 
       hour: 'numeric', 
       minute: '2-digit',
       hour12: true 
     })}`
   } else if (diffDays < 7) {
-    return date.toLocaleDateString('en-US', { 
+    return dateObj.toLocaleDateString('en-US', { 
       weekday: 'long',
       hour: 'numeric', 
       minute: '2-digit',
       hour12: true 
     })
   } else {
-    return date.toLocaleDateString('en-US', { 
+    return dateObj.toLocaleDateString('en-US', { 
       month: 'short',
       day: 'numeric',
       hour: 'numeric', 

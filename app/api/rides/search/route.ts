@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
       destText: ride.destText,
       destLat: ride.destLat,
       destLng: ride.destLng,
-      departAt: ride.departAt,
+      departAt: new Date(ride.departAt),
       totalCostCents: ride.totalCostCents,
       seatsAvailable: ride.seatsAvailable,
       seatsTotal: ride.seatsTotal,
