@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { PrismaClient } from '@prisma/client'
 import { signJWT } from '@/lib/auth/jwt-edge'
-import { setAuthCookies } from '@/lib/auth/cookies'
+import { setAuthCookies } from '@/lib/auth/cookies-server'
 
 const prisma = new PrismaClient()
 

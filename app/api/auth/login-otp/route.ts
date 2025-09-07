@@ -6,7 +6,7 @@ import { validateEduEmail, getUniversityName } from "@/lib/auth/university-detec
 import { PrismaClient } from "@prisma/client"
 import { signJWT } from "@/lib/auth/jwt-edge"
 import { OTPEmailService } from "@/lib/auth/otp-email"
-import { setAuthCookies } from "@/lib/auth/cookies"
+import { setAuthCookies } from "@/lib/auth/cookies-server"
 
 const prisma = new PrismaClient()
 

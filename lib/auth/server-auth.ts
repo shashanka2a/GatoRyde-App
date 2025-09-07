@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getAuthCookies } from './cookies'
+import { getAuthCookies } from './cookies-server'
 import { prisma } from '@/lib/db/client'
 
 export interface AuthenticatedUser {

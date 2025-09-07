@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getTokenFromRequest } from '@/lib/auth/jwt-edge'
-import { getAuthCookies } from '@/lib/auth/cookies'
+import { getAuthCookies } from '@/lib/auth/cookies-server'
 
 // Routes that require .edu verification + session
 const PROTECTED_ROUTES = [

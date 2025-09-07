@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { searchRidesWithUniversity } from '@/lib/rides/search-with-university'
+// Removed server-side import - using API route instead
 import { Button } from '@/src/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/src/components/ui/card'
 import { Alert, AlertDescription } from '@/src/components/ui/alert'
@@ -103,12 +103,18 @@ export function RidesPageClient() {
     setCurrentFilters(filters)
 
     try {
-      const result = await searchRidesWithUniversity(filters)
+      const response = await fetch('/api/rides/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filters })
+      })
+
+      const result = await response.json()
 
       if (result.success && result.data) {
         setRides(result.data.rides)
 
-        // Extract driver emails for university badges (from mock data)
+        // Extract driver emails for university badges
         const emails: Record<string, string> = {}
         result.data.rides.forEach((ride: any) => {
           if (ride.driverEmail) {
