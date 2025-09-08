@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { MapPin, TrendingUp, Clock } from 'lucide-react'
 import { Card, CardContent } from '@/src/components/ui/card'
 import { Badge } from '@/src/components/ui/badge'
+import { analytics } from '@/lib/analytics'
 
 interface LocationSuggestion {
   id: string
@@ -62,6 +63,9 @@ export default function SmartLocationSuggestions({
   }
 
   const handleLocationClick = async (suggestion: LocationSuggestion) => {
+    // Track analytics
+    analytics.useLocationSuggestion(suggestion.location, type)
+    
     // Track this location search
     try {
       await fetch('/api/locations/track', {

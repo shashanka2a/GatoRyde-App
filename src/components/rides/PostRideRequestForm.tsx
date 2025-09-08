@@ -13,6 +13,7 @@ import { format } from 'date-fns'
 import { cn } from '@/src/lib/utils'
 import { toast } from 'sonner'
 import SmartLocationSuggestions from '../location/SmartLocationSuggestions'
+import { analytics } from '@/lib/analytics'
 
 interface PostRideRequestFormProps {
   onSuccess?: () => void
@@ -68,6 +69,14 @@ export default function PostRideRequestForm({ onSuccess, onCancel }: PostRideReq
       const result = await response.json()
 
       if (result.success) {
+        // Track ride request creation analytics
+        analytics.createRideRequest({
+          origin: formData.origin,
+          destination: formData.destination,
+          seats: formData.seatsNeeded,
+          maxCost: formData.maxCostCents
+        })
+        
         toast.success('Ride request posted successfully!')
         onSuccess?.()
       } else {

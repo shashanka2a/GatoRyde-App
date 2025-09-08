@@ -7,6 +7,7 @@ import { MapboxService } from '@/lib/maps/mapbox'
 import { LocationAutocomplete } from './LocationAutocomplete'
 import { FirstTimeDriverOnboarding } from './FirstTimeDriverOnboarding'
 import SmartLocationSuggestions from '../location/SmartLocationSuggestions'
+import { analytics } from '@/lib/analytics'
 import { Button } from '@/src/components/ui/button'
 import { Input } from '@/src/components/ui/input'
 import { Label } from '@/src/components/ui/label'
@@ -256,6 +257,14 @@ export function CreateRideForm({ showSkippedNotice = false }: CreateRideFormProp
       const result = await createRide(submitData)
 
       if (result.success) {
+        // Track ride creation analytics
+        analytics.createRide({
+          origin: formData.origin!.text,
+          destination: formData.destination!.text,
+          seats: formData.seatsTotal,
+          cost: formData.totalTripCostCents / 100 // Convert cents to dollars
+        })
+        
         setMessage(result.message)
         setTimeout(() => {
           router.push(`/rides/${result.rideId}`)

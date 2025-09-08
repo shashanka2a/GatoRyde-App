@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { AppNavigation } from '../src/components/layout/AppNavigation'
 import { BottomNavigation } from '../src/components/layout/BottomNavigation'
 import '../src/styles/globals.css'
@@ -63,6 +65,8 @@ export default function RootLayout({
         <AppNavigation />
         <main className="pb-16 lg:pb-0 min-h-screen bg-gray-50">{children}</main>
         <BottomNavigation />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

@@ -12,8 +12,10 @@ const nextConfig = {
   },
   // Performance optimizations
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion']
+    optimizePackageImports: ['lucide-react', 'framer-motion', '@vercel/analytics', '@vercel/speed-insights']
   },
+  // Analytics configuration
+  analyticsId: process.env.VERCEL_ANALYTICS_ID,
   // Bundle optimization
   webpack: (config, { isServer }) => {
     if (!isServer) {

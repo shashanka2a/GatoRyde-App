@@ -10,6 +10,7 @@ import Link from 'next/link'
 import type { SearchFilters, RideWithDriver } from '@/lib/rides/types'
 import { getFilterScopeDescription } from '@/lib/rides/university-filter'
 import { useAuth } from '@/lib/auth/useAuth'
+import { analytics } from '@/lib/analytics'
 
 // Direct imports for now to fix build issues
 import { RideSearchForm } from '@/src/components/rides/RideSearchForm'
@@ -105,6 +106,15 @@ export function RidesPageClient() {
     setError(null)
     setHasSearched(true)
     setCurrentFilters(filters)
+
+    // Track search analytics
+    analytics.searchRides({
+      origin: filters.origin,
+      destination: filters.destination,
+      date: filters.departAt ? new Date(filters.departAt).toISOString() : undefined,
+      seats: filters.seats,
+      universityScope: filters.universityScope
+    })
 
     try {
       const response = await fetch('/api/rides/search', {

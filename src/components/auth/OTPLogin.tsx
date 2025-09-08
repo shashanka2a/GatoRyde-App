@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { Mail, ArrowLeft, Shield, CheckCircle, AlertCircle, ExternalLink } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { analytics } from '@/lib/analytics'
 
 export function OTPLogin() {
   const [step, setStep] = useState<'email' | 'otp' | 'profile'>('email')
@@ -70,6 +71,9 @@ export function OTPLogin() {
     }
     
     setLoading(true)
+    
+    // Track login attempt
+    analytics.loginAttempt('otp')
     
     try {
       console.log('🔍 [FRONTEND] Sending OTP request for email:', email)
@@ -148,6 +152,10 @@ export function OTPLogin() {
         } else {
           console.log('🔍 [FRONTEND] Existing user - redirecting to:', smartRedirectTo)
           await login(data.user)
+          
+          // Track successful login
+          analytics.loginSuccess('otp')
+          
           toast.success('Successfully signed in!')
           // Redirect to the intended page
           router.push(smartRedirectTo)
