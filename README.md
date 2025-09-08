@@ -1,41 +1,122 @@
-# Rydify Landing Page
+# 🚗 Rydify - University Ride-Sharing Platform
 
-A production-ready Next.js 14 application for Rydify - a student rideshare platform. This landing page features modern animations, responsive design, and optimized performance.
+A production-ready Next.js 14 application for Rydify - a comprehensive student rideshare platform that connects university students for campus transportation through dual posting systems (drivers posting rides + riders posting requests).
 
-## 🚀 Features
+## 🎯 Core Concept
 
-- **Next.js 14** with static export support
-- **React 18** with modern hooks and patterns
-- **Framer Motion** for smooth animations
-- **Tailwind CSS** for responsive styling
-- **Radix UI** components for accessibility
-- **TypeScript** for type safety
-- **ESLint** for code quality
-- **Production optimized** with static export
+Rydify is a university-focused ride-sharing platform that enables students to:
+- **Drivers**: Post rides with fixed details (seats, cost, time)
+- **Riders**: Post requests with flexible needs (seats needed, max cost)
+- **Combined Display**: View both rides and requests together in one feed
+
+## 🚀 Key Features
+
+### 🔐 Authentication & Security
+- **Edu Verification**: Only `.edu` emails allowed
+- **OTP System**: Email-based verification with Gmail SMTP
+- **JWT + Cookie Sessions**: Secure authentication
+- **Route Protection**: Gated access to driver/rider features
+- **Open Access**: Browse rides without login
+
+### 🚗 Driver Flow
+- **Driver Onboarding**: Complete verification process
+- **Post Rides**: Create rides with origin, destination, departure time, seats, cost
+- **Manage Bookings**: View and contact riders
+- **Profile Management**: Edit driver information
+
+### 🚶‍♂️ Rider Flow
+- **Find Existing Rides**: Browse and book posted rides
+- **Post Requests**: Create ride requests with flexible needs
+- **Contact Drivers**: Direct communication with ride providers
+- **Request Management**: Track and manage ride requests
+
+### 🔄 Dual Posting System
+- **Ride Cards**: Clean, scannable layout for posted rides
+- **Request Cards**: Distinct styling for ride requests
+- **Combined Search**: Both types displayed together, sorted by time
+- **Visual Distinction**: Clear differentiation between rides and requests
+
+### 📱 User Experience
+- **Responsive Design**: Mobile-first approach
+- **Active Navigation**: Clear visual feedback for current page
+- **Smart Redirects**: Post-login routing based on user intent
+- **Expandable Details**: Click to see full ride information
+- **Contact CTAs**: Prominent buttons for communication
 
 ## 🛠️ Tech Stack
 
-- **Framework**: Next.js 14
+### Frontend
+- **Framework**: Next.js 14 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
-- **UI Components**: Radix UI
+- **UI Components**: Radix UI, shadcn/ui
 - **Icons**: Lucide React
-- **Build**: Static Export
+- **State Management**: React hooks (useState, useEffect)
 
-## 📦 Installation
+### Backend
+- **Database**: PostgreSQL (Supabase)
+- **ORM**: Prisma
+- **Authentication**: JWT + Cookies
+- **Email**: Nodemailer (Gmail SMTP)
+- **API**: Next.js API Routes
+- **Validation**: Zod schemas
 
-1. Install dependencies:
+### Infrastructure
+- **Hosting**: Vercel
+- **Database**: Supabase PostgreSQL
+- **Email**: Gmail SMTP
+- **Deployment**: Git-based CI/CD
+
+## 📦 Installation & Setup
+
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL database (Supabase recommended)
+- Gmail SMTP credentials
+
+### 1. Clone & Install
 ```bash
+git clone https://github.com/shashanka2a/GatoRyde-App.git
+cd GatoRyde-App
 npm install
 ```
 
-2. Run the development server:
+### 2. Environment Setup
+Create `.env` file with:
+```env
+# Database
+DATABASE_URL="postgresql://user:password@host:port/database"
+
+# Email (Gmail SMTP)
+GMAIL_USER="your-email@gmail.com"
+GMAIL_APP_PASSWORD="your-app-password"
+
+# JWT
+JWT_SECRET="your-jwt-secret"
+
+# Next.js
+NEXTAUTH_URL="http://localhost:3000"
+```
+
+### 3. Database Setup
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Push schema to database
+npx prisma db push
+
+# (Optional) Seed with mock data
+node scripts/seed-mock-rides.js
+```
+
+### 4. Run Development Server
 ```bash
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🏗️ Build & Deploy
 
@@ -47,70 +128,141 @@ npm run dev
 ### Production Build
 ```bash
 npm run build
+npm start
 ```
 
-### Static Export
+### Database Management
 ```bash
-npm run export
+# View database in Prisma Studio
+npx prisma studio
+
+# Clear all dummy data
+node scripts/clear-mock-data.js
+
+# Reset database schema
+npx prisma db push --force-reset
 ```
 
-The static files will be generated in the `out` directory, ready for deployment to any static hosting service.
+### Deployment
+The app is configured for Vercel deployment with automatic database migrations.
 
 ## 📁 Project Structure
 
 ```
-├── pages/
-│   ├── _app.tsx          # App wrapper
-│   ├── _document.tsx     # Document structure
-│   └── index.tsx         # Main landing page
+├── app/                  # Next.js App Router
+│   ├── api/             # API routes
+│   │   ├── auth/        # Authentication endpoints
+│   │   ├── rides/       # Ride management APIs
+│   │   └── ride-requests/ # Ride request APIs
+│   ├── auth/            # Authentication pages
+│   ├── drive/           # Driver dashboard
+│   ├── profile/         # User profile
+│   └── rides/           # Ride browsing
 ├── src/
-│   ├── components/
-│   │   └── ui/           # Reusable UI components
-│   └── styles/
-│       └── globals.css   # Global styles
-├── public/               # Static assets
-└── out/                  # Static export output
+│   ├── components/      # React components
+│   │   ├── auth/        # Authentication components
+│   │   ├── rides/       # Ride-related components
+│   │   └── layout/      # Layout components
+│   └── hooks/           # Custom React hooks
+├── lib/                 # Utility libraries
+│   ├── auth/            # Authentication logic
+│   ├── db/              # Database utilities
+│   └── rides/           # Ride business logic
+├── prisma/              # Database schema
+├── scripts/             # Utility scripts
+└── public/              # Static assets
 ```
 
 ## 🎨 Key Components
 
-- **Hero Section**: Animated landing with call-to-action
-- **How It Works**: Step-by-step process explanation
-- **App Features**: Interactive phone mockups
-- **Testimonials**: Carousel with student reviews
-- **Footer**: Links and company information
+### Authentication
+- **OTPLogin**: Email OTP verification form
+- **AuthGates**: Route protection components
+- **Session Management**: JWT + cookie handling
+
+### Ride Management
+- **RideList**: Combined display of rides and requests
+- **RideCard**: Individual ride display component
+- **RideRequestCard**: Ride request display component
+- **CreateRideForm**: Driver ride creation form
+- **PostRideRequestForm**: Rider request creation form
+
+### Navigation & Layout
+- **AppNavigation**: Main navigation component
+- **BottomNavigation**: Mobile navigation
+- **ContactDriverModal**: Driver contact interface
+
+### Business Logic
+- **useAuth**: Authentication hook
+- **Ride Actions**: Server actions for ride operations
+- **Contact Actions**: Communication management
 
 ## 🔧 Configuration
 
-- **next.config.js**: Next.js configuration with static export
+- **next.config.js**: Next.js configuration
 - **tailwind.config.js**: Tailwind CSS customization
 - **tsconfig.json**: TypeScript configuration
-- **postcss.config.js**: PostCSS setup
+- **prisma/schema.prisma**: Database schema
+- **middleware.ts**: Route protection and authentication
 
-## 📱 Responsive Design
+## 📱 User Flow
 
-The application is fully responsive and optimized for:
-- Desktop (1024px+)
-- Tablet (768px - 1023px)
-- Mobile (320px - 767px)
+### 1. Authentication Flow
+```
+User visits app → Redirected to /auth/login → Enter .edu email → 
+Receive OTP → Enter OTP → Authenticated → Profile setup (first time)
+```
+
+### 2. Driver Flow
+```
+/drive → "Become a Driver" → Complete verification → Post Ride → 
+Fill form (origin, destination, time, seats, cost) → Ride live → 
+Manage bookings → Contact riders
+```
+
+### 3. Rider Flow
+```
+/rides → "Find Ride" → Browse posted rides OR Post Request → 
+Fill request form → Wait for offers → Accept offer → Contact driver
+```
+
+## 🗄️ Database Schema
+
+### Core Models
+- **User**: Profile + university verification
+- **Driver**: Driver-specific data + verification
+- **Ride**: Posted rides with booking capacity
+- **RideRequest**: Rider requests with offer system
+- **Booking**: Ride reservations
+- **ContactLog**: Communication tracking
+- **OTP**: Email verification codes
 
 ## ⚡ Performance
 
-- Static export for fast loading
-- Optimized images and assets
-- Minimal JavaScript bundle
-- Efficient CSS with Tailwind
-- Smooth animations with Framer Motion
+- **Server-Side Rendering**: Next.js App Router
+- **Database Optimization**: Prisma ORM with connection pooling
+- **Authentication**: JWT with secure cookie storage
+- **Email Delivery**: Gmail SMTP for reliable OTP delivery
+- **Responsive Design**: Mobile-first approach
 
-## 🚀 Deployment
+## 🚀 Production Status
 
-This app is configured for static export and can be deployed to:
-- Vercel
-- Netlify
-- GitHub Pages
-- AWS S3
-- Any static hosting service
+### ✅ Ready for Launch
+- Complete authentication system
+- Dual posting (rides + requests)
+- Combined search & display
+- Driver & rider flows
+- Database schema deployed
+- API endpoints working
+- Clean UI/UX
+- Production ready
 
-## 📄 Original Design
+### 🔗 Live Demo
+- **Development**: http://localhost:3000
+- **Production**: Deployed on Vercel
+- **Database**: Supabase PostgreSQL
+- **Repository**: https://github.com/shashanka2a/GatoRyde-App
 
-The original Figma design is available at: https://www.figma.com/design/yRup5RXwUhumFnYQQU7XXM/Rydify-Landing-Page
+## 📄 License
+
+This project is licensed under the MIT License.
