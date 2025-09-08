@@ -6,6 +6,7 @@ import { createRide } from '@/lib/rides/actions'
 import { MapboxService } from '@/lib/maps/mapbox'
 import { LocationAutocomplete } from './LocationAutocomplete'
 import { FirstTimeDriverOnboarding } from './FirstTimeDriverOnboarding'
+import SmartLocationSuggestions from '../location/SmartLocationSuggestions'
 import { Button } from '@/src/components/ui/button'
 import { Input } from '@/src/components/ui/input'
 import { Label } from '@/src/components/ui/label'
@@ -333,24 +334,60 @@ export function CreateRideForm({ showSkippedNotice = false }: CreateRideFormProp
         <CardContent className="p-6 space-y-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Origin */}
-            <LocationAutocomplete
-              label="Pickup Location"
-              placeholder="Where are you starting from?"
-              value={formData.origin}
-              onChange={handleLocationChange('origin')}
-              error={errors.origin}
-              required
-            />
+            <div className="space-y-3">
+              <LocationAutocomplete
+                label="Pickup Location"
+                placeholder="Where are you starting from?"
+                value={formData.origin}
+                onChange={handleLocationChange('origin')}
+                error={errors.origin}
+                required
+              />
+              {!formData.origin && (
+                <SmartLocationSuggestions
+                  type="origin"
+                  onLocationSelect={(location) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      origin: {
+                        text: location.text,
+                        placeName: location.placeName,
+                        lat: location.lat,
+                        lng: location.lng
+                      }
+                    }))
+                  }}
+                />
+              )}
+            </div>
 
             {/* Destination */}
-            <LocationAutocomplete
-              label="Drop-off Location"
-              placeholder="Where are you going?"
-              value={formData.destination}
-              onChange={handleLocationChange('destination')}
-              error={errors.destination}
-              required
-            />
+            <div className="space-y-3">
+              <LocationAutocomplete
+                label="Drop-off Location"
+                placeholder="Where are you going?"
+                value={formData.destination}
+                onChange={handleLocationChange('destination')}
+                error={errors.destination}
+                required
+              />
+              {!formData.destination && (
+                <SmartLocationSuggestions
+                  type="destination"
+                  onLocationSelect={(location) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      destination: {
+                        text: location.text,
+                        placeName: location.placeName,
+                        lat: location.lat,
+                        lng: location.lng
+                      }
+                    }))
+                  }}
+                />
+              )}
+            </div>
 
             {/* Route Preview */}
             {(formData.origin && formData.destination) && (

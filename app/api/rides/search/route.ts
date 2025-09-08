@@ -10,6 +10,43 @@ export async function GET(request: NextRequest) {
   try {
     console.log('🔍 [SEARCH RIDES] Request received')
     
+    // Track location searches if origin/destination provided
+    const { searchParams } = new URL(request.url)
+    const origin = searchParams.get('origin')
+    const destination = searchParams.get('destination')
+    
+    // Track origin search
+    if (origin) {
+      try {
+        await fetch(`${request.nextUrl.origin}/api/locations/track`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            location: origin,
+            searchType: 'origin'
+          })
+        })
+      } catch (error) {
+        console.log('Failed to track origin search:', error)
+      }
+    }
+    
+    // Track destination search
+    if (destination) {
+      try {
+        await fetch(`${request.nextUrl.origin}/api/locations/track`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            location: destination,
+            searchType: 'destination'
+          })
+        })
+      } catch (error) {
+        console.log('Failed to track destination search:', error)
+      }
+    }
+    
     // Fetch both rides and ride requests
     const [rides, rideRequests] = await Promise.all([
       // Fetch rides

@@ -301,3 +301,19 @@ model OTP {
   @@unique([identifier, type])
   @@map("otps")
 }
+
+model LocationSearch {
+  id          String   @id @default(cuid())
+  location    String   // The searched location text
+  placeName   String?  // Clean place name
+  lat         Float?   // Latitude
+  lng         Float?   // Longitude
+  searchType  String   // 'origin' or 'destination'
+  searchCount Int      @default(1) // How many times this location was searched
+  lastSearched DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([location, searchType])
+  @@map("location_searches")
+}

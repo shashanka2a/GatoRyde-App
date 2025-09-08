@@ -12,6 +12,7 @@ import { CalendarIcon, MapPin, Clock, Users, DollarSign, MessageSquare } from 'l
 import { format } from 'date-fns'
 import { cn } from '@/src/lib/utils'
 import { toast } from 'sonner'
+import SmartLocationSuggestions from '../location/SmartLocationSuggestions'
 
 interface PostRideRequestFormProps {
   onSuccess?: () => void
@@ -114,6 +115,14 @@ export default function PostRideRequestForm({ onSuccess, onCancel }: PostRideReq
                 onChange={(e) => handleInputChange('origin', e.target.value)}
                 required
               />
+              {!formData.origin && (
+                <SmartLocationSuggestions
+                  type="origin"
+                  onLocationSelect={(location) => {
+                    handleInputChange('origin', location.text)
+                  }}
+                />
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="destination" className="flex items-center gap-2">
@@ -127,6 +136,14 @@ export default function PostRideRequestForm({ onSuccess, onCancel }: PostRideReq
                 onChange={(e) => handleInputChange('destination', e.target.value)}
                 required
               />
+              {!formData.destination && (
+                <SmartLocationSuggestions
+                  type="destination"
+                  onLocationSelect={(location) => {
+                    handleInputChange('destination', location.text)
+                  }}
+                />
+              )}
             </div>
           </div>
 
