@@ -14,6 +14,7 @@ import { useAuth } from '@/lib/auth/useAuth'
 // Direct imports for now to fix build issues
 import { RideSearchForm } from '@/src/components/rides/RideSearchForm'
 import { RideList } from '@/src/components/rides/RideList'
+import PostRideRequestForm from '@/src/components/rides/PostRideRequestForm'
 
 // Import only essential icons for initial render
 import {
@@ -44,6 +45,9 @@ export function RidesPageClient() {
   const [searchType, setSearchType] = useState<'drivers' | 'requests'>('drivers')
   const [currentFilters, setCurrentFilters] = useState<SearchFilters | null>(null)
   const [driverEmails, setDriverEmails] = useState<Record<string, string>>({})
+  const [showRideRequestForm, setShowRideRequestForm] = useState(false)
+  const [rideRequests, setRideRequests] = useState<any[]>([])
+  const [allItems, setAllItems] = useState<any[]>([])
 
   // Optimized initialization - defer non-critical operations
   useEffect(() => {
@@ -111,25 +115,40 @@ export function RidesPageClient() {
 
       const result = await response.json()
 
-      if (result.success && result.data) {
-        setRides(result.data.rides)
+      if (result.success) {
+        // Handle new API response format with both rides and ride requests
+        if (result.rides) {
+          setRides(result.rides)
+        }
+        if (result.rideRequests) {
+          setRideRequests(result.rideRequests)
+        }
+        if (result.allItems) {
+          setAllItems(result.allItems)
+        }
 
         // Extract driver emails for university badges
         const emails: Record<string, string> = {}
-        result.data.rides.forEach((ride: any) => {
-          if (ride.driverEmail) {
-            emails[ride.driver.userId] = ride.driverEmail
-          }
-        })
+        if (result.rides) {
+          result.rides.forEach((ride: any) => {
+            if (ride.driverEmail) {
+              emails[ride.driver.userId] = ride.driverEmail
+            }
+          })
+        }
         setDriverEmails(emails)
       } else {
         setError(result.message || 'Failed to search rides')
         setRides([])
+        setRideRequests([])
+        setAllItems([])
       }
     } catch (error) {
       console.error('Search error:', error)
       setError('Failed to search rides. Please try again.')
       setRides([])
+      setRideRequests([])
+      setAllItems([])
     } finally {
       setIsLoading(false)
     }
@@ -257,10 +276,12 @@ export function RidesPageClient() {
               <TabsContent value="list">
                 <RideList
                   rides={rides}
+                  rideRequests={rideRequests}
+                  allItems={allItems}
                   isLoading={isLoading}
                   emptyMessage={
                     hasSearched
-                      ? "No rides match your search criteria. Try adjusting your filters or check back later."
+                      ? "No rides or requests match your search criteria. Try adjusting your filters or check back later."
                       : "Search for rides to get started!"
                   }
                   showDistance={!!userLocation}
@@ -344,9 +365,9 @@ export function RidesPageClient() {
                     </p>
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                       <Button
-                        onClick={() => setSearchType('requests')}
+                        onClick={() => setShowRideRequestForm(true)}
                         size="lg"
-                        className="bg-gray-900 hover:bg-gray-800 text-white shadow-sm hover:shadow-md transition-all duration-200 px-8 py-4 font-semibold"
+                        className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm hover:shadow-md transition-all duration-200 px-8 py-4 font-semibold"
                       >
                         <MessageSquare className="w-5 h-5 mr-3" />
                         Post Ride Request
@@ -397,6 +418,22 @@ export function RidesPageClient() {
           </div>
         )}
       </div>
+
+      {/* Ride Request Form Modal */}
+      {showRideRequestForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <PostRideRequestForm
+              onSuccess={() => {
+                setShowRideRequestForm(false)
+                // Optionally refresh the page or show success message
+                window.location.reload()
+              }}
+              onCancel={() => setShowRideRequestForm(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

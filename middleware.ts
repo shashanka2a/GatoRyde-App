@@ -45,19 +45,18 @@ export async function middleware(request: NextRequest) {
     console.log('🔍 [MIDDLEWARE] Pathname:', pathname)
     
     if (!authCookies.uid || !authCookies.eduVerified) {
-      console.log('❌ [MIDDLEWARE] Missing auth cookies, redirecting to login')
+      console.log('❌ [MIDDLEWARE] Missing auth cookies')
       // Redirect to login for page requests
       if (!pathname.startsWith('/api/')) {
+        console.log('❌ [MIDDLEWARE] Redirecting page to login')
         const loginUrl = new URL('/auth/login', request.url)
         loginUrl.searchParams.set('redirect', pathname)
         return NextResponse.redirect(loginUrl)
       }
 
-      // Return 401 for API requests
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      )
+      // For API requests, let them handle their own authentication
+      console.log('🔍 [MIDDLEWARE] API route, letting through for JWT auth:', pathname)
+      return NextResponse.next()
     }
 
     // Skip JWT verification for now to avoid double authentication

@@ -6,6 +6,150 @@ import { SearchRidesSchema } from '@/lib/rides/types'
 
 const prisma = new PrismaClient()
 
+export async function GET(request: NextRequest) {
+  try {
+    console.log('🔍 [SEARCH RIDES] Request received')
+    
+    // Fetch both rides and ride requests
+    const [rides, rideRequests] = await Promise.all([
+      // Fetch rides
+      prisma.ride.findMany({
+        where: {
+          status: 'open',
+          seatsAvailable: { gt: 0 },
+          departAt: { gte: new Date() }
+        },
+        include: {
+          driver: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  photoUrl: true,
+                  ratingAvg: true,
+                  ratingCount: true,
+                }
+              }
+            }
+          }
+        },
+        orderBy: [
+          { departAt: 'asc' },
+          { totalCostCents: 'asc' }
+        ],
+        take: 20
+      }),
+      
+      // Fetch ride requests
+      prisma.rideRequest.findMany({
+        where: {
+          status: 'open',
+          departAt: { gte: new Date() }
+        },
+        include: {
+          rider: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              photoUrl: true,
+              ratingAvg: true,
+              ratingCount: true,
+              university: true,
+            }
+          }
+        },
+        orderBy: [
+          { departAt: 'asc' },
+          { createdAt: 'desc' }
+        ],
+        take: 20
+      })
+    ])
+    
+    console.log(`✅ [SEARCH RIDES] Found ${rides.length} rides and ${rideRequests.length} ride requests`)
+
+    const transformedRides = rides.map(ride => ({
+      id: ride.id,
+      type: 'ride', // Distinguish from requests
+      originText: ride.originText,
+      originLat: ride.originLat,
+      originLng: ride.originLng,
+      destText: ride.destText,
+      destLat: ride.destLat,
+      destLng: ride.destLng,
+      departAt: ride.departAt,
+      totalCostCents: ride.totalCostCents,
+      seatsAvailable: ride.seatsAvailable,
+      seatsTotal: ride.seatsTotal,
+      status: ride.status,
+      notes: ride.notes,
+      driver: {
+        userId: ride.driver.userId,
+        user: {
+          id: ride.driver.user.id,
+          name: ride.driver.user.name,
+          email: ride.driver.user.email,
+          photoUrl: ride.driver.user.photoUrl,
+          ratingAvg: ride.driver.user.ratingAvg,
+          ratingCount: ride.driver.user.ratingCount,
+        }
+      }
+    }))
+
+    const transformedRequests = rideRequests.map(request => ({
+      id: request.id,
+      type: 'request', // Distinguish from rides
+      originText: request.originText,
+      originLat: request.originLat,
+      originLng: request.originLng,
+      destText: request.destText,
+      destLat: request.destLat,
+      destLng: request.destLng,
+      departAt: request.departAt,
+      seatsNeeded: request.seatsNeeded,
+      maxCostCents: request.maxCostCents,
+      status: request.status,
+      notes: request.notes,
+      createdAt: request.createdAt,
+      rider: {
+        userId: request.rider.id,
+        user: {
+          id: request.rider.id,
+          name: request.rider.name,
+          email: request.rider.email,
+          photoUrl: request.rider.photoUrl,
+          ratingAvg: request.rider.ratingAvg,
+          ratingCount: request.rider.ratingCount,
+          university: request.rider.university,
+        }
+      }
+    }))
+
+    // Combine and sort by departure time
+    const allItems = [...transformedRides, ...transformedRequests].sort((a, b) => 
+      new Date(a.departAt).getTime() - new Date(b.departAt).getTime()
+    )
+
+    return NextResponse.json({
+      success: true,
+      rides: transformedRides,
+      rideRequests: transformedRequests,
+      allItems: allItems,
+      total: allItems.length
+    })
+
+  } catch (error) {
+    console.error('Search rides GET error:', error)
+    return NextResponse.json({
+      success: false,
+      message: 'Failed to search rides'
+    }, { status: 500 })
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()

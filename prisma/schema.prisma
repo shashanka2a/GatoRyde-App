@@ -33,6 +33,7 @@ model User {
   contactLogs    ContactLog[]   @relation("ContactLogs")
   verifications  Verification[]
   disputesOpened Dispute[]      @relation("DisputeOpener")
+  rideRequests   RideRequest[]  @relation("RideRequests")
 
   @@map("users")
 }
@@ -63,6 +64,7 @@ model Driver {
   user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   vehicle Vehicle? @relation(fields: [vehicleId], references: [id])
   rides   Ride[]
+  rideRequestOffers RideRequestOffer[]
 
   @@map("drivers")
 }
@@ -113,6 +115,7 @@ model Ride {
   // Relations
   driver   Driver    @relation(fields: [driverId], references: [userId], onDelete: Cascade)
   bookings Booking[]
+  rideRequestOffers RideRequestOffer[]
 
   @@map("rides")
 }
@@ -174,6 +177,62 @@ model ContactLog {
   user    User    @relation("ContactLogs", fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("contact_logs")
+}
+
+model RideRequest {
+  id             String     @id @default(cuid())
+  riderId        String
+  originText     String
+  originLat      Float
+  originLng      Float
+  destText       String
+  destLat        Float
+  destLng        Float
+  departAt       DateTime
+  seatsNeeded    Int
+  maxCostCents   Int
+  status         RideRequestStatus @default(open)
+  notes          String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  // Relations
+  rider   User    @relation("RideRequests", fields: [riderId], references: [id], onDelete: Cascade)
+  offers  RideRequestOffer[]
+
+  @@map("ride_requests")
+}
+
+enum RideRequestStatus {
+  open
+  matched
+  completed
+  cancelled
+}
+
+model RideRequestOffer {
+  id            String   @id @default(cuid())
+  rideRequestId String
+  driverId      String
+  rideId        String?
+  message       String?
+  status        RideRequestOfferStatus @default(pending)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  rideRequest RideRequest @relation(fields: [rideRequestId], references: [id], onDelete: Cascade)
+  driver      Driver      @relation(fields: [driverId], references: [userId], onDelete: Cascade)
+  ride        Ride?       @relation(fields: [rideId], references: [id])
+
+  @@map("ride_request_offers")
+}
+
+enum RideRequestOfferStatus {
+  pending
+  accepted
+  rejected
+  expired
 }
 
 enum VerificationType {

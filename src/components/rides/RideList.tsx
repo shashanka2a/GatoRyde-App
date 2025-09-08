@@ -29,10 +29,13 @@ import {
 } from '@/lib/rides/types'
 import { ContactDriverModal } from './ContactDriverModal'
 import { UniversityBadge } from './UniversityBadge'
+import { RideRequestCard } from './RideRequestCard'
 import { cn } from '@/lib/utils'
 
 interface RideListProps {
   rides: RideWithDriver[]
+  rideRequests?: any[] // Ride requests from API
+  allItems?: any[] // Combined rides and requests
   isLoading?: boolean
   emptyMessage?: string
   showDistance?: boolean
@@ -44,6 +47,8 @@ interface RideListProps {
 
 export function RideList({ 
   rides, 
+  rideRequests = [],
+  allItems = [],
   isLoading = false, 
   emptyMessage = "No rides found",
   showDistance = false,
@@ -123,9 +128,27 @@ export function RideList({
     )
   }
 
+  // Combine rides and ride requests for display
+  const displayItems = allItems.length > 0 ? allItems : rides
+
   return (
     <div className={cn('space-y-6', className)}>
-      {rides.map((ride) => {
+      {displayItems.map((item) => {
+        // Handle ride requests
+        if (item.type === 'request') {
+          return (
+            <RideRequestCard
+              key={item.id}
+              request={item}
+              showDistance={showDistance}
+              userLocation={userLocation}
+              userEduVerified={userEduVerified}
+            />
+          )
+        }
+
+        // Handle regular rides
+        const ride = item as RideWithDriver
         const isExpanded = expandedRide === ride.id
         const distanceFromUser = getDistanceFromUser(ride)
         
