@@ -1,4 +1,4 @@
-import { DrivePageClient } from './DrivePageClient'
+import DrivePageClient from './DrivePageClient'
 
 export default async function DrivePage() {
   // Simplified for MVP - assume user is verified

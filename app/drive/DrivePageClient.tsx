@@ -30,7 +30,7 @@ interface DrivePageClientProps {
   userEduVerified: boolean
 }
 
-export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
+export default function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
   const [driver, setDriver] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('local')
@@ -178,7 +178,7 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
       <div className="bg-gradient-to-r from-teal-600 via-emerald-600 to-teal-700 text-white relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-full bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/5 to-transparent"></div>
         </div>
         
         <div className="container mx-auto py-12 px-4 relative">
@@ -442,7 +442,6 @@ export function DrivePageClient({ userEduVerified }: DrivePageClientProps) {
           </div>
         </div>
       </div>
-      
     </div>
   )
 }
