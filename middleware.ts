@@ -7,11 +7,16 @@ const PROTECTED_ROUTES = [
   '/drive',
   '/profile',
   '/driver',
+  '/dashboard',
+  '/rides/create',
+  '/rides/[id]/payment',
   '/api/rides/create',
   '/api/rides/update',
   '/api/rides/delete',
   '/api/profile',
   '/api/driver',
+  '/api/bookings',
+  '/api/ride-requests',
 ]
 
 // Routes that are open to everyone (no login required)
@@ -20,6 +25,8 @@ const PUBLIC_ROUTES = [
   '/ride',
   '/ride/search',
   '/rides', // Open access to browse rides
+  '/browse-rides', // Browse rides page
+  '/terms', // Terms of service
   '/auth/login',
   '/auth/verify',
   '/api/auth/verify',
@@ -28,6 +35,7 @@ const PUBLIC_ROUTES = [
   '/api/rides/search',
   '/api/rides/public',
   '/api/rides/[id]', // Individual ride details API
+  '/api/locations/popular', // Popular locations API
 ]
 
 export async function middleware(request: NextRequest) {
