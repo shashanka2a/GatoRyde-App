@@ -8,6 +8,7 @@ export function setAuthCookies(userId: string, eduVerified: boolean, response?: 
     sameSite: 'lax' as const,
     maxAge: 60 * 60 * 24 * 7, // 7 days
     path: '/',
+    domain: process.env.NODE_ENV === 'production' ? '.rydify.app' : undefined,
   }
 
   const cookiesToSet = [

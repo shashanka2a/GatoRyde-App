@@ -89,6 +89,7 @@ export async function POST(request: NextRequest) {
       sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: "/",
+      domain: process.env.NODE_ENV === "production" ? ".rydify.app" : undefined,
     })
 
     // Set authentication cookies for middleware

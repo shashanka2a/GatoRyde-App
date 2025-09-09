@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { clearAuthCookies } from "@/lib/auth/cookies-server"
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,14 +8,18 @@ export async function POST(request: NextRequest) {
       message: "Logged out successfully"
     })
 
-    // Clear the auth cookie
+    // Clear the auth token cookie
     response.cookies.set("auth-token", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 0,
       path: "/",
+      domain: process.env.NODE_ENV === "production" ? ".rydify.app" : undefined,
     })
+
+    // Clear the auth cookies for middleware
+    clearAuthCookies(response)
 
     return response
 
