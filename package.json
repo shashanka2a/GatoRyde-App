@@ -24,7 +24,11 @@
     "test:auth": "tsx scripts/test-auth-gates.ts",
     "test:all": "npm run test && npm run test:e2e",
     "flow:driver": "tsx scripts/driver-flow.ts",
-    "flow:rider": "tsx scripts/rider-flow.ts"
+    "flow:rider": "tsx scripts/rider-flow.ts",
+    "db:migrate:deploy": "tsx scripts/db-migrate.ts --deploy",
+    "db:migrate:dev": "tsx scripts/db-migrate.ts --dev",
+    "db:push": "tsx scripts/db-migrate.ts --push",
+    "db:migrate:status": "tsx scripts/db-migrate.ts --status"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
