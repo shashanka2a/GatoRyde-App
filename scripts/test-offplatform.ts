@@ -55,10 +55,10 @@ class OffPlatformTestRunner {
 
       // Step 1: Seed driver with QR code and create ride
       const driver = await this.seedDriver()
-      const ride = await this.createRide(driver.id)
+      const ride = await this.createRide(driver.userId)
 
       // Step 2: Create first rider booking and verify estimated share
-      const rider1 = await this.createRider('rider1@test.edu')
+      const rider1 = await this.createRider(`rider1-${this.testId}@test.edu`)
       const booking1 = await this.createBooking(ride.id, rider1.id, 1)
       await this.verifyEstimatedShare(booking1, ride.totalCostCents, 3) // 3 total seats
 
@@ -66,7 +66,7 @@ class OffPlatformTestRunner {
       await this.startTrip(booking1.id)
 
       // Step 4: Add second rider booking before departure
-      const rider2 = await this.createRider('rider2@test.edu')
+      const rider2 = await this.createRider(`rider2-${this.testId}@test.edu`)
       const booking2 = await this.createBooking(ride.id, rider2.id, 1)
 
       // Step 5: Complete trip
@@ -110,14 +110,14 @@ class OffPlatformTestRunner {
         licenseVerified: true,
         zelleHandle: 'driver@zelle.com',
         cashAppHandle: 'testdriver',
-        qrCodeUrl: 'https://example.com/qr/driver-payment.png',
+        paymentQrUrl: 'https://example.com/qr/driver-payment.png',
       }
     })
 
     this.log('DRIVER_SEEDED', { 
       userId: user.id, 
-      driverId: driver.id,
-      qrCodeUrl: driver.qrCodeUrl 
+      driverId: driver.userId,
+      paymentQrUrl: driver.paymentQrUrl 
     })
 
     return driver
@@ -132,7 +132,11 @@ class OffPlatformTestRunner {
       data: {
         driverId,
         originText: 'Gainesville, FL',
+        originLat: 29.6516,
+        originLng: -82.3248,
         destText: 'Orlando, FL',
+        destLat: 28.5383,
+        destLng: -81.3792,
         departAt,
         totalCostCents: 15000, // $150.00 as specified
         seatsTotal: 3,
@@ -179,7 +183,7 @@ class OffPlatformTestRunner {
     if (!ride) throw new Error('Ride not found')
 
     const currentRiders = ride.bookings.reduce((sum, b) => sum + b.seats, 0)
-    const estimatedShare = Math.ceil(ride.totalCostCents / (currentRiders + seats))
+    const estimatedShare = Math.ceil(ride.totalCostCents / ride.seatsTotal)
 
     const booking = await prisma.booking.create({
       data: {
@@ -242,7 +246,7 @@ class OffPlatformTestRunner {
     await prisma.booking.update({
       where: { id: bookingId },
       data: {
-        status: 'in-progress',
+        status: 'in_progress',
         tripStartedAt: new Date(),
       }
     })
@@ -255,7 +259,7 @@ class OffPlatformTestRunner {
 
     // Get all bookings for this ride
     const bookings = await prisma.booking.findMany({
-      where: { rideId, status: 'in-progress' }
+      where: { rideId }
     })
 
     const ride = await prisma.ride.findUnique({
@@ -286,7 +290,7 @@ class OffPlatformTestRunner {
         data: {
           status: 'completed',
           finalShareCents: finalShare,
-          completedAt: new Date(),
+          tripCompletedAt: new Date(),
         }
       })
 
@@ -302,7 +306,6 @@ class OffPlatformTestRunner {
       where: { id: rideId },
       data: {
         status: 'completed',
-        completedAt: new Date(),
       }
     })
 

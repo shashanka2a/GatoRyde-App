@@ -13,10 +13,10 @@ import { otpManager } from '@/lib/auth/otp'
 import { CookieManager } from '@/lib/auth/cookies'
 import { UserRepository } from '@/lib/db/repositories'
 
-const mockRateLimiter = rateLimiter as jest.Mocked<typeof rateLimiter>
-const mockOtpManager = otpManager as jest.Mocked<typeof otpManager>
-const mockCookieManager = CookieManager as jest.Mocked<typeof CookieManager>
-const mockUserRepository = UserRepository as jest.MockedClass<typeof UserRepository>
+const mockRateLimiter = rateLimiter as jest.Mocked<typeof rateLimiter>;
+const mockOtpManager = otpManager as jest.Mocked<typeof otpManager>;
+const mockCookieManager = CookieManager as jest.Mocked<typeof CookieManager>;
+const mockUserRepository = UserRepository as jest.MockedClass<typeof UserRepository>;
 
 describe('/api/auth/verify-otp', () => {
   let mockUserRepo: jest.Mocked<UserRepository>
