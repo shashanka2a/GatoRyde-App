@@ -1,18 +1,34 @@
-import { track } from '@vercel/analytics'
+// Safe analytics wrapper that handles missing Vercel Analytics
+const safeTrack = (event: string, properties?: Record<string, any>) => {
+  try {
+    // Only import and use analytics in browser environment
+    if (typeof window !== 'undefined') {
+      import('@vercel/analytics').then(({ track }) => {
+        track(event, properties)
+      }).catch(() => {
+        // Silently fail if analytics is not available
+        console.debug('Analytics not available:', event, properties)
+      })
+    }
+  } catch (error) {
+    // Silently fail if analytics fails
+    console.debug('Analytics error:', error)
+  }
+}
 
 // Custom analytics events for GatoRyde app
 export const analytics = {
   // Authentication events
   loginAttempt: (method: 'email' | 'otp') => {
-    track('login_attempt', { method })
+    safeTrack('login_attempt', { method })
   },
   
   loginSuccess: (method: 'email' | 'otp') => {
-    track('login_success', { method })
+    safeTrack('login_success', { method })
   },
   
   logout: () => {
-    track('logout')
+    safeTrack('logout')
   },
 
   // Ride-related events
@@ -23,7 +39,7 @@ export const analytics = {
     seats?: number
     universityScope?: string
   }) => {
-    track('search_rides', filters)
+    safeTrack('search_rides', filters)
   },
 
   createRide: (rideData: {
@@ -32,11 +48,11 @@ export const analytics = {
     seats: number
     cost: number
   }) => {
-    track('create_ride', rideData)
+    safeTrack('create_ride', rideData)
   },
 
   bookRide: (rideId: string, seats: number) => {
-    track('book_ride', { rideId, seats })
+    safeTrack('book_ride', { rideId, seats })
   },
 
   // Ride request events
@@ -46,7 +62,7 @@ export const analytics = {
     seats: number
     maxCost: number
   }) => {
-    track('create_ride_request', requestData)
+    safeTrack('create_ride_request', requestData)
   },
 
   searchRideRequests: (filters: {
@@ -54,49 +70,49 @@ export const analytics = {
     destination?: string
     date?: string
   }) => {
-    track('search_ride_requests', filters)
+    safeTrack('search_ride_requests', filters)
   },
 
   // Location events
   useLocationSuggestion: (location: string, type: 'origin' | 'destination') => {
-    track('use_location_suggestion', { location, type })
+    safeTrack('use_location_suggestion', { location, type })
   },
 
   searchLocation: (query: string, type: 'origin' | 'destination') => {
-    track('search_location', { query, type })
+    safeTrack('search_location', { query, type })
   },
 
   // Driver events
   becomeDriver: () => {
-    track('become_driver')
+    safeTrack('become_driver')
   },
 
   completeDriverVerification: () => {
-    track('complete_driver_verification')
+    safeTrack('complete_driver_verification')
   },
 
   // Contact events
   contactDriver: (rideId: string, method: 'message' | 'call') => {
-    track('contact_driver', { rideId, method })
+    safeTrack('contact_driver', { rideId, method })
   },
 
   contactRider: (requestId: string, method: 'message' | 'call') => {
-    track('contact_rider', { requestId, method })
+    safeTrack('contact_rider', { requestId, method })
   },
 
   // Navigation events
   pageView: (page: string) => {
-    track('page_view', { page })
+    safeTrack('page_view', { page })
   },
 
   // Error events
   error: (error: string, context?: string) => {
-    track('error', { error, context })
+    safeTrack('error', { error, context })
   },
 
   // Feature usage
   useFeature: (feature: string, context?: Record<string, any>) => {
-    track('use_feature', { feature, ...context })
+    safeTrack('use_feature', { feature, ...context })
   }
 }
 

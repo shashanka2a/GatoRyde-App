@@ -1,10 +1,33 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { AppNavigation } from '../src/components/layout/AppNavigation'
 import { BottomNavigation } from '../src/components/layout/BottomNavigation'
 import '../src/styles/globals.css'
+
+// Safe analytics components that won't break the app
+const SafeAnalytics = () => {
+  if (typeof window === 'undefined') return null
+  
+  try {
+    const { Analytics } = require('@vercel/analytics/react')
+    return <Analytics />
+  } catch (error) {
+    console.debug('Analytics not available:', error)
+    return null
+  }
+}
+
+const SafeSpeedInsights = () => {
+  if (typeof window === 'undefined') return null
+  
+  try {
+    const { SpeedInsights } = require('@vercel/speed-insights/next')
+    return <SpeedInsights />
+  } catch (error) {
+    console.debug('SpeedInsights not available:', error)
+    return null
+  }
+}
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -65,8 +88,8 @@ export default function RootLayout({
         <AppNavigation />
         <main className="pb-16 lg:pb-0 min-h-screen bg-gray-50">{children}</main>
         <BottomNavigation />
-        <Analytics />
-        <SpeedInsights />
+        <SafeAnalytics />
+        <SafeSpeedInsights />
       </body>
     </html>
   )
