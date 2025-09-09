@@ -6,6 +6,7 @@ import { getAuthCookies } from '@/lib/auth/cookies-server'
 const PROTECTED_ROUTES = [
   '/drive',
   '/profile',
+  '/driver',
   '/api/rides/create',
   '/api/rides/update',
   '/api/rides/delete',
