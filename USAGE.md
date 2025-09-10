@@ -104,3 +104,4 @@ If tests are failing:
 2. Verify your app is running correctly
 3. Check browser developer tools for cookie issues
 4. Review the middleware and auth route implementations
+

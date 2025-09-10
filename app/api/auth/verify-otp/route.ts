@@ -9,6 +9,8 @@ import { UserRepository } from "@/lib/db/repositories"
 import { validateEduEmail, getUniversityInfo } from "@/lib/auth/university-detector"
 import { signIn } from "next-auth/react"
 import { z } from "zod"
+import { signJWT } from "@/lib/auth/jwt"
+import { setAuthCookies } from "@/lib/auth/cookies-server"
 
 export async function POST(request: NextRequest) {
   try {
@@ -124,15 +126,24 @@ export async function POST(request: NextRequest) {
       CookieManager.clearAnonymousData(response)
     }
 
-    // Set session cookie (this would typically be handled by NextAuth)
-    // For now, we'll set a simple session identifier
-    response.cookies.set("gr_session", user.id, {
+    // Also issue our app JWT so /api/auth/session can read it
+    const token = await signJWT({
+      id: user.id,
+      email: user.email,
+      eduVerified: user.eduVerified,
+      university: user.universityId ? undefined : undefined,
+    })
+
+    response.cookies.set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 30 * 24 * 60 * 60, // 30 days
       path: "/",
     })
+
+    // And set simple cookies the middleware expects
+    setAuthCookies(user.id, user.eduVerified, response)
 
     return response
 
