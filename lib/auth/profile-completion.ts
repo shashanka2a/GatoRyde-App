@@ -59,6 +59,11 @@ export async function checkProfileCompletion(userId: string): Promise<ProfileCom
       if (!mandatoryFields.cashAppHandle) missingFields.push('cashapp_handle')
       // KYC and license are OPTIONAL for drivers (not in missingFields)
     }
+    
+    console.log('🔍 [PROFILE COMPLETION] User:', user.email)
+    console.log('🔍 [PROFILE COMPLETION] Has driver profile:', !!user.driver)
+    console.log('🔍 [PROFILE COMPLETION] Mandatory fields:', mandatoryFields)
+    console.log('🔍 [PROFILE COMPLETION] Missing fields:', missingFields)
 
     // Calculate completion percentage based on mandatory fields only
     const mandatoryFieldCount = user.driver ? 4 : 2 // name, phone for all; + zelle, cashapp for drivers
@@ -97,7 +102,7 @@ export function getFieldDisplayName(field: string): string {
     kyc_verification: 'Identity Verification (KYC)',
     license_verification: 'Driver\'s License Verification',
     user_not_found: 'User Account',
-    error_checking_profile: 'Profile Data'
+    error_checking_profile: 'Profile Information'
   }
   
   return fieldNames[field] || field

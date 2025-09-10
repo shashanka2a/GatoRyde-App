@@ -76,9 +76,12 @@ export function CompleteProfileForm({ user, profileStatus }: CompleteProfileForm
         if (response.ok) {
           const data = await response.json()
           setIsDriver(data.isDriver || false)
+        } else {
+          console.log('Driver status check failed, assuming rider')
+          setIsDriver(false)
         }
       } catch (error) {
-        console.log('Could not determine driver status, assuming rider')
+        console.log('Could not determine driver status, assuming rider:', error)
         setIsDriver(false)
       }
     }
@@ -87,6 +90,10 @@ export function CompleteProfileForm({ user, profileStatus }: CompleteProfileForm
   }, [])
 
   useEffect(() => {
+    console.log('🔍 [PROFILE FORM] Profile status:', profileStatus)
+    console.log('🔍 [PROFILE FORM] Is driver:', isDriver)
+    console.log('🔍 [PROFILE FORM] Missing fields:', profileStatus.missingFields)
+    
     if (profileStatus.missingFields.includes('name') || profileStatus.missingFields.includes('phone')) {
       setCurrentStep('basic')
     } else if (isDriver && profileStatus.missingFields.some(field => ['zelle_handle', 'cashapp_handle'].includes(field))) {
@@ -140,22 +147,27 @@ export function CompleteProfileForm({ user, profileStatus }: CompleteProfileForm
     try {
       if (step === 'basic') {
         await updateBasicProfile()
-      } else if (step === 'payment') {
-        await updatePaymentProfile()
-      } else if (step === 'verification') {
-        await uploadVerificationDocuments()
-      }
-      
-      toast.success('Profile updated successfully!')
-      
-      // Move to next step or complete
-      if (step === 'basic') {
+        
+        // For riders, we're done after basic info
+        if (!isDriver) {
+          toast.success('Profile completed successfully!')
+          router.push(redirectTo)
+          return
+        }
+        
+        // For drivers, move to payment step
         setCurrentStep('payment')
       } else if (step === 'payment') {
+        await updatePaymentProfile()
         setCurrentStep('verification')
-      } else {
+      } else if (step === 'verification') {
+        await uploadVerificationDocuments()
         // All done, redirect
         router.push(redirectTo)
+      }
+      
+      if (step !== 'basic' || isDriver) {
+        toast.success('Profile updated successfully!')
       }
     } catch (error) {
       console.error('Profile update error:', error)
@@ -204,11 +216,35 @@ export function CompleteProfileForm({ user, profileStatus }: CompleteProfileForm
   }
 
   const getStepProgress = () => {
-    const totalSteps = isDriver ? 3 : 1 // Only basic info for riders, all steps for drivers
-    const completedSteps = profileStatus.missingFields.length === 0 ? totalSteps : 
-                          currentStep === 'basic' ? 0 :
-                          currentStep === 'payment' ? 1 : 2
-    return (completedSteps / totalSteps) * 100
+    if (!isDriver) {
+      // For riders, only basic info matters
+      const basicFieldsMissing = profileStatus.missingFields.filter(field => 
+        ['name', 'phone'].includes(field)
+      ).length
+      return basicFieldsMissing === 0 ? 100 : 0
+    }
+    
+    // For drivers, calculate based on completed steps
+    const totalSteps = 3
+    let completedSteps = 0
+    
+    // Basic step completed if name and phone are filled
+    if (!profileStatus.missingFields.includes('name') && !profileStatus.missingFields.includes('phone')) {
+      completedSteps++
+    }
+    
+    // Payment step completed if zelle and cashapp are filled
+    if (!profileStatus.missingFields.includes('zelle_handle') && !profileStatus.missingFields.includes('cashapp_handle')) {
+      completedSteps++
+    }
+    
+    // Verification step is optional, so we don't count it for completion
+    // But if we're on verification step, we're at 2/3
+    if (currentStep === 'verification') {
+      completedSteps = 2
+    }
+    
+    return Math.round((completedSteps / totalSteps) * 100)
   }
 
   const getMissingFieldsForStep = (step: string) => {
