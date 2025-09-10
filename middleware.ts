@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getTokenFromRequest } from '@/lib/auth/jwt-edge'
 import { getAuthCookies } from '@/lib/auth/cookies-server'
+import { checkProfileCompletion } from '@/lib/auth/profile-completion'
 
 // Routes that require .edu verification + session
 const PROTECTED_ROUTES = [
@@ -29,9 +30,12 @@ const PUBLIC_ROUTES = [
   '/terms', // Terms of service
   '/auth/login',
   '/auth/verify',
+  '/auth/complete-profile', // Profile completion page
   '/api/auth/verify',
   '/api/auth/login-otp',
   '/api/auth/session',
+  '/api/auth/complete-profile',
+  '/api/profile/update',
   '/api/rides/search',
   '/api/rides/public',
   '/api/rides/[id]', // Individual ride details API
@@ -71,6 +75,25 @@ export async function middleware(request: NextRequest) {
     // Skip JWT verification for now to avoid double authentication
     // The cookies are sufficient for basic authentication
     console.log('✅ [MIDDLEWARE] Authentication successful via cookies')
+
+    // Check profile completion for page requests (not API routes)
+    if (!pathname.startsWith('/api/') && !pathname.startsWith('/auth/complete-profile')) {
+      try {
+        const profileStatus = await checkProfileCompletion(authCookies.uid)
+        console.log('🔍 [MIDDLEWARE] Profile completion status:', profileStatus)
+        
+        // Redirect to profile completion if basic fields are missing
+        if (!profileStatus.canAccessApp) {
+          console.log('❌ [MIDDLEWARE] Profile incomplete, redirecting to completion')
+          const completeProfileUrl = new URL('/auth/complete-profile', request.url)
+          completeProfileUrl.searchParams.set('redirect', pathname)
+          return NextResponse.redirect(completeProfileUrl)
+        }
+      } catch (error) {
+        console.error('❌ [MIDDLEWARE] Error checking profile completion:', error)
+        // Continue if there's an error checking profile
+      }
+    }
 
     // Add user info to request headers for API routes
     if (pathname.startsWith('/api/')) {

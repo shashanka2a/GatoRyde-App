@@ -1,74 +1,87 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getTokenFromRequest } from '@/lib/auth/jwt-edge'
 import { prisma } from '@/lib/db/client'
-import { UpdateDriverSchema } from '@/lib/db/types'
+import { z } from 'zod'
 
-export async function PUT(request: NextRequest) {
+const PaymentProfileSchema = z.object({
+  zelleHandle: z.string().email('Invalid Zelle email address'),
+  cashAppHandle: z.string().regex(/^\$[a-zA-Z0-9_]+$/, 'Cash App handle must start with $ and contain only letters, numbers, and underscores')
+})
+
+export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { userId, ...updateData } = body
-
-    if (!userId) {
+    // Get authenticated user
+    const tokenData = await getTokenFromRequest(request)
+    
+    if (!tokenData || !tokenData.eduVerified) {
       return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
       )
     }
 
-    // Validate the update data
-    const validatedData = UpdateDriverSchema.parse(updateData)
-
-    // Update driver payment profile
-    const updatedDriver = await prisma.driver.update({
-      where: { userId },
-      data: validatedData,
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        }
-      }
+    // Parse and validate request body
+    const body = await request.json()
+    const { zelleHandle, cashAppHandle } = PaymentProfileSchema.parse(body)
+    
+    // Check if user has a driver profile
+    let driver = await prisma.driver.findUnique({
+      where: { userId: tokenData.id }
     })
 
+    // Create driver profile if it doesn't exist
+    if (!driver) {
+      driver = await prisma.driver.create({
+        data: {
+          userId: tokenData.id,
+          zelleHandle,
+          cashAppHandle,
+          isLocalRidesOnly: false,
+          licenseUploaded: false,
+          licenseVerified: false
+        }
+      })
+    } else {
+      // Update existing driver profile
+      driver = await prisma.driver.update({
+        where: { id: driver.id },
+        data: {
+          zelleHandle,
+          cashAppHandle
+        }
+      })
+    }
+    
     return NextResponse.json({
       success: true,
-      driver: updatedDriver
+      message: 'Payment profile updated successfully',
+      driver: {
+        id: driver.id,
+        zelleHandle: driver.zelleHandle,
+        cashAppHandle: driver.cashAppHandle
+      }
     })
-
+    
   } catch (error) {
     console.error('Payment profile update error:', error)
     
-    if (error instanceof Error && error.message.includes('Record to update not found')) {
+    if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Driver profile not found' },
-        { status: 404 }
+        {
+          success: false,
+          error: 'Invalid input data',
+          details: error.errors
+        },
+        { status: 400 }
       )
     }
-
+    
     return NextResponse.json(
-      { error: 'Failed to update payment profile' },
+      {
+        success: false,
+        error: 'Failed to update payment profile'
+      },
       { status: 500 }
     )
   }
 }
-
-export async function GET() {
-  try {
-    // For static generation, return empty profile
-    return NextResponse.json({
-      success: true,
-      driver: null
-    })
-
-  } catch (error) {
-    console.error('Payment profile fetch error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch payment profile' },
-      { status: 500 }
-    )
-  }
-}
-
-export const dynamic = 'force-static'

@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     const validatedData = CreateRideSchema.parse(body)
     console.log('✅ [CREATE RIDE] Data validated successfully')
     
-    // Check if user has a driver profile
+    // Check if user has a driver profile with payment info
     const driver = await prisma.driver.findUnique({
       where: { userId: tokenData.id }
     })
@@ -57,7 +57,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Driver profile required. Please complete driver verification first.' 
+          error: 'Driver profile required. Please complete driver setup first.' 
+        },
+        { status: 400 }
+      )
+    }
+
+    // Check if driver has payment methods set up
+    if (!driver.zelleHandle || !driver.cashAppHandle) {
+      console.log('❌ [CREATE RIDE] Driver missing payment methods')
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Payment methods required. Please set up Zelle and Cash App handles in your profile.' 
         },
         { status: 400 }
       )
