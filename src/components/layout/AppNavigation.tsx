@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/src/components/ui/button'
@@ -17,17 +17,18 @@ export function AppNavigation() {
   const pathname = usePathname()
 
   // Check if user needs onboarding
-  const getDriveHref = () => {
+  const [driveHref, setDriveHref] = useState('/rides/create')
+  
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const hasDriverProfile = localStorage.getItem('hasDriverProfile')
-      return hasDriverProfile ? '/rides/create' : '/driver/onboarding'
+      setDriveHref(hasDriverProfile ? '/rides/create' : '/driver/onboarding')
     }
-    return '/rides/create'
-  }
+  }, [])
 
   const navigationItems = [
     { href: '/rides', label: 'Search', icon: Search },
-    { href: getDriveHref(), label: 'Drive', icon: Car },
+    { href: driveHref, label: 'Drive', icon: Car },
     { href: '/profile', label: 'Profile', icon: User },
   ]
 

@@ -244,15 +244,10 @@ export function OTPLogin() {
     if (user) {
       console.log('🔍 [FRONTEND] User already logged in, redirecting to:', smartRedirectTo)
       console.log('🔍 [FRONTEND] Original redirect:', redirectTo)
-      console.log('🔍 [FRONTEND] Current pathname:', window.location.pathname)
       
-      // Use window.location for immediate redirect
-      if (window.location.pathname !== smartRedirectTo) {
-        console.log('🔍 [FRONTEND] Performing redirect to:', smartRedirectTo)
-        window.location.href = smartRedirectTo
-      } else {
-        console.log('🔍 [FRONTEND] Already on target page')
-      }
+      // Use router.push for client-side navigation instead of window.location
+      console.log('🔍 [FRONTEND] Performing redirect to:', smartRedirectTo)
+      router.push(smartRedirectTo)
     }
   }, [user, router, smartRedirectTo, redirectTo])
 
