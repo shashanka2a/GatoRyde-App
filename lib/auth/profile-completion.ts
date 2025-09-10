@@ -25,7 +25,7 @@ export async function checkProfileCompletion(userId: string): Promise<ProfileCom
       where: { id: userId },
       include: {
         driver: true,
-        kycVerification: true
+        verifications: true
       }
     })
 
@@ -43,7 +43,7 @@ export async function checkProfileCompletion(userId: string): Promise<ProfileCom
       phone: !!user.phone?.trim(),
       zelleHandle: !!user.driver?.zelleHandle?.trim(),
       cashAppHandle: !!user.driver?.cashAppHandle?.trim(),
-      kycVerified: user.kycVerified || false,
+      kycVerified: user.driver?.idVerified || false,
       licenseVerified: user.driver?.licenseVerified || false
     }
 
